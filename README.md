@@ -10,6 +10,7 @@ If you have any suggestions to enhance this package, feel free to create an issu
 - clone the repository locally
 - create new environment ```conda create -n verona python=3.10```
 - activate the environment ```conda activate verona```
+- change into verona directory ```cd VERONA```
 - install dependencies ```pip install -r requirements.txt```
 - install package locally (editable install for development) ```pip install -e .```
 
