@@ -34,6 +34,45 @@ experiment/
 
 The images can be placed in it optionally, if one wants to execute the experiments using custom data. Otherwise, Pytorch Datasets can be used too and no image folder has to be created.
 
+## Results folder
+
+The following structure for an result folder is currently supported:
+```
+experiment_results/
+|-- results/
+|   |-- results_df.csv
+|   |-- boxplot.png
+|   |-- ecdf_plot.png
+|   |-- hist_figure.png
+|   |-- kde_plot.png
+|-- slurm/
+|   |-- slurm_.out
+|   |-- config_.txt
+|   |-- ...
+|-- tmp/
+|   |-- mnist-net_256x2\
+|   |   |-- image_0\
+|   |   |  |-- epsilons_df.csv
+|   |   |  |-- property___.vnnlib
+|   |   |  |-- property___.vnnlib.compiled
+|   |   |  |-- ...
+|   |   |-- ...
+|   |-- ...
+|-- yaml/
+|   |--verification_context____.yaml
+|   |-- ...
+|-- configuration.json
+```
+
+The ```yaml``` and ```slurm``` folders only exist when working with the multiple jobs example. 
+
+The ```results_df.csv``` is structured as follows at this point. 
+
+```
+network_path | image_id | tmp_path | epsilon_value | smallest_value |total_time
+```
+
+
 ## Available Verifiers
 
 ### AutoVerify
