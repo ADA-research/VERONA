@@ -1,0 +1,32 @@
+[project]
+name = "robustness_experiment_box"
+version = "0.0.1"
+authors = [
+  { name="Aaron Berger", email="aaron.berger@rwth-aachen.de" },
+  { name="Annelot Bosmann", email="a.w.bosman@liacs.leidenuniv.n" },
+]
+description = "A robustness distribution generator"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+license = {file = "LICENSE"}
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.2.2",
+    "pytest-mock==3.14.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+
