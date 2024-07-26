@@ -23,7 +23,7 @@ class PytorchExperimentDataset():
     def get_subset(self, indices: list[int]) -> Self:
         new_instance = PytorchExperimentDataset(self.dataset)
 
-        new_instance._indices = indices
+        new_instance._indices = [self._indices[x] for x in indices]
 
         return new_instance
     
