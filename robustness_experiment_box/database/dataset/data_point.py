@@ -5,7 +5,7 @@ import numpy as np
 @dataclass
 class DataPoint:
 
-    id: int
+    id: str
     label: int
     data: torch.Tensor
 
