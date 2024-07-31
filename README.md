@@ -69,7 +69,7 @@ The ```yaml``` and ```slurm``` folders only exist when working with the multiple
 The ```results_df.csv``` is structured as follows at this point. 
 
 ```
-network_path | image_id | tmp_path | epsilon_value | smallest_value |total_time
+network_path | image_id | tmp_path | epsilon_value | smallest_sat_value |total_time
 ```
 
 
