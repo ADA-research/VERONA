@@ -25,7 +25,7 @@ class VerificationContext:
             self.tmp_path.mkdir(parents=True)
 
     def get_dict_for_epsilon_result(self):
-            return dict(network_path = self.network.path.resolve(), image_id = self.data_point.id, tmp_path = self.tmp_path.resolve())
+            return dict(network_path = self.network.path.resolve(), image_id = self.data_point.id,original_label = self.data_point.label, tmp_path = self.tmp_path.resolve())
 
     def save_vnnlib_property(self, vnnlib_property: VNNLibProperty) -> None:
         """
