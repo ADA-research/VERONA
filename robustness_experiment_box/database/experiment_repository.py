@@ -12,6 +12,7 @@ from robustness_experiment_box.analysis.report_creator import ReportCreator
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
+PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"
 
 class ExperimentRepository:
     "Database to handle all the paths to the different files used"
@@ -102,8 +103,11 @@ class ExperimentRepository:
                 t_df["image"] = image_folder.name
                 df = pd.concat([df, t_df])
         return df
-
     
+    def save_per_epsilon_result_df(self):
+        per_epsilon_result_df = self.get_per_epsilon_result_df()
+        per_epsilon_result_df.to_csv(self.get_results_path() / PER_EPSILON_RESULT_CSV_NAME)
+
     def save_plots(self):
 
         df = self.get_result_df()
@@ -120,11 +124,9 @@ class ExperimentRepository:
         ecdf_figure = report_creator.create_ecdf_figure()
         ecdf_figure.savefig(self.get_results_path() / "ecdf_plot.png", bbox_inches='tight')
 
-
     def save_verification_context_to_yaml(self, file_path: Path, verification_context: VerificationContext):
          with open(file_path, 'w') as file:
             yaml.dump(verification_context.to_dict(), file)
-
 
     def load_verification_context_from_yaml(self, file_path: Path):
         with open(file_path, 'r') as file:
