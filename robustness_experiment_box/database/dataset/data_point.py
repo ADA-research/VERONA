@@ -13,7 +13,7 @@ class DataPoint:
         return {
             'id': self.id, 
             'label': self.label, 
-            'data' : self.data.numpy.tolist()
+            'data' : self.data.numpy().tolist()
         }
 
     @classmethod
