@@ -17,11 +17,12 @@ from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_val
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
+from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
 from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import One2OnePropertyGenerator
 
 
-def create_distribution(experiment_repository: ExperimentRepository, dataset: ExperimentDataset, dataset_sampler: DatasetSampler,  epsilon_value_estimator: EpsilonValueEstimator):
+def create_distribution(experiment_repository: ExperimentRepository, dataset: ExperimentDataset, dataset_sampler: DatasetSampler, epsilon_value_estimator: EpsilonValueEstimator, property_generator: PropertyGenerator):
     network_list = experiment_repository.get_network_list()
     failed_networks = []
     for network in network_list:
@@ -32,7 +33,7 @@ def create_distribution(experiment_repository: ExperimentRepository, dataset: Ex
             failed_networks.append(network)
             continue
         for data_point in sampled_data:
-            verification_context = experiment_repository.create_verification_context(network, data_point)
+            verification_context = experiment_repository.create_verification_context(network, data_point, property_generator)
 
             epsilon_value_result = epsilon_value_estimator.compute_epsilon_value(verification_context)
 
@@ -55,7 +56,9 @@ def main():
 
     # Create distribution using one-to-one verification with nnenum
     experiment_name = "nnenum_one2one"
-    verifier = AutoVerifyModule(verifier=Nnenum(), property_generator=One2OnePropertyGenerator(target_class=1),timeout=timeout)
+    property_generator=One2OnePropertyGenerator(target_class=1)
+
+    verifier = AutoVerifyModule(verifier=Nnenum(), timeout=timeout)
 
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
     dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
@@ -64,11 +67,12 @@ def main():
                                         experiment_name=experiment_name, experiment_repository_path=str(experiment_repository_path),
                                         network_folder=str(network_folder), dataset=str(dataset),
                                         timeout=timeout, epsilon_list=[str(x) for x in epsilon_list]))
-    create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator)
+    create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator, property_generator)
 
     # Create distribution using AB-Crown verifier
     experiment_name = "ab_crown_one2any"
-    verifier = AutoVerifyModule(verifier=AbCrown(), property_generator=One2AnyPropertyGenerator(),timeout=timeout)
+    property_generator=One2AnyPropertyGenerator()
+    verifier = AutoVerifyModule(verifier=AbCrown(), timeout=timeout)
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
     dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
     experiment_repository.initialize_new_experiment(experiment_name)
@@ -77,7 +81,7 @@ def main():
                                         network_folder=str(network_folder), dataset=str(dataset),
                                         timeout=timeout, epsilon_list=[str(x) for x in epsilon_list]))
 
-    create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator)
+    create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator, property_generator)
 
 if __name__ == "__main__":
     main()

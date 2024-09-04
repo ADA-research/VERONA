@@ -14,9 +14,8 @@ from robustness_experiment_box.verification_module.verification_module import Ve
 
 class AutoVerifyModule(VerificationModule):
 
-    def __init__(self, verifier: autoverify.verifier.verifier.Verifier,  property_generator: PropertyGenerator, timeout: float, config: Path = None) -> None:
+    def __init__(self, verifier: autoverify.verifier.verifier.Verifier, timeout: float, config: Path = None) -> None:
         self.verifier = verifier
-        self.property_generator = property_generator
         self.timeout = timeout
         self.config = config
 
@@ -24,7 +23,7 @@ class AutoVerifyModule(VerificationModule):
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
 
         image  = verification_context.data_point.data.reshape(-1).detach().numpy()
-        vnnlib_property = self.property_generator.create_vnnlib_property(image, verification_context.data_point.label, epsilon)
+        vnnlib_property = verification_context.property_generator.create_vnnlib_property(image, verification_context.data_point.label, epsilon)
     
         verification_context.save_vnnlib_property(vnnlib_property)
 

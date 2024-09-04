@@ -10,6 +10,7 @@ from robustness_experiment_box.database.epsilon_value_result import EpsilonValue
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.analysis.report_creator import ReportCreator
 from robustness_experiment_box.database.dataset.data_point import DataPoint
+from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
 PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"
@@ -77,9 +78,9 @@ class ExperimentRepository:
     def get_file_name(self, file: Path) -> str:
         return file.name.split(".")[0]
 
-    def create_verification_context(self, network: Network, data_point: DataPoint) -> VerificationContext:
+    def create_verification_context(self, network: Network, data_point: DataPoint, property_generator: PropertyGenerator) -> VerificationContext:
         tmp_path = self.get_tmp_path() / f"{self.get_file_name(network.path)}" / f"image_{data_point.id}"
-        return VerificationContext(network, data_point, tmp_path)
+        return VerificationContext(network, data_point, tmp_path, property_generator)
     
     def get_result_df(self):
         result_df_path = self.get_results_path() / DEFAULT_RESULT_CSV_NAME
@@ -127,6 +128,7 @@ class ExperimentRepository:
     def save_verification_context_to_yaml(self, file_path: Path, verification_context: VerificationContext):
          with open(file_path, 'w') as file:
             yaml.dump(verification_context.to_dict(), file)
+         return file_path
 
     def load_verification_context_from_yaml(self, file_path: Path):
         with open(file_path, 'r') as file:

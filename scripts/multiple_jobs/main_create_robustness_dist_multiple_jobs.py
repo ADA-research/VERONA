@@ -1,5 +1,6 @@
 import logging
 
+
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 from pathlib import Path
@@ -7,8 +8,8 @@ import numpy as np
 import torch
 torch.manual_seed(0)
 import stat
-
-
+import os
+from datetime import datetime
 
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
@@ -16,8 +17,8 @@ from robustness_experiment_box.dataset_sampler.predictions_based_sampler import 
 
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-import os
-from datetime import datetime
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
+
 
 def write_slurm_script(slurm_script_template: str, slurm_scripts_path: Path, file_verification_context: Path, base_path_experiment_repository: Path, \
     network_folder: Path, experiment_name: Path, epsilon_list: np.ndarray, temp_slurm_script: Path):
@@ -87,7 +88,8 @@ def create_distribution(experiment_repository: ExperimentRepository, dataset: Ex
         for data_point in sampled_data: 
      
             #make the verification context and save it to a temporary yaml file 
-            verification_context = experiment_repository.create_verification_context(network, data_point)
+            property_generator = One2AnyPropertyGenerator(number_classes=10, data_lb=0, data_ub=1)
+            verification_context = experiment_repository.create_verification_context(network, data_point, property_generator)
             file_path = write_yaml_file(yaml_scripts_path)
             file_verification_context = experiment_repository.save_verification_context_to_yaml(file_path, verification_context)
              

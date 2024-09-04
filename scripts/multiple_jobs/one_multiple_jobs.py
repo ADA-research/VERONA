@@ -31,8 +31,7 @@ if __name__ == "__main__":
     baby_experiment_repository.load_experiment(experiment_name= args.experiment_name)
 
     #load autoverify module for verification 
-    property_generator = One2AnyPropertyGenerator(number_classes=10, data_lb=0, data_ub=1)
-    verifier = AutoVerifyModule(verifier=AbCrown(), property_generator=property_generator,  timeout=360) 
+    verifier = AutoVerifyModule(verifier=AbCrown(), timeout=360) 
     eps_list = args.epsilon_list 
 
     #create the binary search module

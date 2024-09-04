@@ -53,3 +53,14 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
 
         return VNNLibProperty(name=property_name, content=result)
+    
+    def get_dict_for_epsilon_result(self) -> dict:
+        return dict()
+    
+    def to_dict(self):
+        return dict(number_classes=self.number_classes, data_lb=self.data_lb, data_ub=self.data_ub)
+    
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(number_classes=data["number_classes"], data_lb=data["data_lb"], data_ub=data["data_ub"])
+

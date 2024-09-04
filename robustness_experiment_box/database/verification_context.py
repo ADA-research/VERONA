@@ -12,20 +12,22 @@ from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 class VerificationContext:
 
-    def __init__(self, network: Network, data_point: DataPoint, tmp_path: Path, save_epsilon_results: bool = True) -> None:   
+    def __init__(self, network: Network, data_point: DataPoint, tmp_path: Path, property_generator: PropertyGenerator, save_epsilon_results: bool = True) -> None:   
         self.network = network
         self.data_point = data_point
         self.tmp_path = tmp_path
+        self.property_generator = property_generator
         self.save_epsilon_results = save_epsilon_results
 
         if save_epsilon_results and not self.tmp_path.exists():
             self.tmp_path.mkdir(parents=True)
 
     def get_dict_for_epsilon_result(self):
-            return dict(network_path = self.network.path.resolve(), image_id = self.data_point.id,original_label = self.data_point.label, tmp_path = self.tmp_path.resolve())
+            return dict(network_path = self.network.path.resolve(), image_id = self.data_point.id,original_label = self.data_point.label, tmp_path = self.tmp_path.resolve(), **self.property_generator.get_dict_for_epsilon_result())
 
     def save_vnnlib_property(self, vnnlib_property: VNNLibProperty) -> None:
         """
@@ -72,6 +74,7 @@ class VerificationContext:
             'network': self.network.to_dict(),
             'data_point': self.data_point.to_dict(),
             'tmp_path': str(self.tmp_path),
+            'property_generator': self.property_generator.to_dict(),
             'save_epsilon_results': self.save_epsilon_results
         }
 
@@ -80,7 +83,8 @@ class VerificationContext:
         network = Network.from_dict(data['network'])
         data_point = DataPoint.from_dict(data['data_point'])
         tmp_path = Path(data['tmp_path'])
+        property_generator = PropertyGenerator.from_dict(data["property_generator"])
         save_epsilon_results=data['save_epsilon_results']
-        return cls(network=network, data_point=data_point, tmp_path=tmp_path, save_epsilon_results= save_epsilon_results)
+        return cls(network=network, data_point=data_point, tmp_path=tmp_path, property_generator=property_generator, save_epsilon_results= save_epsilon_results)
 
 
