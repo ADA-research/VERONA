@@ -127,6 +127,7 @@ class ExperimentRepository:
     def save_verification_context_to_yaml(self, file_path: Path, verification_context: VerificationContext):
          with open(file_path, 'w') as file:
             yaml.dump(verification_context.to_dict(), file)
+         return file_path
 
     def load_verification_context_from_yaml(self, file_path: Path):
         with open(file_path, 'r') as file:
