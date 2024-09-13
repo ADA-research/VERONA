@@ -10,15 +10,19 @@ from robustness_experiment_box.database.verification_result import VerificationR
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 
 
-class AdjustedBinarySearchEpsilonValueEstimator(BinarySearchEpsilonValueEstimator):
+class QuarteredBinarySearchEpsilonValueEstimator(BinarySearchEpsilonValueEstimator):
 
 
-    def get_next_epsilon(self, midpoint:int, first:int, last:int, epsilon_status_list: list[EpsilonStatus]) -> int:
+    def get_next_epsilon(self, midpoint:int, first:int, last:int) -> int:
         random_number = torch.rand(1).item()
         if random_number<= 0.5:
-            return (first + midpoint) // 2
+            next = (first + midpoint) // 2
+            if next == midpoint:
+                return first
         else: 
-            return (midpoint + last) // 2
+            next = (midpoint + last) // 2
+            if next == midpoint:
+                return last
 
     def binary_search(self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]) -> float:
 
@@ -56,7 +60,7 @@ class AdjustedBinarySearchEpsilonValueEstimator(BinarySearchEpsilonValueEstimato
                 midpoint = (first + last) // 2
             else:
                 if len(epsilon_status_list)>3:
-                    midpoint = self.get_next_epsilon(epsilon_status_list)
+                    midpoint = self.get_next_epsilon(midpoint=midpoint, first=first,last=last)
                     epsilon_status_list.pop(midpoint)
                     last = last - 1
                 else:
