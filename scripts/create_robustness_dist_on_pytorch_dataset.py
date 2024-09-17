@@ -14,6 +14,7 @@ from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSam
 from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import BinarySearchEpsilonValueEstimator
+from robustness_experiment_box.epsilon_value_estimator.quartered_binary_search_epsilon_value_estimator import QuarteredBinarySearchEpsilonValueEstimator
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
@@ -57,7 +58,7 @@ def main():
     experiment_name = "nnenum_one2one"
     verifier = AutoVerifyModule(verifier=Nnenum(), property_generator=One2OnePropertyGenerator(target_class=1),timeout=timeout)
 
-    epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
+    epsilon_value_estimator = QuarteredBinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
     dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
     experiment_repository.initialize_new_experiment(experiment_name)
     experiment_repository.save_configuration(dict(
