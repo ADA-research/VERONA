@@ -10,11 +10,13 @@ If you have any suggestions to enhance this package, feel free to create an issu
 - clone the repository locally
 - create new environment ```conda create -n verona python=3.10```
 - activate the environment ```conda activate verona```
-- change into verona directory ```cd VERONA```
+- change into verona directory ```cd VERONA```**
 - install dependencies ```pip install -r requirements.txt```
 - install package locally (editable install for development) ```pip install -e .```
 
-This package was tested only on python version 3.10 and we cannot guarentee it working on any other python version at this point
+This package was tested only on python version 3.10 and we cannot guarentee it working on any other python version at this point. 
+
+** If you want to use Autoverify with either OvalBab or Verinet, you should follow the installation guide of Autoverify at this point. Otherwise, some of the requirements of the VERONA package will clash with the installation requirements of the verifiers. After this, you can proceed with the VERONA installation guide. 
 
 ## Experiment Folder
 The following structure for an experiment folder is currently supported:
