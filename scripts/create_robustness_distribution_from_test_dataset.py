@@ -31,7 +31,8 @@ file_database.save_configuration(dict(
                                     network_folder=str(network_folder), dataset=str(dataset),
                                     timeout=timeout, epsilon_list=[str(x) for x in epsilon_list]))
 
-verifier = AutoVerifyModule(verifier=AbCrown(), property_generator= One2AnyPropertyGenerator(), timeout=timeout)
+property_generator = One2AnyPropertyGenerator()
+verifier = AutoVerifyModule(verifier=AbCrown(), timeout=timeout)
 
 epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
 dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
@@ -44,7 +45,7 @@ for network in network_list:
 
     for data_point in sampled_data:
 
-        verification_context = file_database.create_verification_context(network, data_point)
+        verification_context = file_database.create_verification_context(network, data_point, property_generator)
 
         epsilon_value_result = epsilon_value_estimator.compute_epsilon_value(verification_context)
 
