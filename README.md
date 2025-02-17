@@ -6,6 +6,7 @@ With only one script it should be possible to run an entire experiment with vari
 The package can be used to create robustness distributions [Bosman, Hoos and van Rijn, 2023] and per-class robustness distributions [Bosman et al., 2024] 
 
 If you have any suggestions to enhance this package, feel free to create an issue or a pull-request.
+
 ## Setup
 - clone the repository locally
 - create new environment ```conda create -n verona python=3.10```
@@ -51,8 +52,17 @@ If the auto verify module is used, the verifiers have to be installed as describ
 https://github.com/ADA-research/auto-verify
 
 
-### Custom verifiers
-Custom verifiers can be implemented to, by using the VerificationModule interface.
+### Custom Verifiers
+Custom verifiers can be implemented too, by using the [VerificationModule](robustness_experiment_box/verification_module/verification_module.py) interface.
+
+## Available Attacks
+Currently the package implements the following adversarial attack methods:
+- Fast Gradient Sign Method (FGSM) [Goodfellow et al., 2015](https://arxiv.org/abs/1412.6572)
+- Projected Gradient Descent (PGD) [Madry et al., 2018](https://arxiv.org/abs/1706.06083)
+- AutoVerify https://github.com/ADA-research/auto-verify
+
+### Custom Attacks
+Custom attacks can be implemented too, by using the [Attack](robustness_experiment_box/verification_module/attacks/attack.py) interface.
 
 ## Testing
 Core parts of the package can be tested using pytest. In addition, the package was tested using various datasets described below.
