@@ -59,7 +59,7 @@ Custom verifiers can be implemented too, by using the [VerificationModule](robus
 Currently the package implements the following adversarial attack methods:
 - Fast Gradient Sign Method (FGSM) [Goodfellow et al., 2015](https://arxiv.org/abs/1412.6572)
 - Projected Gradient Descent (PGD) [Madry et al., 2018](https://arxiv.org/abs/1706.06083)
-- AutoVerify https://github.com/ADA-research/auto-verify
+- AutoAttack https://github.com/fra31/auto-attack. For using AutoAttack the package has to be installed first as described in the AutoAttack repository.
 
 ### Custom Attacks
 Custom attacks can be implemented too, by using the [Attack](robustness_experiment_box/verification_module/attacks/attack.py) interface.
