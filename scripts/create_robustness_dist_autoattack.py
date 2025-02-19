@@ -44,7 +44,6 @@ def create_distribution(experiment_repository: ExperimentRepository, dataset: Ex
     logging.info(f"Failed for networks: {failed_networks}")
 
 def main():
-    timeout = 600
 
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
     experiment_repository_path = Path(f'../tests/test_experiment')
@@ -55,9 +54,9 @@ def main():
 
     experiment_repository = ExperimentRepository(base_path=experiment_repository_path, network_folder=network_folder)
 
-    # Create distribution using one-to-one verification with nnenum
+    # Create distribution using AutoAttack
     experiment_name = "AutoAttack"
-    property_generator=One2OnePropertyGenerator(target_class=1)
+    property_generator = One2AnyPropertyGenerator()
 
     verifier = AttackEstimationModule(attack=AutoAttackWrapper())
 
@@ -66,8 +65,7 @@ def main():
     experiment_repository.initialize_new_experiment(experiment_name)
     experiment_repository.save_configuration(dict(
                                         experiment_name=experiment_name, experiment_repository_path=str(experiment_repository_path),
-                                        network_folder=str(network_folder), dataset=str(dataset),
-                                        timeout=timeout, epsilon_list=[str(x) for x in epsilon_list]))
+                                        network_folder=str(network_folder), dataset=str(dataset), epsilon_list=[str(x) for x in epsilon_list]))
     create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator, property_generator)
 
 
