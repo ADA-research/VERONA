@@ -1,5 +1,5 @@
 import logging
-
+import time
 logger = logging.getLogger(__name__)
 
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
@@ -15,9 +15,10 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
     def compute_epsilon_value(self, verification_context: VerificationContext) -> EpsilonValueResult:
 
         epsilon_status_list = [EpsilonStatus(x, None) for x in self.epsilon_value_list]
-
+        start_time = time.time()
         highest_unsat_value, lowest_sat_value, epsilon_status_list = self.iterative_search(verification_context, epsilon_status_list)
-        epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value, epsilon_status_list)
+        duration = time.time() - start_time
+        epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value, lowest_sat_value, duration)
 
         return epsilon_value_result
 
@@ -25,10 +26,12 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
 
         for index in range(0, len(epsilon_status_list)):
             
-            result = self.verifier.verify(verification_context, epsilon_status_list[index].value)
-            epsilon_status_list[index].result = result.result
-            epsilon_status_list[index].time = result.took
-            logger.info(f"epsilon value: {epsilon_status_list[index].value}, result: {result.result}")
+            outcome = self.verifier.verify(verification_context, epsilon_status_list[index].value)
+            result = outcome.result
+            epsilon_status_list[index].result = result
+            epsilon_status_list[index].time = outcome.took
+            verification_context.save_result(epsilon_status_list[index])
+            logger.info(f"epsilon value: {epsilon_status_list[index].value}, result: {result}")
 
         highest_unsat = None
 
