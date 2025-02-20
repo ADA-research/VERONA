@@ -6,11 +6,30 @@ from robustness_experiment_box.database.dataset.experiment_dataset import Experi
 from robustness_experiment_box.database.network import Network
 
 class PredictionsBasedSampler(DatasetSampler):
+    """
+    A sampler class that selects data points based on the predictions of a network.
+    """
 
     def __init__(self, sample_correct_predictions: bool = True) -> None:
+        """
+        Initialize the PredictionsBasedSampler with the given parameter.
+
+        Args:
+            sample_correct_predictions (bool, optional): Whether to sample data points with correct predictions. Defaults to True as in the JAIR paper. 
+        """
         self.sample_correct_predictions = sample_correct_predictions
     
     def sample(self, network: Network, dataset: ExperimentDataset) -> ExperimentDataset:
+        """
+        Sample data points from the dataset based on the predictions of the network.
+
+        Args:
+            network (Network): The network to use for predictions.
+            dataset (ExperimentDataset): The dataset to sample from.
+
+        Returns:
+            ExperimentDataset: The sampled dataset.
+        """
         input_shape = network.get_input_shape()
 
         sess_opt = rt.SessionOptions()
@@ -39,4 +58,3 @@ class PredictionsBasedSampler(DatasetSampler):
         
         return dataset.get_subset(selected_indices)
 
-        
