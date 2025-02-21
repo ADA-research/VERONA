@@ -11,9 +11,20 @@ from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 
 
 class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
+    """
+    A class to estimate the epsilon value using an iterative search.
+    """
 
     def compute_epsilon_value(self, verification_context: VerificationContext) -> EpsilonValueResult:
+        """
+        Compute the epsilon value using an iterative search.
 
+        Args:
+            verification_context (VerificationContext): The context for verification.
+
+        Returns:
+            EpsilonValueResult: The result of the epsilon value estimation.
+        """
         epsilon_status_list = [EpsilonStatus(x, None) for x in self.epsilon_value_list]
         start_time = time.time()
         highest_unsat_value, lowest_sat_value, epsilon_status_list = self.iterative_search(verification_context, epsilon_status_list)
@@ -23,7 +34,16 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         return epsilon_value_result
 
     def iterative_search(self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]) -> float:
+        """
+        Perform an iterative search to find the highest UNSAT and smallest SAT epsilon values.
 
+        Args:
+            verification_context (VerificationContext): The context for verification.
+            epsilon_status_list (list[EpsilonStatus]): The list of epsilon statuses.
+
+        Returns:
+            float: The highest UNSAT and smallest SAT epsilon values and the status list. 
+        """
         for index in range(0, len(epsilon_status_list)):
             
             outcome = self.verifier.verify(verification_context, epsilon_status_list[index].value)
