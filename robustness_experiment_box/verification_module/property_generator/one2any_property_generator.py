@@ -3,7 +3,18 @@ from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 import numpy as np 
 
 class One2AnyPropertyGenerator(PropertyGenerator):
+    """ One2AnyPropertyGenerator generates properties for untargeted verification of neural networks.
+    This means the property is violated if we can find any class other than the target class that has a higher output value.
+    """
+
     def __init__(self, number_classes: int=10, data_lb: int =0, data_ub: int=1):
+        """
+        Initialize the One2AnyPropertyGenerator with the number of classes, data lower bound, and data upper bound.
+        Args:
+            number_classes (int, optional): The number of classes. Defaults to 10.
+            data_lb (int, optional): The lower bound of the input features. Defaults to 0.
+            data_ub (int, optional): The upper bound of the input features. Defaults to 1.
+        """
         super().__init__()
         self.number_classes = number_classes
         self.data_lb = data_lb
@@ -11,6 +22,15 @@ class One2AnyPropertyGenerator(PropertyGenerator):
 
     
     def create_vnnlib_property(self, image: np.array, image_class: int, epsilon: float) -> VNNLibProperty:
+        """Creates a VNNLib property for a given image, its class, and a perturbation epsilon.
+        Args:
+            image (np.array): The input image as a numpy array.
+            image_class (int): The class of the input image.
+            epsilon (float): The perturbation value to create the property.
+
+        Returns:
+            VNNLibProperty: An object containing the name and content of the VNNLib property.
+        """
         negate_spec = False
 
         x = image
@@ -55,12 +75,32 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         return VNNLibProperty(name=property_name, content=result)
     
     def get_dict_for_epsilon_result(self) -> dict:
+        """
+        Get a dictionary representation of the epsilon result.
+
+        Returns:
+            dict: The dictionary representation of the epsilon result.
+        """
         return dict()
     
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        """
+        Convert the One2AnyPropertyGenerator to a dictionary.
+
+        Returns:
+            dict: The dictionary representation of the One2AnyPropertyGenerator.
+        """
         return dict(number_classes=self.number_classes, data_lb=self.data_lb, data_ub=self.data_ub)
     
     @classmethod
     def from_dict(cls, data: dict):
+        """
+        Create a One2AnyPropertyGenerator from a dictionary.
+        Args:
+            data (dict): The dictionary containing the One2AnyPropertyGenerator attributes.
+
+        Returns:
+            One2AnyPropertyGenerator: The created One2AnyPropertyGenerator.
+        """
         return cls(number_classes=data["number_classes"], data_lb=data["data_lb"], data_ub=data["data_ub"])
 

@@ -1,6 +1,6 @@
 import logging
-
 import time
+
 logger = logging.getLogger(__name__)
 
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
@@ -11,7 +11,20 @@ from robustness_experiment_box.database.verification_result import VerificationR
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 
 class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
+    """
+    A class to get the critical epsilon value using binary search.
+    """
+
     def compute_epsilon_value(self, verification_context: VerificationContext) -> EpsilonValueResult:
+        """
+        Compute the epsilon value using binary search.
+
+        Args:
+            verification_context (VerificationContext): The context for verification.
+
+        Returns:
+            EpsilonValueResult: The result of the epsilon value estimation.
+        """
         epsilon_status_list = [EpsilonStatus(x, None) for x in self.epsilon_value_list]
 
         start_time = time.time()
@@ -23,6 +36,15 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         return epsilon_value_result
     
     def get_highest_unsat(self, epsilon_status_list: list[EpsilonStatus]) -> float:
+        """
+        Get the highest UNSAT epsilon value from the list.
+
+        Args:
+            epsilon_status_list (list[EpsilonStatus]): The list of epsilon statuses.
+
+        Returns:
+            float: The highest UNSAT epsilon value.
+        """
         highest_unsat = None
         if len([x.result for x in epsilon_status_list if x.result == VerificationResult.UNSAT]) > 0:
             highest_unsat = max([index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.UNSAT])
@@ -32,6 +54,15 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         return highest_unsat_value
     
     def get_smallest_sat(self, epsilon_status_list: list[EpsilonStatus]) -> float:
+        """
+        Get the smallest SAT epsilon value from the list.
+
+        Args:
+            epsilon_status_list (list[EpsilonStatus]): The list of epsilon statuses.
+
+        Returns:
+            float: The smallest SAT epsilon value.
+        """
         max_epsilon_value = max([x.value for x in epsilon_status_list])
         smallest_sat = None
 
@@ -43,7 +74,16 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         return smallest_sat_value
 
     def binary_search(self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]) -> float:
+        """
+        Perform binary search to find the highest UNSAT and smallest SAT epsilon values.
 
+        Args:
+            verification_context (VerificationContext): The context for verification.
+            epsilon_status_list (list[EpsilonStatus]): The list of epsilon statuses.
+
+        Returns:
+            float: The highest UNSAT and smallest SAT epsilon values.
+        """
         if len(epsilon_status_list) == 1:
             outcome = self.verifier.verify(verification_context, epsilon_status_list[0].value)
             result = outcome.result
@@ -59,12 +99,10 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         first = 0
         last = len(epsilon_status_list) - 1
 
-        while first<=last:
-
+        while first <= last:
             midpoint = (first + last) // 2
 
             if not epsilon_status_list[midpoint].result:
-
                 outcome = self.verifier.verify(verification_context, epsilon_status_list[midpoint].value)
                 epsilon_status_list[midpoint].result = outcome.result
                 epsilon_status_list[midpoint].time = outcome.took
@@ -82,7 +120,6 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         logger.debug(f"epsilon status list: {[(x.value, x.result, x.time) for x in epsilon_status_list]}")
 
         highest_unsat_value = self.get_highest_unsat(epsilon_status_list)
-
         smallest_sat_value = self.get_smallest_sat(epsilon_status_list)
 
         return highest_unsat_value, smallest_sat_value
