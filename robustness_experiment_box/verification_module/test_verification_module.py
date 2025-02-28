@@ -3,8 +3,8 @@ from torch import Tensor, randn_like, load
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
-
-
+from pathlib import Path
+from result import Err, Ok
 class TestVerificationModule(VerificationModule):
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
@@ -35,7 +35,7 @@ class TestVerificationModule(VerificationModule):
             return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
         
 
-    def verify_property(self, verification_context: VerificationContext, epsilon: float, timeout:int) -> str | CompleteVerificationData:
+    def verify_property(self, network_path:Path, vnnlib_property_path:Path, timeout:int) -> str | CompleteVerificationData:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.
         It returns SAT or UNSAT based on the size of epsilon. 
@@ -50,19 +50,15 @@ class TestVerificationModule(VerificationModule):
             str | CompleteVerificationData: the result including verification result and time taken.
         """
 
-        if not verification_context.network.path.exists():
+        if not Path(network_path).exists():
             raise Exception("[TestVerificationModule]: network path not found")
         
-        if not verification_context.labeled_image.image_path.exists():
+        if not Path(vnnlib_property_path).exists():
             raise Exception("[TestVerificationModule]: image path not found")
         
-        if epsilon > 0.5:
-            return CompleteVerificationData(result=VerificationResult.SAT, took=10.0)
+        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=10.0))
 
-        else:
-            return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
-        
-
+   
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.

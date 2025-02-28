@@ -68,9 +68,9 @@ def parse_counter_example(result: Ok) -> np.ndarray:
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if not "sat" in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
-    counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers])
+    counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers if x.strip()])
 
-    return counter_example_array.reshape(28, 28)
+    return counter_example_array.reshape(28, 28) #TODO: this is a hardcoded value, what if the image size changes?
 
 def parse_counter_example_label(result: Ok) -> int:
     """
@@ -84,6 +84,6 @@ def parse_counter_example_label(result: Ok) -> int:
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if not "sat" in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "X" not in x]
-    counter_example_array = np.array([float(re.sub(r'Y_\d*', '', x).strip()) for x in numbers])
-
-    return np.argmax(counter_example_array)
+    counter_example_array = np.array([float(re.sub(r'Y_\d*', '', x).strip()) for x in numbers if x.strip()])
+  
+    return int(np.argmax(counter_example_array))
