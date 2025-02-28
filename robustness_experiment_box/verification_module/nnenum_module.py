@@ -33,5 +33,5 @@ class NnenumModule(VerificationModule):
         
         verification_context.save_vnnlib_property(vnnlib_property)
         result = subprocess.run(f"python -m nnenum.nnenum {str(verification_context.network.path)} {str(vnnlib_property.path)} {str(self.timeout)}", shell=True, capture_output=True, text=True)
-
+        #TODO: we should be returning CompleteVerificationData here
         return result
