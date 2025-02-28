@@ -37,7 +37,7 @@ class AutoVerifyModule(VerificationModule):
             epsilon (float): The perturbation magnitude for the attack.
 
         Returns:
-            str | CompleteVerificationData: The result of the verification, either SAT or UNSAT, along with the duration.
+            str | CompleteVerificationData: The result of the verification, either SAT or UNSAT, along with the duration and counter example.
         """
         image = verification_context.data_point.data.reshape(-1).detach().numpy()
         vnnlib_property = verification_context.property_generator.create_vnnlib_property(image, verification_context.data_point.label, epsilon)

@@ -48,13 +48,14 @@ class AttackEstimationModule(VerificationModule):
             target_on_device = torch.tensor([target], device=device)  
             data_on_device = verification_context.data_point.data.clone().detach().to(device)  
             perturbed_data = self.attack.execute(torch_model, data_on_device, target_on_device, epsilon)  
+        
             output = torch_model(perturbed_data) 
 
             _, final_pred = output.max(1, keepdim=True) 
 
             duration = time.time() - start 
-
             if final_pred == target:
+                #TODO: check whether we ever get here because I find that final_pred looks like tensor([[5]]) and target looks like 5 as its just an integer. 
                 return CompleteVerificationData(result=VerificationResult.UNSAT, took=duration)
             else:
                 return CompleteVerificationData(result=VerificationResult.SAT, took=duration)
