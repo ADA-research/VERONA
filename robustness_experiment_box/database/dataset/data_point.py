@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import torch
 import numpy as np
 
+
 @dataclass
 class DataPoint:
     """
@@ -27,7 +28,7 @@ class DataPoint:
         return {
             'id': self.id, 
             'label': self.label, 
-            'data' : self.data.numpy().tolist()
+            'data': self.data.numpy().tolist()
         }
 
     @classmethod
@@ -41,4 +42,8 @@ class DataPoint:
         Returns:
             DataPoint: The created DataPoint.
         """
-        return cls(id=data['id'], label=data['label'], data=torch.tensor(np.array(data['data']).astype(np.float32)))
+        return cls(
+            id=data['id'], 
+            label=data['label'], 
+            data=torch.tensor(np.array(data['data']).astype(np.float32))
+        )
