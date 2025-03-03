@@ -24,17 +24,22 @@ def test_get_dict_for_epsilon_result(property_generator):
 def test_to_dict(property_generator):
     result_dict = property_generator.to_dict()
     assert isinstance(result_dict, dict)
+    print(result_dict)
     assert result_dict == {
         "number_classes": 10,
         "data_lb": 0,
-        "data_ub": 1
+        "data_ub": 1, 
+        'type': 'One2AnyPropertyGenerator', 
+        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator'
     }
 
 def test_from_dict():
     data = {
         "number_classes": 10,
         "data_lb": 0,
-        "data_ub": 1
+        "data_ub": 1, 
+        'type': 'One2AnyPropertyGenerator', 
+        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator'
     }
     property_generator = One2AnyPropertyGenerator.from_dict(data)
     assert isinstance(property_generator, One2AnyPropertyGenerator)

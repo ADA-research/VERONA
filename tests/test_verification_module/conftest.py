@@ -39,6 +39,11 @@ def verification_context(network, datapoint, tmp_path):
 def nnenum_module():
     return NnenumModule(timeout=60.0)
 
+
+@pytest.fixture
+def verifier():
+    return TestVerificationModule()
+
 @pytest.fixture
 def auto_verify_module(verifier):
     return AutoVerifyModule(verifier, timeout=60)
