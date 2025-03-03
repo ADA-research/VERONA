@@ -18,7 +18,8 @@ from robustness_experiment_box.verification_module.property_generator.property_g
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
 from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import One2OnePropertyGenerator
 
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s",
+                    level=logging.INFO)
 
 torch.manual_seed(0)
 
