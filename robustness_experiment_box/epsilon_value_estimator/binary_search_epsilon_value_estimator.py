@@ -63,7 +63,10 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         Returns:
             float: The smallest SAT epsilon value.
         """
-        max_epsilon_value = max([x.value for x in epsilon_status_list])
+        try:
+            max_epsilon_value = max([x.value for x in epsilon_status_list])
+        except: 
+            return 0
         smallest_sat = None
 
         if len([x.result for x in epsilon_status_list if x.result == VerificationResult.SAT]) > 0:
