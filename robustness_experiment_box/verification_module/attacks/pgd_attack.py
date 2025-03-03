@@ -14,21 +14,25 @@ class PGDAttack(Attack):
         randomise (bool): Whether to randomize the initial perturbation.
     """
 
-    def __init__(self, number_iterations: int, step_size: float = None, randomise: bool = False) -> None:
+    def __init__(self, number_iterations: int, step_size: float = None,
+                 randomise: bool = False) -> None:
         """
         Initialize the PGDAttack with specific parameters.
 
         Args:
             number_iterations (int): The number of iterations for the attack.
-            step_size (float, optional): The step size for each iteration. Defaults to None.
-            randomise (bool, optional): Whether to randomize the initial perturbation. Defaults to False.
+            step_size (float, optional): The step size for each iteration.
+            Defaults to None.
+            randomise (bool, optional): Whether to randomize 
+            the initial perturbation. Defaults to False.
         """
         super().__init__()
         self.number_iterations = number_iterations
         self.step_size = step_size
         self.randomise = randomise
 
-    def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
+    def execute(self, model: Module, data: Tensor, target: Tensor,
+                epsilon: float) -> Tensor:
         """
         Execute the PGD attack on the given model and data.
 
@@ -52,18 +56,20 @@ class PGDAttack(Attack):
             step_size = epsilon / self.number_iterations
 
         if self.randomise:
-            adv_images = adv_images + torch.empty_like(data).uniform_(-epsilon, epsilon)
+            adv_images = adv_images + torch.empty_like(data).uniform_(
+                -epsilon, epsilon)
             adv_images = torch.clamp(adv_images, min=0, max=1).detach()
-        
+
         for i in range(0, self.number_iterations):
             adv_images.requires_grad = True
             output = model(adv_images)
 
             loss = loss_fn(output, target)
-            grad = torch.autograd.grad(loss, adv_images, retain_graph=False, create_graph=False)[0]
+            grad = torch.autograd.grad(loss, adv_images, retain_graph=False,
+                                       create_graph=False)[0]
 
             adv_images = adv_images.detach() + step_size * grad.sign()
             delta = torch.clamp(adv_images - data, min=-epsilon, max=epsilon)
             adv_images = torch.clamp(data + delta, min=0, max=1).detach()
-        
+
         return adv_images

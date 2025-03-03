@@ -1,35 +1,45 @@
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
-import numpy as np 
+import numpy as np
+
 
 class One2AnyPropertyGenerator(PropertyGenerator):
-    """ One2AnyPropertyGenerator generates properties for untargeted verification of neural networks.
-    This means the property is violated if we can find any class other than the target class that has a higher output value.
+    """ One2AnyPropertyGenerator generates properties for untargeted
+    verification of neural networks.
+    This means the property is violated if we can find any class other than
+    the target class that has a higher output value.
     """
 
-    def __init__(self, number_classes: int=10, data_lb: int =0, data_ub: int=1):
+    def __init__(self, number_classes: int = 10, data_lb: int = 0,
+                 data_ub: int = 1):
         """
-        Initialize the One2AnyPropertyGenerator with the number of classes, data lower bound, and data upper bound.
+        Initialize the One2AnyPropertyGenerator with the number of classes,
+        data lower bound, and data upper bound.
         Args:
-            number_classes (int, optional): The number of classes. Defaults to 10.
-            data_lb (int, optional): The lower bound of the input features. Defaults to 0.
-            data_ub (int, optional): The upper bound of the input features. Defaults to 1.
+            number_classes (int, optional): The number of classes.
+            Defaults to 10.
+            data_lb (int, optional): The lower bound of the input features.
+            Defaults to 0.
+            data_ub (int, optional): The upper bound of the input features.
+            Defaults to 1.
         """
         super().__init__()
         self.number_classes = number_classes
         self.data_lb = data_lb
         self.data_ub = data_ub
 
-    
-    def create_vnnlib_property(self, image: np.array, image_class: int, epsilon: float) -> VNNLibProperty:
-        """Creates a VNNLib property for a given image, its class, and a perturbation epsilon.
+    def create_vnnlib_property(self, image: np.array, image_class: int,
+                               epsilon: float) -> VNNLibProperty:
+        """Creates a VNNLib property for a given image, its class,
+        and a perturbation epsilon.
         Args:
             image (np.array): The input image as a numpy array.
             image_class (int): The class of the input image.
             epsilon (float): The perturbation value to create the property.
 
         Returns:
-            VNNLibProperty: An object containing the name and content of the VNNLib property.
+            VNNLibProperty: An object containing the name and content
+            of the VNNLib property.
         """
         negate_spec = False
 
@@ -45,35 +55,37 @@ class One2AnyPropertyGenerator(PropertyGenerator):
 
         result += f"; Spec for image and epsilon {epsilon:.5f}\n"
 
-        result += f"\n; Definition of input variables\n"
+        result += "\n; Definition of input variables\n"
         for i in range(len(x)):
             result += f"(declare-const X_{i} Real)\n"
 
-        result += f"\n; Definition of output variables\n"
+        result += "\n; Definition of output variables\n"
         for i in range(self.number_classes):
-            result +=f"(declare-const Y_{i} Real)\n"
+            result += f"(declare-const Y_{i} Real)\n"
 
-        result += f"\n; Definition of input constraints\n"
+        result += "\n; Definition of input constraints\n"
         for i in range(len(x_ub)):
             result += f"(assert (<= X_{i} {x_ub[i]:.8f}))\n"
             result += f"(assert (>= X_{i} {x_lb[i]:.8f}))\n"
 
-        result += f"\n; Definition of output constraints\n"
+        result += "\n; Definition of output constraints\n"
         if negate_spec:
             for i in range(self.number_classes):
-                if i == image_class: continue
+                if i == image_class:
+                    continue
                 result += f"(assert (<= Y_{i} Y_{image_class}))\n"
         else:
-            result += f"(assert (or\n"
+            result += "(assert (or\n"
             for i in range(self.number_classes):
-                if i == image_class: continue
+                if i == image_class:
+                    continue
                 result += f"\t(and (>= Y_{i} Y_{image_class}))\n"
-            result += f"))\n"
-        
+            result += "))\n"
+
         property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
 
         return VNNLibProperty(name=property_name, content=result)
-    
+
     def get_dict_for_epsilon_result(self) -> dict:
         """
         Get a dictionary representation of the epsilon result.
@@ -82,25 +94,29 @@ class One2AnyPropertyGenerator(PropertyGenerator):
             dict: The dictionary representation of the epsilon result.
         """
         return dict()
-    
+
     def to_dict(self) -> dict:
         """
         Convert the One2AnyPropertyGenerator to a dictionary.
 
         Returns:
-            dict: The dictionary representation of the One2AnyPropertyGenerator.
+            dict: The dictionary representation of
+            the One2AnyPropertyGenerator.
         """
-        return dict(number_classes=self.number_classes, data_lb=self.data_lb, data_ub=self.data_ub)
-    
+        return dict(number_classes=self.number_classes, data_lb=self.data_lb,
+                    data_ub=self.data_ub)
+
     @classmethod
     def from_dict(cls, data: dict):
         """
         Create a One2AnyPropertyGenerator from a dictionary.
         Args:
-            data (dict): The dictionary containing the One2AnyPropertyGenerator attributes.
+            data (dict): The dictionary containing the
+            One2AnyPropertyGenerator attributes.
 
         Returns:
             One2AnyPropertyGenerator: The created One2AnyPropertyGenerator.
         """
-        return cls(number_classes=data["number_classes"], data_lb=data["data_lb"], data_ub=data["data_ub"])
+        return cls(number_classes=data["number_classes"],
+                   data_lb=data["data_lb"], data_ub=data["data_ub"])
 

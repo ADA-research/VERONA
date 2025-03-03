@@ -1,7 +1,6 @@
 from robustness_experiment_box.verification_module.attacks.attack import Attack
-from torch import Tensor, nn
+from torch import Tensor
 from torch.nn.modules import Module
-import torch
 from autoattack import AutoAttack
 
 
@@ -14,15 +13,20 @@ class AutoAttackWrapper(Attack):
         Attack (class): The base class for attacks.
     """
 
-    def __init__(self, device='cuda', norm='Linf', version='standard', verbose=False) -> None:
+    def __init__(self, device='cuda', norm='Linf',
+                 version='standard', verbose=False) -> None:
         """
         Initialize the AutoAttackWrapper with specific parameters.
 
         Args:
-            device (str, optional): The device to run the attack on. Defaults to 'cuda'.
-            norm (str, optional): The norm to use for the attack. Defaults to 'Linf'.
-            version (str, optional): The version of AutoAttack to use. Defaults to 'standard'.
-            verbose (bool, optional): Whether to print verbose output. Defaults to False.
+            device (str, optional): The device to run the attack on.
+            Defaults to 'cuda'.
+            norm (str, optional): The norm to use for the attack.
+            Defaults to 'Linf'.
+            version (str, optional): The version of AutoAttack to use.
+            Defaults to 'standard'.
+            verbose (bool, optional): Whether to print verbose output.
+            Defaults to False.
         """
         super().__init__()
         self.device = device
@@ -30,7 +34,8 @@ class AutoAttackWrapper(Attack):
         self.version = version
         self.verbose = verbose
 
-    def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
+    def execute(self, model: Module, data: Tensor,
+                target: Tensor, epsilon: float) -> Tensor:
         """
         Execute the AutoAttack on the given model and data.
 
@@ -43,7 +48,9 @@ class AutoAttackWrapper(Attack):
         Returns:
             Tensor: The perturbed data.
         """
-        adversary = AutoAttack(model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose)
+        adversary = AutoAttack(model, norm=self.norm, eps=epsilon,
+                               version=self.version, device=self.device,
+                               verbose=self.verbose)
         data = data.unsqueeze(0)
         # auto attack requires NCHW input format
         perturbed_data = adversary.run_standard_evaluation(data, target)
