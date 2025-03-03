@@ -41,6 +41,7 @@ jobs:
           conda run -n verona pip install pytest  # Installs pytest explicitly
 
       - name: Run pytest
-        run: python -m pytest --verbose --cov=VERONA
+        run: |
+          conda run -n verona python -m pytest --verbose --cov=VERONA  # Run pytest with coverage for VERONA
 
       
