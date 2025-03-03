@@ -35,6 +35,10 @@ jobs:
       - name: Install local package
         run: |
           conda run -n verona pip install -e .  # Install your local package in editable mode
+          
+      - name: Install pytest
+        run: |
+          conda run -n verona pip install pytest  # Installs pytest explicitly
 
       - name: Run pytest
         run: pytest --verbose --cov=VERONA
