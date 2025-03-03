@@ -42,7 +42,7 @@ jobs:
 
       - name: Run pytest
         run: |
-          conda run -n verona python -m pytest tests/ --verbose --cov=VERONA --cov-report=term-missing
+          conda run -n verona python -m pytest tests/ --verbose 
 
 
       
