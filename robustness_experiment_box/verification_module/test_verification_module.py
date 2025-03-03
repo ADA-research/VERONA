@@ -1,10 +1,10 @@
 from autoverify.verifier.verification_result import CompleteVerificationData
-
+from torch import Tensor, randn_like, load
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
-
-
+from pathlib import Path
+from result import Err, Ok
 class TestVerificationModule(VerificationModule):
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
@@ -33,3 +33,49 @@ class TestVerificationModule(VerificationModule):
 
         else:
             return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
+        
+
+    def verify_property(self, network_path:Path, vnnlib_property_path:Path, timeout:int) -> str | CompleteVerificationData:
+        """ 
+        A module for testing other parts of the pipeline. This module does not actually verify anything.
+        It returns SAT or UNSAT based on the size of epsilon. 
+        Args:
+            verification_context (VerificationContext): The context for verification, including the model and data point.
+            epsilon (float): The test perturbation. 
+
+        Raises:
+            Exception: When no network path is found in the verification context. 
+            Exception: When no image path is found in the verification context.
+        Returns:
+            str | CompleteVerificationData: the result including verification result and time taken.
+        """
+
+        if not Path(network_path).exists():
+            raise Exception("[TestVerificationModule]: network path not found")
+        
+        if not Path(vnnlib_property_path).exists():
+            raise Exception("[TestVerificationModule]: image path not found")
+        
+        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=10.0))
+
+   
+    def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:
+        """ 
+        A module for testing other parts of the pipeline. This module does not actually verify anything.
+        It returns SAT or UNSAT based on the size of epsilon. 
+        Args:
+            verification_context (VerificationContext): The context for verification, including the model and data point.
+            epsilon (float): The test perturbation. 
+
+        Raises:
+            Exception: When no network path is found in the verification context. 
+            Exception: When no image path is found in the verification context.
+        Returns:
+            str | CompleteVerificationData: the result including verification result and time taken.
+        """
+        
+        if epsilon > 0.5:
+            return load("./tests/test_experiment/data/images/mnist_train_1.pt")
+
+        else:
+            return data_on_device

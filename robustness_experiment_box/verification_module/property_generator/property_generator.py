@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 import numpy as np
+import importlib
+
 class PropertyGenerator(ABC):
     """
     Abstract base class for generating properties for verification.
@@ -28,7 +30,19 @@ class PropertyGenerator(ABC):
     def to_dict(self):
         pass
     
+
     @classmethod
     def from_dict(cls, data: dict):
-        pass
+        class_name = data.pop("type", None)
+        module_name = data.pop("module", None)  # Get module info
 
+        if not class_name or not module_name:
+            raise ValueError("Missing 'class' or 'module' key in dictionary")
+
+        try:
+            module = importlib.import_module(module_name)  # Dynamically import module
+            subclass = getattr(module, class_name)  # Get class from module
+        except (ModuleNotFoundError, AttributeError) as e:
+            raise ValueError(f"Could not import {class_name} from {module_name}: {e}")
+
+        return subclass.from_dict(data)  # Call subclass's `from_dict`
