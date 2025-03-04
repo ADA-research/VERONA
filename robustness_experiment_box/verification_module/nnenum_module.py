@@ -1,5 +1,6 @@
-from autoverify.verifier.verification_result import CompleteVerificationData
 import subprocess
+
+from autoverify.verifier.verification_result import CompleteVerificationData
 
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
@@ -31,9 +32,16 @@ class NnenumModule(VerificationModule):
         """
         image, _ = verification_context.labeled_image.load(-1)
 
-        vnnlib_property = self.property_generator.create_vnnlib_property(image, verification_context.labeled_image.label, epsilon, 10, 0, 1)
-        
+        vnnlib_property = self.property_generator.create_vnnlib_property(
+            image, verification_context.labeled_image.label, epsilon, 10, 0, 1
+        )
+
         verification_context.save_vnnlib_property(vnnlib_property)
-        result = subprocess.run(f"python -m nnenum.nnenum {str(verification_context.network.path)} {str(vnnlib_property.path)} {str(self.timeout)}", shell=True, capture_output=True, text=True)
+        result = subprocess.run(
+            f"python -m nnenum.nnenum {str(verification_context.network.path)} {str(vnnlib_property.path)} {str(self.timeout)}",
+            shell=True,
+            capture_output=True,
+            text=True,
+        )
 
         print(result)
