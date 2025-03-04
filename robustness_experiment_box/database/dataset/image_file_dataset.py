@@ -64,7 +64,8 @@ class ImageFileDataset(ExperimentDataset):
 
     def merge_label_file_with_images(self, image_folder: Path, image_label_file: Path) -> pd.DataFrame:
         """
-        Merge the label file with the images in the image folder such that we have the label corresponding to the correct image.
+        Merge the label file with the images in the image folder such that
+        we have the label corresponding to the correct image.
 
         Args:
             image_folder (Path): The folder containing the images.

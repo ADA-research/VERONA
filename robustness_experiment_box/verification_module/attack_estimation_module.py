@@ -32,11 +32,13 @@ class AttackEstimationModule(VerificationModule):
         Verify the robustness of the model within the given epsilon perturbation.
 
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
+            verification_context (VerificationContext): The context for verification, 
+            including the model and data point.
             epsilon (float): The perturbation magnitude for the attack.
 
         Returns:
-            str | CompleteVerificationData: The result of the verification, either SAT or UNSAT, along with the duration.
+            str | CompleteVerificationData: The result of the verification,
+                                either SAT or UNSAT, along with the duration.
         """
 
         if isinstance(verification_context.property_generator, One2AnyPropertyGenerator):

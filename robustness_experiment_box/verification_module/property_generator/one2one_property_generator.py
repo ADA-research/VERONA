@@ -11,7 +11,8 @@ class One2OnePropertyGenerator(PropertyGenerator):
 
     def __init__(self, target_class: int, number_classes: int = 10, data_lb: int = 0, data_ub: int = 1):
         """
-        Initialize the One2OnePropertyGenerator with the target class, number of classes, data lower bound, and data upper bound.
+        Initialize the One2OnePropertyGenerator with the target class, number of classes, data lower bound, 
+        and data upper bound.
         Args:
             target_class (int): The target class for the property.
             number_classes (int): The number of classes in the classification task.

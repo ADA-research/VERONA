@@ -11,7 +11,8 @@ class TestVerificationModule(VerificationModule):
         A module for testing other parts of the pipeline. This module does not actually verify anything.
         It returns SAT or UNSAT based on the size of epsilon.
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
+            verification_context (VerificationContext): The context for verification,
+            including the model and data point.
             epsilon (float): The test perturbation.
 
         Raises:

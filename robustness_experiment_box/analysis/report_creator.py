@@ -1,14 +1,13 @@
 import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
+matplotlib.use("Agg")
 sns.set_style("darkgrid")
 sns.set_theme(rc={"figure.figsize": (11.7, 8.27)})
 sns.set_palette(sns.color_palette("Paired"))
-import numpy as np
 
 
 class ReportCreator:
