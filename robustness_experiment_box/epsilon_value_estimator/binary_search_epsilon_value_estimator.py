@@ -1,14 +1,13 @@
 import logging
 import time
-
-logger = logging.getLogger(__name__)
-
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+
+logger = logging.getLogger(__name__)
+
 
 class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
     """
@@ -57,7 +56,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         Get the highest UNSAT epsilon value from the list.
 
         Args:
-            epsilon_status_list (list[EpsilonStatus]): 
+            epsilon_status_list (list[EpsilonStatus]):
                 The list of epsilon statuses.
 
         Returns:
@@ -155,7 +154,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
 
             if not epsilon_status_list[midpoint].result:
                 outcome = self.verifier.verify(
-                    verification_context, 
+                    verification_context,
                     epsilon_status_list[midpoint].value)
                 epsilon_status_list[midpoint].result = outcome.result
                 epsilon_status_list[midpoint].time = outcome.took

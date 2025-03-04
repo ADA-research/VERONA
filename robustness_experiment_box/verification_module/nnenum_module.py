@@ -19,21 +19,35 @@ class NnenumModule(VerificationModule):
         self.property_generator = PropertyGenerator()
         self.timeout = timeout
 
-    def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
+    def verify(self,
+               verification_context: VerificationContext, epsilon: float
+               ) -> str | CompleteVerificationData:
         """
-        Verify the robustness of the model within the given epsilon perturbation.
+        Verify the robustness of the model within the given
+        epsilon perturbation.
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
+            verification_context (VerificationContext): The context for
+            verification, including the model and data point.
             epsilon (float): The perturbation magnitude for the attack.
 
         Returns:
-            str | CompleteVerificationData: The result of the verification, either SAT or UNSAT, along with the duration.
+            str | CompleteVerificationData: The result of the verification,
+            either SAT or UNSAT, along with the duration.
         """
         image, _ = verification_context.labeled_image.load(-1)
 
-        vnnlib_property = self.property_generator.create_vnnlib_property(image, verification_context.labeled_image.label, epsilon, 10, 0, 1)
-        
+        vnnlib_property = (self.property_generator
+                           .create_vnnlib_property(
+                               image,
+                               verification_context.labeled_image.label,
+                               epsilon, 10, 0, 1
+                           ))
+
         verification_context.save_vnnlib_property(vnnlib_property)
-        result = subprocess.run(f"python -m nnenum.nnenum {str(verification_context.network.path)} {str(vnnlib_property.path)} {str(self.timeout)}", shell=True, capture_output=True, text=True)
+        result = subprocess.run(
+            f"python -m nnenum.nnenum {str(verification_context.network.path)}"
+            f"{str(vnnlib_property.path)} {str(self.timeout)}",
+            shell=True, capture_output=True, text=True
+        )
 
         print(result)

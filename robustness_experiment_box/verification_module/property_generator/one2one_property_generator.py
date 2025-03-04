@@ -111,4 +111,3 @@ class One2OnePropertyGenerator(PropertyGenerator):
         return cls(target_class=data["target_class"],
                    number_classes=data["number_classes"],
                    data_lb=data["data_lb"], data_ub=data["data_ub"])
-

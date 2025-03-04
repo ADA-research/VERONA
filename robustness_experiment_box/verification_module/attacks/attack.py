@@ -10,13 +10,13 @@ class Attack(ABC):
 
     Methods:
         execute(model, data, target, epsilon):
-            Executes the attack on the given model using 
+            Executes the attack on the given model using
             the provided data and target.
 
         ABC (class): Abstract Base Class from the abc module."""
 
     @abstractmethod
-    def execute(self, 
+    def execute(self,
                 model: torch.nn.Module, data: torch.Tensor,
                 target: torch.Tensor, epsilon: float
                 ) -> torch.Tensor:

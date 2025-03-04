@@ -80,11 +80,12 @@ class ExperimentRepository:
         now_string = now.strftime("%d-%m-%Y+%H_%M")
 
         self.act_experiment_path = (self.base_path /
-                                     f"{experiment_name}_{now_string}")
+                                    f"{experiment_name}_{now_string}")
 
         if os.path.exists(self.get_results_path()):
             raise Exception(
-                "Error, there is already a directory with results with the same name, "
+                "Error, there is already a directory with results"
+                "with the same name, "
                 "make sure no results will be overwritten"
             )
         else:

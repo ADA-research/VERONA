@@ -16,7 +16,9 @@ class ReportCreator:
         self.df = df
 
     def create_hist_figure(self) -> plt.Figure:
-        hist_plot = sns.histplot(data=self.df, x="epsilon_value", hue="network", multiple="stack")
+        hist_plot = sns.histplot(data=self.df,
+                                 x="epsilon_value",
+                                 hue="network", multiple="stack")
         figure = hist_plot.get_figure()
 
         plt.close()
@@ -34,7 +36,7 @@ class ReportCreator:
         return figure
 
     def create_kde_figure(self) -> plt.Figure:
-        kde_plot = sns.kdeplot(data=self.df, x="epsilon_value", 
+        kde_plot = sns.kdeplot(data=self.df, x="epsilon_value",
                                hue="network", multiple="stack")
 
         figure = kde_plot.get_figure()
@@ -44,7 +46,8 @@ class ReportCreator:
         return figure
 
     def create_ecdf_figure(self) -> plt.Figure:
-        ecdf_plot = sns.ecdfplot(data=self.df, x="epsilon_value", hue="network")
+        ecdf_plot = sns.ecdfplot(data=self.df,
+                                 x="epsilon_value", hue="network")
 
         figure = ecdf_plot.get_figure()
 
@@ -58,7 +61,7 @@ class ReportCreator:
             df = df.sort_values(by="epsilon_value")
             cdf_x = np.linspace(0, 1, len(df))
             plt.plot(df.epsilon_value, cdf_x, label=network)
-            plt.fill_betweenx(cdf_x,  df.epsilon_value, 
+            plt.fill_betweenx(cdf_x,  df.epsilon_value,
                               df.smallest_sat_value, alpha=0.3)
             plt.xlim(0, 0.35)
             plt.xlabel('Epsilon values')

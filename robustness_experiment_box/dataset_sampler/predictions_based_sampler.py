@@ -22,7 +22,7 @@ class PredictionsBasedSampler(DatasetSampler):
                 Defaults to True as in the JAIR paper.
         """
         self.sample_correct_predictions = sample_correct_predictions
-    
+
     def sample(self,
                network: Network, dataset: ExperimentDataset
                ) -> ExperimentDataset:

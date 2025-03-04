@@ -9,7 +9,7 @@ class TorchModelWrapper(torch.nn.Module):
 
     def __init__(self, torch_model: torch.nn.Module, input_shape: tuple[int]):
         """
-        Initialize the TorchModelWrapper with 
+        Initialize the TorchModelWrapper with
             the given PyTorch model and input shape.
 
         Args:

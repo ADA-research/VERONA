@@ -119,4 +119,3 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         """
         return cls(number_classes=data["number_classes"],
                    data_lb=data["data_lb"], data_ub=data["data_ub"])
-

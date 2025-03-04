@@ -12,7 +12,7 @@ from robustness_experiment_box.verification_module.attacks.attack import Attack
 
 class AttackEstimationModule(VerificationModule):
     """
-    A module for estimating the robustness of a model 
+    A module for estimating the robustness of a model
     against adversarial attacks.
 
     """
@@ -47,7 +47,7 @@ class AttackEstimationModule(VerificationModule):
             # Check if the property generator is
             # of type One2AnyPropertyGenerator
 
-            start = time.time()  
+            start = time.time() 
             torch_model = verification_context.network.load_pytorch_model()
             device = 'cuda' if torch.cuda.is_available() else 'cpu'
             target = verification_context.data_point.label

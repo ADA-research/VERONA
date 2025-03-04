@@ -23,7 +23,7 @@ class PGDAttack(Attack):
             number_iterations (int): The number of iterations for the attack.
             step_size (float, optional): The step size for each iteration.
             Defaults to None.
-            randomise (bool, optional): Whether to randomize 
+            randomise (bool, optional): Whether to randomize
             the initial perturbation. Defaults to False.
         """
         super().__init__()

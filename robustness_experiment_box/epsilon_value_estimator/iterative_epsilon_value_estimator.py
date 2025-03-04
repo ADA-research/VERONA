@@ -1,12 +1,12 @@
 import logging
 import time
-logger = logging.getLogger(__name__)
-
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+
+logger = logging.getLogger(__name__)
 
 
 class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
@@ -64,7 +64,7 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         for index in range(0, len(epsilon_status_list)):
 
             outcome = self.verifier.verify(
-                verification_context, 
+                verification_context,
                 epsilon_status_list[index].value)
             result = outcome.result
             epsilon_status_list[index].result = result

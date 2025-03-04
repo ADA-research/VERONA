@@ -3,12 +3,12 @@ from result import Err, Ok
 import numpy as np
 import re
 import logging
-logger = logging.getLogger(__name__)
-
 import autoverify
 from autoverify.verifier.verification_result import CompleteVerificationData
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
+
+logger = logging.getLogger(__name__)
 
 
 class AutoVerifyModule(VerificationModule):
