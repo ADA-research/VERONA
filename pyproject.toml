@@ -18,7 +18,8 @@ license = {file = "LICENSE"}
 [project.optional-dependencies]
 dev = [
     "pytest==8.2.2",
-    "pytest-mock==3.14.0"
+    "pytest-mock==3.14.0",
+    "ruff==0.3.4"
 ]
 
 [build-system]
@@ -29,4 +30,24 @@ build-backend = "hatchling.build"
 pythonpath = [
   "."
 ]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
 
