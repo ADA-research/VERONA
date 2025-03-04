@@ -16,13 +16,16 @@ from robustness_experiment_box.verification_module.property_generator.one2one_pr
 def network():
     return Network("/path/to/network")
 
+
 @pytest.fixture
 def datapoint():
     return DataPoint("1", 0, torch.tensor([0.1, 0.2, 0.3]))  
 
+
 @pytest.fixture
 def verification_context(network, datapoint, tmp_path, property_generator):
     return VerificationContext(network, datapoint, tmp_path, property_generator)
+
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_to_dict(verification_context):
@@ -35,6 +38,7 @@ def test_to_dict(verification_context):
     assert context_dict['tmp_path'] == str(verification_context.tmp_path)
     assert context_dict['property_generator'] == verification_context.property_generator.to_dict()  
     assert context_dict['save_epsilon_results'] is True
+
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_from_dict(tmp_path, verification_context):
@@ -66,6 +70,7 @@ def test_save_vnnlib_property(verification_context):
         content = f.read()
     assert content == "test_content"
 
+
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_save_status_list(verification_context):
     epsilon_status_list = [EpsilonStatus(0.1, None), EpsilonStatus(0.2, None)]
@@ -74,6 +79,7 @@ def test_save_status_list(verification_context):
     assert save_path.exists()
     df = pd.read_csv(save_path)
     assert len(df) == 2
+
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_save_result(verification_context):
