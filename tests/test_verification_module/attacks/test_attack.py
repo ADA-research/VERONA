@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from robustness_experiment_box.verification_module.attacks.attack import Attack
 import pytest
 

@@ -1,6 +1,4 @@
-import pytest
 import torch
-from torch import nn
 
 
 def test_fgsm_attack_execute(fgsm_attack, model, data, target):

@@ -1,6 +1,4 @@
-import pytest
 import torch
-from torch import nn
 
 
 def test_pgd_attack_initialization(pgd_attack):
