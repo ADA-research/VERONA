@@ -1,16 +1,15 @@
-from autoverify.verifier.verification_result import CompleteVerificationData
-import torch
-from autoverify.verifier.verification_result import CompleteVerificationData
 import time
 
+import torch
+from autoverify.verifier.verification_result import CompleteVerificationData
+
 from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
 from robustness_experiment_box.database.verification_result import VerificationResult
+from robustness_experiment_box.verification_module.attacks.attack import Attack
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-
-from robustness_experiment_box.verification_module.attacks.attack import Attack
+from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
 class AttackEstimationModule(VerificationModule):

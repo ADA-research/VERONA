@@ -1,12 +1,13 @@
+from dataclasses import dataclass
 from pathlib import Path
+
 import pandas as pd
 import torch
-from typing_extensions import Self
 import torchvision.transforms as transforms
-from dataclasses import dataclass
+from typing_extensions import Self
 
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.data_point import DataPoint
+from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 
 
 @dataclass
@@ -57,7 +58,7 @@ class ImageFileDataset(ExperimentDataset):
         """
         data = [
             (self.image_folder / image_path, label)
-            for image_path, label in zip(self.image_data_df.image, self.image_data_df.label)
+            for image_path, label in zip(self.image_data_df.image, self.image_data_df.label, strict=False)
         ]
         return data
 

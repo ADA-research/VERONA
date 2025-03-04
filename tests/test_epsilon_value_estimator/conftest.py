@@ -1,10 +1,10 @@
-import pytest
 from pathlib import Path
+
+import pytest
 from autoverify.verifier.verification_result import CompleteVerificationData
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 

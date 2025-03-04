@@ -3,22 +3,23 @@ import logging
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 from pathlib import Path
+
 from autoverify.verifier import AbCrown
 
+from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
+from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
-from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
 
 experiment_name = "auto_verify"
 timeout = 600
-experiment_repository_path = Path(f"../tests/test_experiment")
+experiment_repository_path = Path("../tests/test_experiment")
 network_folder = Path("../tests/test_experiment/data/networks")
 image_folder = Path("../tests/test_experiment/data/images")
 image_label_file = Path("../tests/test_experiment/data/image_labels.csv")

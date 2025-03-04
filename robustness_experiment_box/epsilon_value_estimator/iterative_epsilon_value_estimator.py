@@ -3,12 +3,11 @@ import time
 
 logger = logging.getLogger(__name__)
 
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
-from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 
 
 class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
@@ -64,7 +63,7 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
                 [index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.UNSAT]
             )
 
-        highest_unsat_value = epsilon_status_list[highest_unsat].value if not highest_unsat is None else 0
+        highest_unsat_value = epsilon_status_list[highest_unsat].value if highest_unsat is not None else 0
 
         lowest_sat = None
 
@@ -73,6 +72,6 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
                 [index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.SAT]
             )
 
-        lowest_sat_value = epsilon_status_list[lowest_sat].value if not lowest_sat is None else "undefined"
+        lowest_sat_value = epsilon_status_list[lowest_sat].value if lowest_sat is not None else "undefined"
 
         return highest_unsat_value, lowest_sat_value, epsilon_status_list

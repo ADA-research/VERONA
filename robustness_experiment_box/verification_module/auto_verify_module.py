@@ -1,15 +1,15 @@
-from pathlib import Path
-from result import Err, Ok
-import numpy as np
-import re
 import logging
+import re
+from pathlib import Path
+
+import numpy as np
+from result import Err, Ok
 
 logger = logging.getLogger(__name__)
 
 import autoverify
 from autoverify.verifier.verification_result import CompleteVerificationData
 
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
@@ -75,7 +75,7 @@ def parse_counter_example(result: Ok) -> np.ndarray:
     Returns:
         np.ndarray: The parsed counter example as a numpy array.
     """
-    string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if not "sat" in x]
+    string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
     counter_example_array = np.array([float(re.sub(r"X_\d*", "", x).strip()) for x in numbers])
 
@@ -92,7 +92,7 @@ def parse_counter_example_label(result: Ok) -> int:
     Returns:
         int: The parsed counter example label.
     """
-    string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if not "sat" in x]
+    string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "X" not in x]
     counter_example_array = np.array([float(re.sub(r"Y_\d*", "", x).strip()) for x in numbers])
 

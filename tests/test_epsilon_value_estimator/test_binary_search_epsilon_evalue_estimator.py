@@ -1,11 +1,10 @@
 import pytest
 
-from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-
 from tests.test_epsilon_value_estimator.conftest import MockVerificationModule
 
 

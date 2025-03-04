@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import numpy as np
 
 from robustness_experiment_box.database.verification_result import VerificationResult
 

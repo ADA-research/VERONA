@@ -1,7 +1,8 @@
-from robustness_experiment_box.verification_module.attacks.attack import Attack
+import torch
 from torch import Tensor, nn
 from torch.nn.modules import Module
-import torch
+
+from robustness_experiment_box.verification_module.attacks.attack import Attack
 
 
 class PGDAttack(Attack):

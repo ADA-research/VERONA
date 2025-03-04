@@ -1,7 +1,8 @@
-import torch
-import pandas as pd
-import torchvision
 from pathlib import Path
+
+import pandas as pd
+import torch
+import torchvision
 
 
 def create_image_folder(folder: Path, dataset: torchvision.datasets.MNIST):

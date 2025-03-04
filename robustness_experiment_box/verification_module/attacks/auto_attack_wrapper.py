@@ -1,8 +1,8 @@
-from robustness_experiment_box.verification_module.attacks.attack import Attack
-from torch import Tensor, nn
-from torch.nn.modules import Module
-import torch
 from autoattack import AutoAttack
+from torch import Tensor
+from torch.nn.modules import Module
+
+from robustness_experiment_box.verification_module.attacks.attack import Attack
 
 
 class AutoAttackWrapper(Attack):

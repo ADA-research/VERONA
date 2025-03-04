@@ -1,5 +1,6 @@
-from autoverify.verifier.verification_result import CompleteVerificationData
 import subprocess
+
+from autoverify.verifier.verification_result import CompleteVerificationData
 
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator

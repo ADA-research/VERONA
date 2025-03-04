@@ -1,23 +1,22 @@
 import logging
 
-
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 from pathlib import Path
+
 import numpy as np
 import torch
 
 torch.manual_seed(0)
-import stat
 import os
+import stat
 from datetime import datetime
-
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
-from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
+from robustness_experiment_box.database.experiment_repository import ExperimentRepository
+from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
+from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
@@ -139,7 +138,7 @@ def main():
     timeout = 360
     epsilon_list = np.arange(0.0039, 0.2, 0.0039)
 
-    experiment_repository_path = Path(f"../tests/test_experiment")
+    experiment_repository_path = Path("../tests/test_experiment")
     network_folder = Path("../tests/test_experiment/data/networks")
     image_folder = Path("../tests/test_experiment/data/images")
     image_label_file = Path("../tests/test_experiment/data/image_labels.csv")

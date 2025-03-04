@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-import numpy as np
 
 from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 
 
 @dataclass

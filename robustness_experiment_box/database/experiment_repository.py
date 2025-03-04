@@ -1,15 +1,16 @@
-from pathlib import Path
-import os
-import pandas as pd
 import json
+import os
 from datetime import datetime
-from torch.utils.data import Dataset
+from pathlib import Path
+
+import pandas as pd
 import yaml
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.verification_context import VerificationContext
+
 from robustness_experiment_box.analysis.report_creator import ReportCreator
 from robustness_experiment_box.database.dataset.data_point import DataPoint
+from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
@@ -43,7 +44,7 @@ class ExperimentRepository:
         Raises:
             Exception: If no experiment is loaded.
         """
-        if not self.act_experiment_path is None:
+        if self.act_experiment_path is not None:
             return self.act_experiment_path
         else:
             raise Exception("No experiment loaded")
@@ -261,6 +262,6 @@ class ExperimentRepository:
         Returns:
             VerificationContext: The loaded verification context.
         """
-        with open(file_path, "r") as file:
+        with open(file_path) as file:
             data = yaml.safe_load(file)
             return VerificationContext.from_dict(data)

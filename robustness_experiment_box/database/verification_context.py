@@ -1,11 +1,11 @@
+from pathlib import Path
+
 import pandas as pd
 
-from dataclasses import dataclass
-from pathlib import Path
-from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 

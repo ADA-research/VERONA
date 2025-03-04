@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+
 import numpy as np
+
+from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 
 
 class PropertyGenerator(ABC):

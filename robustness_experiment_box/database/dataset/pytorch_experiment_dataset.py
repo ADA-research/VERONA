@@ -1,6 +1,6 @@
 from torch.utils.data import Dataset
-import torch
 from typing_extensions import Self
+
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 
 

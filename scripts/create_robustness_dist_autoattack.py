@@ -3,31 +3,28 @@ import logging
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 from pathlib import Path
+
 import torch
 
 torch.manual_seed(0)
 import torchvision
 import torchvision.transforms as transforms
-from autoverify.verifier import AbCrown, Nnenum
 
+from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
+from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
 from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
-from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
+from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
 from robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
-    One2OnePropertyGenerator,
-)
+from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 
 def create_distribution(
@@ -61,7 +58,7 @@ def create_distribution(
 
 def main():
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
-    experiment_repository_path = Path(f"../tests/test_experiment")
+    experiment_repository_path = Path("../tests/test_experiment")
     network_folder = Path("../tests/test_experiment/data/networks")
     torch_dataset = torchvision.datasets.MNIST(
         root="./data", train=True, download=True, transform=transforms.ToTensor()

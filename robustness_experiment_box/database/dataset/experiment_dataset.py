@@ -1,5 +1,6 @@
-from typing_extensions import Self
 from abc import ABC, abstractmethod
+
+from typing_extensions import Self
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 

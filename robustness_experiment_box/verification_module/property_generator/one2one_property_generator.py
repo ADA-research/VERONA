@@ -1,6 +1,7 @@
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 import numpy as np
+
+from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 
 class One2OnePropertyGenerator(PropertyGenerator):
@@ -46,24 +47,24 @@ class One2OnePropertyGenerator(PropertyGenerator):
 
         result += f"; Spec for image and epsilon {epsilon:.5f}\n"
 
-        result += f"\n; Definition of input variables\n"
+        result += "\n; Definition of input variables\n"
         for i in range(len(x)):
             result += f"(declare-const X_{i} Real)\n"
 
-        result += f"\n; Definition of output variables\n"
+        result += "\n; Definition of output variables\n"
         for i in range(self.number_classes):
             result += f"(declare-const Y_{i} Real)\n"
 
-        result += f"\n; Definition of input constraints\n"
+        result += "\n; Definition of input constraints\n"
         for i in range(len(x_ub)):
             result += f"(assert (<= X_{i} {x_ub[i]:.8f}))\n"
             result += f"(assert (>= X_{i} {x_lb[i]:.8f}))\n"
 
-        result += f"\n; Definition of output constraints\n"
+        result += "\n; Definition of output constraints\n"
 
-        result += f"(assert (or\n"
+        result += "(assert (or\n"
         result += f"\t(and (>= Y_{self.target_class} Y_{image_class}))\n"
-        result += f"))\n"
+        result += "))\n"
 
         property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
 
