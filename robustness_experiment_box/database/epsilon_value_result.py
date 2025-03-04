@@ -1,19 +1,19 @@
 from dataclasses import dataclass
-import numpy as np
 
 from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+
 
 @dataclass
 class EpsilonValueResult:
     """
     A class defining the verification result of a single verification.
     """
+
     verification_context: VerificationContext
     epsilon: float
     smallest_sat_value: float
     time: float = None
-    
+
     def to_dict(self) -> dict:
         """
         Convert the EpsilonValueResult to a dictionary.
@@ -21,5 +21,10 @@ class EpsilonValueResult:
         Returns:
             dict: The dictionary representation of the EpsilonValueResult.
         """
-        ret = dict(**self.verification_context.get_dict_for_epsilon_result(), epsilon_value=self.epsilon, smallest_sat_value=self.smallest_sat_value, total_time=self.time) 
+        ret = dict(
+            **self.verification_context.get_dict_for_epsilon_result(),
+            epsilon_value=self.epsilon,
+            smallest_sat_value=self.smallest_sat_value,
+            total_time=self.time,
+        )
         return ret

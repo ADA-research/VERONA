@@ -1,12 +1,12 @@
+from pathlib import Path
 
+import numpy as np
 import onnx
 import torch
-import numpy as np
 from onnx2torch import convert
-from pathlib import Path
-from dataclasses import dataclass
 
 from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+
 
 class Network:
     """
@@ -42,7 +42,7 @@ class Network:
             self.onnx_model = model
 
         return model
-    
+
     def get_input_shape(self) -> np.ndarray:
         """
         Get the input shape of the ONNX model.
@@ -52,10 +52,10 @@ class Network:
         """
         model = self.load_onnx_model()
         input_shape = tuple([d.dim_value for d in model.graph.input[0].type.tensor_type.shape.dim])
-        input_shape = [x if x != 0 else -1 for x in input_shape ]
+        input_shape = [x if x != 0 else -1 for x in input_shape]
 
         return input_shape
-    
+
     def load_pytorch_model(self) -> torch.nn.Module:
         """
         Load the PyTorch model from the ONNX model.
@@ -71,7 +71,7 @@ class Network:
             self.torch_model_wrapper = torch_model_wrapper
 
         return torch_model_wrapper
-    
+
     def to_dict(self) -> dict:
         """
         Convert the Network to a dictionary.
@@ -79,10 +79,8 @@ class Network:
         Returns:
             dict: The dictionary representation of the Network.
         """
-        return {
-            'network_path': str(self.path)
-        }
-    
+        return {"network_path": str(self.path)}
+
     @classmethod
     def from_dict(cls, data: dict):
         """
@@ -94,4 +92,4 @@ class Network:
         Returns:
             Network: The created Network.
         """
-        return cls(path = Path(data['network_path']))
+        return cls(path=Path(data["network_path"]))
