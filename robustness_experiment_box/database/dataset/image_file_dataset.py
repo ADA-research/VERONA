@@ -8,18 +8,21 @@ from dataclasses import dataclass
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 
+
 @dataclass
 class IDIndex:
     """
     A class to represent an index and its corresponding ID for images.
-    This distinction needs to be made because sometimes images have specific names and not just integer names. 
+    This distinction needs to be made because sometimes images have specific names and not just integer names.
 
     Attributes:
         index (int): The index of the data point.
         id (str): The identifier of the data point.
     """
+
     index: int
     id: str
+
 
 class ImageFileDataset(ExperimentDataset):
     """
@@ -52,9 +55,12 @@ class ImageFileDataset(ExperimentDataset):
         Returns:
             list[tuple[Path, int]]: The list of image paths and their corresponding labels.
         """
-        data = [(self.image_folder / image_path, label) for image_path, label in zip(self.image_data_df.image, self.image_data_df.label)]
+        data = [
+            (self.image_folder / image_path, label)
+            for image_path, label in zip(self.image_data_df.image, self.image_data_df.label)
+        ]
         return data
-    
+
     def merge_label_file_with_images(self, image_folder: Path, image_label_file: Path) -> pd.DataFrame:
         """
         Merge the label file with the images in the image folder such that we have the label corresponding to the correct image.
@@ -72,7 +78,7 @@ class ImageFileDataset(ExperimentDataset):
         image_label_df = pd.read_csv(image_label_file, index_col=0)
 
         return image_path_df.merge(image_label_df, how="left", on="image")
-    
+
     def __len__(self) -> int:
         """
         Get the number of data points in the dataset.
@@ -81,7 +87,7 @@ class ImageFileDataset(ExperimentDataset):
             int: The number of data points in the dataset.
         """
         return len(self._id_indices)
-    
+
     def __getitem__(self, idx: int) -> DataPoint:
         """
         Get the data point at the specified index.
@@ -101,7 +107,7 @@ class ImageFileDataset(ExperimentDataset):
             image = self.preprocessing(image)
 
         return DataPoint(id_index.id, label, image)
-    
+
     def get_id_index_from_value(self, value: str) -> str:
         """
         Get the IDIndex object for the specified value.
@@ -116,7 +122,7 @@ class ImageFileDataset(ExperimentDataset):
             if id_index.id == value:
                 return id_index
         return -1
-    
+
     def get_id_indices_from_value_list(self, value_list: list[str]) -> list[int]:
         """
         Get the list of IDIndex objects for the specified value list.
@@ -132,7 +138,7 @@ class ImageFileDataset(ExperimentDataset):
             id_index = self.get_id_index_from_value(value)
             id_indices.append(id_index)
         return id_indices
-    
+
     def get_subset(self, values: list[str]) -> Self:
         """
         Get a subset of the dataset for the specified values.
@@ -148,4 +154,3 @@ class ImageFileDataset(ExperimentDataset):
         new_instance._id_indices = self.get_id_indices_from_value_list(values)
 
         return new_instance
-

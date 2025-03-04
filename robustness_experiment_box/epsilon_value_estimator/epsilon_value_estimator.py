@@ -5,6 +5,7 @@ from robustness_experiment_box.database.epsilon_value_result import EpsilonValue
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 
+
 class EpsilonValueEstimator(ABC):
     """
     An abstract base class for estimating epsilon values.

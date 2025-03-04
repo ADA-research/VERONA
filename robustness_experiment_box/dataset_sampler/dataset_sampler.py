@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 
-class DatasetSampler(ABC):
 
+class DatasetSampler(ABC):
     @abstractmethod
     def sample(network: Network, dataset: ExperimentDataset) -> ExperimentDataset:
         """Abstract method to sample a dataset.
@@ -14,6 +14,6 @@ class DatasetSampler(ABC):
             dataset (ExperimentDataset): The dataset object to sample.
 
         Returns:
-            ExperimentDataset: The sampled dataset we are analysing for this Network object. 
+            ExperimentDataset: The sampled dataset we are analysing for this Network object.
         """
         pass

@@ -3,7 +3,8 @@ import torch
 from typing_extensions import Self
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 
-class PytorchExperimentDataset():
+
+class PytorchExperimentDataset:
     """
     A dataset class for wrapping a PyTorch dataset for experiments.
     """
@@ -26,7 +27,7 @@ class PytorchExperimentDataset():
             int: The number of data points in the dataset.
         """
         return len(self._indices)
-    
+
     def __getitem__(self, idx) -> DataPoint:
         """
         Get the data point at the specified index.
@@ -42,7 +43,7 @@ class PytorchExperimentDataset():
         data, label = self.dataset[index]
 
         return DataPoint(index, label, data)
-    
+
     def get_subset(self, indices: list[int]) -> Self:
         """
         Get a subset of the dataset for the specified indices.
@@ -58,7 +59,7 @@ class PytorchExperimentDataset():
         new_instance._indices = indices
 
         return new_instance
-    
+
     def __str__(self) -> str:
         """
         Get the string representation of the dataset.

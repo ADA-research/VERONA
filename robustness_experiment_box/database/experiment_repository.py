@@ -15,6 +15,7 @@ from robustness_experiment_box.verification_module.property_generator.property_g
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
 PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"
 
+
 class ExperimentRepository:
     """
     Database to handle all the paths to the different files used.
@@ -46,7 +47,7 @@ class ExperimentRepository:
             return self.act_experiment_path
         else:
             raise Exception("No experiment loaded")
-        
+
     def get_results_path(self) -> Path:
         """
         Get the path to the results folder of the active experiment.
@@ -55,7 +56,7 @@ class ExperimentRepository:
             Path: The path to the results folder.
         """
         return self.get_act_experiment_path() / "results"
-    
+
     def get_tmp_path(self) -> Path:
         """
         Get the path to the temporary folder of the active experiment.
@@ -81,8 +82,10 @@ class ExperimentRepository:
         self.act_experiment_path = self.base_path / f"{experiment_name}_{now_string}"
 
         if os.path.exists(self.get_results_path()):
-            raise Exception("Error, there is already a directory with results with the same name, make sure no results will be overwritten")
-        else: 
+            raise Exception(
+                "Error, there is already a directory with results with the same name, make sure no results will be overwritten"
+            )
+        else:
             os.makedirs(self.get_results_path())
         os.makedirs(self.get_tmp_path())
 
@@ -102,9 +105,9 @@ class ExperimentRepository:
         Args:
             data (dict): The configuration data to save.
         """
-        with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile: 
+        with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
-    
+
     def get_network_list(self) -> list[Network]:
         """
         Get the list of networks from the network folder.
@@ -115,7 +118,7 @@ class ExperimentRepository:
         network_path_list = [file for file in self.network_folder.iterdir()]
         network_list = [Network(x) for x in network_path_list]
         return network_list
-    
+
     def save_results(self, results: list[EpsilonValueResult]) -> None:
         """
         Save the list of epsilon value results to a CSV file.
@@ -153,7 +156,9 @@ class ExperimentRepository:
         """
         return file.name.split(".")[0]
 
-    def create_verification_context(self, network: Network, data_point: DataPoint, property_generator: PropertyGenerator) -> VerificationContext:
+    def create_verification_context(
+        self, network: Network, data_point: DataPoint, property_generator: PropertyGenerator
+    ) -> VerificationContext:
         """
         Create a verification context for the given network, data point, and property generator.
 
@@ -167,7 +172,7 @@ class ExperimentRepository:
         """
         tmp_path = self.get_tmp_path() / f"{self.get_file_name(network.path)}" / f"image_{data_point.id}"
         return VerificationContext(network, data_point, tmp_path, property_generator)
-    
+
     def get_result_df(self) -> pd.DataFrame:
         """
         Get the result DataFrame from the results CSV file.
@@ -181,12 +186,12 @@ class ExperimentRepository:
         result_df_path = self.get_results_path() / DEFAULT_RESULT_CSV_NAME
         if result_df_path.exists():
             df = pd.read_csv(result_df_path, index_col=0)
-            df["network"] = df.network_path.str.split("/").apply(lambda x: x[-1]).apply(lambda x : x.split(".")[0])
+            df["network"] = df.network_path.str.split("/").apply(lambda x: x[-1]).apply(lambda x: x.split(".")[0])
 
             return df
         else:
             raise Exception(f"Error, no result file found at {result_df_path}")
-        
+
     def get_per_epsilon_result_df(self) -> pd.DataFrame:
         """
         Get the per-epsilon result DataFrame from the temporary folder.
@@ -200,12 +205,12 @@ class ExperimentRepository:
         for network_folder in network_folders:
             images_folders = [x for x in network_folders[0].iterdir()]
             for image_folder in images_folders:
-                t_df = pd.read_csv(image_folder / per_epsilon_result_df_name, index_col = 0)
+                t_df = pd.read_csv(image_folder / per_epsilon_result_df_name, index_col=0)
                 t_df["network"] = network_folder.name
                 t_df["image"] = image_folder.name
                 df = pd.concat([df, t_df])
         return df
-    
+
     def save_per_epsilon_result_df(self) -> None:
         """
         Save the per-epsilon result DataFrame to a CSV file.
@@ -220,16 +225,16 @@ class ExperimentRepository:
         df = self.get_result_df()
         report_creator = ReportCreator(df)
         hist_figure = report_creator.create_hist_figure()
-        hist_figure.savefig(self.get_results_path() / "hist_figure.png", bbox_inches='tight')
+        hist_figure.savefig(self.get_results_path() / "hist_figure.png", bbox_inches="tight")
 
         boxplot = report_creator.create_box_figure()
-        boxplot.savefig(self.get_results_path() / "boxplot.png", bbox_inches='tight')
+        boxplot.savefig(self.get_results_path() / "boxplot.png", bbox_inches="tight")
 
         kde_figure = report_creator.create_kde_figure()
-        kde_figure.savefig(self.get_results_path() / "kde_plot.png", bbox_inches='tight')
+        kde_figure.savefig(self.get_results_path() / "kde_plot.png", bbox_inches="tight")
 
         ecdf_figure = report_creator.create_ecdf_figure()
-        ecdf_figure.savefig(self.get_results_path() / "ecdf_plot.png", bbox_inches='tight')
+        ecdf_figure.savefig(self.get_results_path() / "ecdf_plot.png", bbox_inches="tight")
 
     def save_verification_context_to_yaml(self, file_path: Path, verification_context: VerificationContext) -> Path:
         """
@@ -242,7 +247,7 @@ class ExperimentRepository:
         Returns:
             Path: The path to the saved YAML file.
         """
-        with open(file_path, 'w') as file:
+        with open(file_path, "w") as file:
             yaml.dump(verification_context.to_dict(), file)
         return file_path
 
@@ -256,16 +261,6 @@ class ExperimentRepository:
         Returns:
             VerificationContext: The loaded verification context.
         """
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             data = yaml.safe_load(file)
             return VerificationContext.from_dict(data)
-
-
-
-
-
-
-
-
-
-

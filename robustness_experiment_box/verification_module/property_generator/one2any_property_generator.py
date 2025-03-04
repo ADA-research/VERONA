@@ -1,13 +1,14 @@
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
-import numpy as np 
+import numpy as np
+
 
 class One2AnyPropertyGenerator(PropertyGenerator):
-    """ One2AnyPropertyGenerator generates properties for untargeted verification of neural networks.
+    """One2AnyPropertyGenerator generates properties for untargeted verification of neural networks.
     This means the property is violated if we can find any class other than the target class that has a higher output value.
     """
 
-    def __init__(self, number_classes: int=10, data_lb: int =0, data_ub: int=1):
+    def __init__(self, number_classes: int = 10, data_lb: int = 0, data_ub: int = 1):
         """
         Initialize the One2AnyPropertyGenerator with the number of classes, data lower bound, and data upper bound.
         Args:
@@ -20,7 +21,6 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         self.data_lb = data_lb
         self.data_ub = data_ub
 
-    
     def create_vnnlib_property(self, image: np.array, image_class: int, epsilon: float) -> VNNLibProperty:
         """Creates a VNNLib property for a given image, its class, and a perturbation epsilon.
         Args:
@@ -37,7 +37,7 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         mean = 0
         std = 1.0
         x_lb = np.clip(x - epsilon, self.data_lb, self.data_ub)
-        x_lb = ((x_lb-mean)/std).reshape(-1)
+        x_lb = ((x_lb - mean) / std).reshape(-1)
         x_ub = np.clip(x + epsilon, self.data_lb, self.data_ub)
         x_ub = ((x_ub - mean) / std).reshape(-1)
 
@@ -51,7 +51,7 @@ class One2AnyPropertyGenerator(PropertyGenerator):
 
         result += f"\n; Definition of output variables\n"
         for i in range(self.number_classes):
-            result +=f"(declare-const Y_{i} Real)\n"
+            result += f"(declare-const Y_{i} Real)\n"
 
         result += f"\n; Definition of input constraints\n"
         for i in range(len(x_ub)):
@@ -61,19 +61,21 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         result += f"\n; Definition of output constraints\n"
         if negate_spec:
             for i in range(self.number_classes):
-                if i == image_class: continue
+                if i == image_class:
+                    continue
                 result += f"(assert (<= Y_{i} Y_{image_class}))\n"
         else:
             result += f"(assert (or\n"
             for i in range(self.number_classes):
-                if i == image_class: continue
+                if i == image_class:
+                    continue
                 result += f"\t(and (>= Y_{i} Y_{image_class}))\n"
             result += f"))\n"
-        
+
         property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
 
         return VNNLibProperty(name=property_name, content=result)
-    
+
     def get_dict_for_epsilon_result(self) -> dict:
         """
         Get a dictionary representation of the epsilon result.
@@ -82,7 +84,7 @@ class One2AnyPropertyGenerator(PropertyGenerator):
             dict: The dictionary representation of the epsilon result.
         """
         return dict()
-    
+
     def to_dict(self) -> dict:
         """
         Convert the One2AnyPropertyGenerator to a dictionary.
@@ -91,7 +93,7 @@ class One2AnyPropertyGenerator(PropertyGenerator):
             dict: The dictionary representation of the One2AnyPropertyGenerator.
         """
         return dict(number_classes=self.number_classes, data_lb=self.data_lb, data_ub=self.data_ub)
-    
+
     @classmethod
     def from_dict(cls, data: dict):
         """
@@ -103,4 +105,3 @@ class One2AnyPropertyGenerator(PropertyGenerator):
             One2AnyPropertyGenerator: The created One2AnyPropertyGenerator.
         """
         return cls(number_classes=data["number_classes"], data_lb=data["data_lb"], data_ub=data["data_ub"])
-

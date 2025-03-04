@@ -8,13 +8,21 @@ from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
+
 class VerificationContext:
     """
     A class to represent the context for verification.
     This class saved all the relevant information for a verification run.
     """
 
-    def __init__(self, network: Network, data_point: DataPoint, tmp_path: Path, property_generator: PropertyGenerator, save_epsilon_results: bool = True) -> None:
+    def __init__(
+        self,
+        network: Network,
+        data_point: DataPoint,
+        tmp_path: Path,
+        property_generator: PropertyGenerator,
+        save_epsilon_results: bool = True,
+    ) -> None:
         """
         Initialize the VerificationContext with the given parameters.
 
@@ -41,7 +49,13 @@ class VerificationContext:
         Returns:
             dict: The dictionary representation of the epsilon result.
         """
-        return dict(network_path=self.network.path.resolve(), image_id=self.data_point.id, original_label=self.data_point.label, tmp_path=self.tmp_path.resolve(), **self.property_generator.get_dict_for_epsilon_result())
+        return dict(
+            network_path=self.network.path.resolve(),
+            image_id=self.data_point.id,
+            original_label=self.data_point.label,
+            tmp_path=self.tmp_path.resolve(),
+            **self.property_generator.get_dict_for_epsilon_result(),
+        )
 
     def save_vnnlib_property(self, vnnlib_property: VNNLibProperty) -> None:
         """
@@ -91,7 +105,7 @@ class VerificationContext:
             else:
                 df = pd.DataFrame([result.to_dict()])
             df.to_csv(result_df_path)
-    
+
     def to_dict(self) -> dict:
         """
         Convert the VerificationContext to a dictionary.
@@ -99,12 +113,12 @@ class VerificationContext:
         Returns:
             dict: The dictionary representation of the VerificationContext.
         """
-        return { 
-            'network': self.network.to_dict(),
-            'data_point': self.data_point.to_dict(),
-            'tmp_path': str(self.tmp_path),
-            'property_generator': self.property_generator.to_dict(),
-            'save_epsilon_results': self.save_epsilon_results
+        return {
+            "network": self.network.to_dict(),
+            "data_point": self.data_point.to_dict(),
+            "tmp_path": str(self.tmp_path),
+            "property_generator": self.property_generator.to_dict(),
+            "save_epsilon_results": self.save_epsilon_results,
         }
 
     @classmethod
@@ -118,11 +132,15 @@ class VerificationContext:
         Returns:
             VerificationContext: The created VerificationContext.
         """
-        network = Network.from_dict(data['network'])
-        data_point = DataPoint.from_dict(data['data_point'])
-        tmp_path = Path(data['tmp_path'])
+        network = Network.from_dict(data["network"])
+        data_point = DataPoint.from_dict(data["data_point"])
+        tmp_path = Path(data["tmp_path"])
         property_generator = PropertyGenerator.from_dict(data["property_generator"])
-        save_epsilon_results = data['save_epsilon_results']
-        return cls(network=network, data_point=data_point, tmp_path=tmp_path, property_generator=property_generator, save_epsilon_results=save_epsilon_results)
-
-
+        save_epsilon_results = data["save_epsilon_results"]
+        return cls(
+            network=network,
+            data_point=data_point,
+            tmp_path=tmp_path,
+            property_generator=property_generator,
+            save_epsilon_results=save_epsilon_results,
+        )

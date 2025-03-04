@@ -5,7 +5,6 @@ from robustness_experiment_box.database.verification_context import Verification
 
 
 class VerificationModule(ABC):
-
     @abstractmethod
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """main method to verify an image for a given network and epsilon value"""

@@ -41,5 +41,7 @@ class FGSMAttack(Attack):
         sign_data_grad = data_grad.sign()
 
         perturbed_image = data + epsilon * sign_data_grad
-        perturbed_image = torch.clamp(perturbed_image, 0, 1) #TODO: adjust the torch clamp as Konstantin says this gives errors 
+        perturbed_image = torch.clamp(
+            perturbed_image, 0, 1
+        )  # TODO: adjust the torch clamp as Konstantin says this gives errors
         return perturbed_image

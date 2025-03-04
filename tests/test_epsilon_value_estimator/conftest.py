@@ -8,24 +8,28 @@ from robustness_experiment_box.database.verification_context import Verification
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
+
 @pytest.fixture
 def data_point():
     return DataPoint(0, Path("test_image.pt"), "0")
+
 
 @pytest.fixture
 def network():
     return Network(Path("test_network.onnx"))
 
+
 @pytest.fixture
 def tmp_path():
     return Path("tests/test_experiment/tmp")
+
 
 @pytest.fixture
 def verification_context(network, data_point, tmp_path):
     return VerificationContext(network, data_point, tmp_path, save_epsilon_results=False)
 
-class MockVerificationModule(VerificationModule):
 
+class MockVerificationModule(VerificationModule):
     def __init__(self, result_dict: dict):
         self.result_dict = result_dict
 
