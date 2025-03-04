@@ -3,12 +3,12 @@ import time
 
 logger = logging.getLogger(__name__)
 
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
-from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+
 
 class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
     """
@@ -30,11 +30,18 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         start_time = time.time()
         highest_unsat_value, smallest_sat_value = self.binary_search(verification_context, epsilon_status_list)
         duration = time.time() - start_time
-        epsilon_value_result = EpsilonValueResult(verification_context=verification_context, epsilon=highest_unsat_value, smallest_sat_value=smallest_sat_value, time=duration)
+        epsilon_value_result = EpsilonValueResult(
+            verification_context=verification_context,
+            epsilon=highest_unsat_value,
+            smallest_sat_value=smallest_sat_value,
+            time=duration,
+        )
 
-        logger.info(f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, epsilon_result: {epsilon_value_result.epsilon}")
+        logger.info(
+            f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, epsilon_result: {epsilon_value_result.epsilon}"
+        )
         return epsilon_value_result
-    
+
     def get_highest_unsat(self, epsilon_status_list: list[EpsilonStatus]) -> float:
         """
         Get the highest UNSAT epsilon value from the list.
@@ -47,12 +54,14 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         """
         highest_unsat = None
         if len([x.result for x in epsilon_status_list if x.result == VerificationResult.UNSAT]) > 0:
-            highest_unsat = max([index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.UNSAT])
+            highest_unsat = max(
+                [index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.UNSAT]
+            )
 
-        highest_unsat_value = epsilon_status_list[highest_unsat].value if not highest_unsat is None else 0
+        highest_unsat_value = epsilon_status_list[highest_unsat].value if highest_unsat is not None else 0
 
         return highest_unsat_value
-    
+
     def get_smallest_sat(self, epsilon_status_list: list[EpsilonStatus]) -> float:
         """
         Get the smallest SAT epsilon value from the list.
@@ -70,13 +79,17 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         smallest_sat = None
 
         if len([x.result for x in epsilon_status_list if x.result == VerificationResult.SAT]) > 0:
-            smallest_sat = min([index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.SAT])
-        
-        smallest_sat_value = epsilon_status_list[smallest_sat].value if not smallest_sat is None else max_epsilon_value
+            smallest_sat = min(
+                [index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.SAT]
+            )
+
+        smallest_sat_value = epsilon_status_list[smallest_sat].value if smallest_sat is not None else max_epsilon_value
 
         return smallest_sat_value
 
-    def binary_search(self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]) -> float:
+    def binary_search(
+        self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]
+    ) -> float:
         """
         Perform binary search to find the highest UNSAT and smallest SAT epsilon values.
 
@@ -92,13 +105,13 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
             result = outcome.result
             epsilon_status_list[0].time = outcome.took
             epsilon_status_list[0].result = result
-            logger.debug(f'current epsilon value: {epsilon_status_list[0].result}, took: {epsilon_status_list[0].time}')
+            logger.debug(f"current epsilon value: {epsilon_status_list[0].result}, took: {epsilon_status_list[0].time}")
             verification_context.save_result(epsilon_status_list[0])
             if result == VerificationResult.UNSAT:
                 return epsilon_status_list[0].value, self.get_smallest_sat(epsilon_status_list)
             else:
                 return 0, self.get_smallest_sat(epsilon_status_list)
-        
+
         first = 0
         last = len(epsilon_status_list) - 1
 
@@ -110,8 +123,10 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
                 epsilon_status_list[midpoint].result = outcome.result
                 epsilon_status_list[midpoint].time = outcome.took
                 verification_context.save_result(epsilon_status_list[midpoint])
-                logger.debug(f'current epsilon value: {epsilon_status_list[midpoint].result}, took: {epsilon_status_list[midpoint].time}')
-                
+                logger.debug(
+                    f"current epsilon value: {epsilon_status_list[midpoint].result}, took: {epsilon_status_list[midpoint].time}"
+                )
+
             if epsilon_status_list[midpoint].result == VerificationResult.UNSAT:
                 first = midpoint + 1
             elif epsilon_status_list[midpoint].result == VerificationResult.SAT:
@@ -119,7 +134,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
             else:
                 epsilon_status_list.pop(midpoint)
                 last = last - 1
-        
+
         logger.debug(f"epsilon status list: {[(x.value, x.result, x.time) for x in epsilon_status_list]}")
 
         highest_unsat_value = self.get_highest_unsat(epsilon_status_list)

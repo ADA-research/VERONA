@@ -1,10 +1,15 @@
-import pytest
 from unittest.mock import MagicMock
-from robustness_experiment_box.epsilon_value_estimator.iterative_epsilon_value_estimator import IterativeEpsilonValueEstimator
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import VerificationResult
+
+import pytest
+
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.verification_result import VerificationResult
+from robustness_experiment_box.epsilon_value_estimator.iterative_epsilon_value_estimator import (
+    IterativeEpsilonValueEstimator,
+)
+
 
 @pytest.fixture
 def verification_context():

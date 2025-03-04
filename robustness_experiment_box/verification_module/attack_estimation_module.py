@@ -1,14 +1,15 @@
-from autoverify.verifier.verification_result import CompleteVerificationData
-import torch
-from autoverify.verifier.verification_result import CompleteVerificationData
 import time
 
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
-from robustness_experiment_box.database.verification_result import VerificationResult
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
+import torch
+from autoverify.verifier.verification_result import CompleteVerificationData
 
+from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.verification_module.attacks.attack import Attack
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+    One2AnyPropertyGenerator,
+)
+from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
 class AttackEstimationModule(VerificationModule):
@@ -51,11 +52,10 @@ class AttackEstimationModule(VerificationModule):
         
             output = torch_model(perturbed_data) 
 
-            _, final_pred = output.max(1, keepdim=True) 
+            _, final_pred = output.max(1, keepdim=True)
 
             duration = time.time() - start 
             if final_pred == target:
-                #TODO: check whether we ever get here because I find that final_pred looks like tensor([[5]]) and target looks like 5 as its just an integer. 
                 return CompleteVerificationData(result=VerificationResult.UNSAT, took=duration)
             else:
                 return CompleteVerificationData(result=VerificationResult.SAT, took=duration)
