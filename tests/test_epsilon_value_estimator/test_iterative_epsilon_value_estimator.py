@@ -57,7 +57,9 @@ def test_iterative_search(epsilon_value_estimator, verification_context, verifie
         MagicMock(result=VerificationResult.SAT, took=1.0),
     ]
 
-    highest_unsat_value, lowest_sat_value, updated_epsilon_status_list = epsilon_value_estimator.iterative_search(verification_context, epsilon_status_list)
+    highest_unsat_value, lowest_sat_value, updated_epsilon_status_list = (
+        epsilon_value_estimator.iterative_search(verification_context, epsilon_status_list)
+    )
     print(highest_unsat_value, lowest_sat_value, updated_epsilon_status_list)
     assert highest_unsat_value == 0.2
     assert lowest_sat_value == 0.3

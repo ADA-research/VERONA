@@ -1,10 +1,17 @@
-import pytest
 from pathlib import Path
-from robustness_experiment_box.verification_module.auto_verify_module import parse_counter_example_label
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import One2OnePropertyGenerator
+
+import pytest
 from autoverify.verifier.verification_result import CompleteVerificationData
+
 from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.verification_module.auto_verify_module import parse_counter_example_label
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+    One2AnyPropertyGenerator,
+)
+from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+    One2OnePropertyGenerator,
+)
+
 
 @pytest.fixture(params=[One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def property_generator(request):

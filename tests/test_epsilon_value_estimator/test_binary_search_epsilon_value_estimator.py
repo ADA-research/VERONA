@@ -1,12 +1,16 @@
-import pytest
 from unittest.mock import MagicMock
-from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import BinarySearchEpsilonValueEstimator
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import VerificationResult
+
+import pytest
+
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-
+from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.verification_result import VerificationResult
+from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
+    BinarySearchEpsilonValueEstimator,
+)
 from tests.test_epsilon_value_estimator.conftest import MockVerificationModule
+
 
 @pytest.fixture
 def verification_context():
@@ -53,7 +57,10 @@ class TestBinarySearchEpsilonValueEstimator:
     def test_compute_epsilon_value(self, verification_context, epsilon_verification_dict, expected_result):
 
         verifier = MockVerificationModule(epsilon_verification_dict)
-        estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=list(epsilon_verification_dict.keys()), verifier=verifier)
+        estimator = BinarySearchEpsilonValueEstimator(
+            epsilon_value_list=list(epsilon_verification_dict.keys()), 
+            verifier=verifier
+        )
 
         epsilon_value_result = estimator.compute_epsilon_value(verification_context)
 
@@ -88,7 +95,8 @@ def test_binary_search(epsilon_value_estimator, verification_context, verifier):
         MagicMock(result=VerificationResult.SAT, took=1.0),
     ]
 
-    highest_unsat_value, smallest_sat_value = epsilon_value_estimator.binary_search(verification_context, epsilon_status_list)
+    highest_unsat_value, smallest_sat_value = epsilon_value_estimator.binary_search(
+        verification_context, epsilon_status_list)
 
     assert highest_unsat_value == 0.2
     assert smallest_sat_value == 0.3

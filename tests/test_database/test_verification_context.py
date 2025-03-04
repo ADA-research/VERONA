@@ -1,15 +1,21 @@
-import pytest
-import pandas as pd
 from pathlib import Path
-import torch
+
 import numpy as np
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.network import Network
+import pandas as pd
+import pytest
+import torch
+
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import One2OnePropertyGenerator
+from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+    One2AnyPropertyGenerator,
+)
+from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+    One2OnePropertyGenerator,
+)
 
 
 @pytest.fixture
@@ -66,7 +72,7 @@ def test_save_vnnlib_property(verification_context):
     verification_context.save_vnnlib_property(vnnlib_property)
     save_path = Path(verification_context.tmp_path) / "test_property.vnnlib"
     assert save_path.exists()
-    with open(save_path, "r") as f:
+    with open(save_path) as f:
         content = f.read()
     assert content == "test_content"
 

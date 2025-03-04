@@ -1,7 +1,11 @@
-import pytest
 import numpy as np
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
+import pytest
+
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+    One2AnyPropertyGenerator,
+)
+
 
 @pytest.fixture
 def property_generator():

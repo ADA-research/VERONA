@@ -1,18 +1,17 @@
 import pytest
-
 import torch
 from torch import nn
 
 from robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
-from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
 from robustness_experiment_box.verification_module.attacks.fgsm_attack import FGSMAttack
+from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
 
 
 @pytest.fixture
 def model():
     class SimpleModel(nn.Module):
         def __init__(self):
-            super(SimpleModel, self).__init__()
+            super().__init__()
             self.fc = nn.Linear(10, 2)
 
         def forward(self, x):

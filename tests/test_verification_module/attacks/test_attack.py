@@ -1,5 +1,6 @@
-from robustness_experiment_box.verification_module.attacks.attack import Attack
 import pytest
+
+from robustness_experiment_box.verification_module.attacks.attack import Attack
 
 
 def test_cannot_instantiate_property_generator():
