@@ -84,7 +84,7 @@ class ExperimentRepository:
 
         if os.path.exists(self.get_results_path()):
             raise Exception(
-                "Error, there is already a directory with results with the same name, make sure no results will be overwritten"
+                "Error, there is already a directory with results with the same name, make sure no results will be overwritten"  # noqa: E501
             )
         else:
             os.makedirs(self.get_results_path())

@@ -28,7 +28,7 @@ class PropertyGenerator(ABC):
     @abstractmethod
     def get_dict_for_epsilon_result(self) -> dict:
         pass
-
+    
     def to_dict(self):
         pass
 

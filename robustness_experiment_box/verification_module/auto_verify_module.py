@@ -2,16 +2,16 @@ import logging
 import re
 from pathlib import Path
 
-import numpy as np
-from result import Err, Ok
-
-logger = logging.getLogger(__name__)
-
 import autoverify
+import numpy as np
 from autoverify.verifier.verification_result import CompleteVerificationData
+from result import Err, Ok
 
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
+
+logger = logging.getLogger(__name__)
+
 
 
 class AutoVerifyModule(VerificationModule):
@@ -35,11 +35,13 @@ class AutoVerifyModule(VerificationModule):
         """
         Verify the robustness of the model within the given epsilon perturbation.
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
+            verification_context (VerificationContext): The context for verification,
+            including the model and data point.
             epsilon (float): The perturbation magnitude for the attack.
 
         Returns:
-            str | CompleteVerificationData: The result of the verification, either SAT or UNSAT, along with the duration.
+            str | CompleteVerificationData: The result of the verification,
+            either SAT or UNSAT, along with the duration.
         """
         image = verification_context.data_point.data.reshape(-1).detach().numpy()
         vnnlib_property = verification_context.property_generator.create_vnnlib_property(
