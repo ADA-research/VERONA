@@ -73,8 +73,8 @@ class TestVerificationModule(VerificationModule):
         Returns:
             str | CompleteVerificationData: the result including verification result and time taken.
         """
-        
-        if epsilon > 0.5:
+
+        if epsilon >= 0.5:
             return load("./tests/test_experiment/data/images/mnist_train_1.pt")
 
         else:

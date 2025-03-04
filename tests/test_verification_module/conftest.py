@@ -5,10 +5,10 @@ from robustness_experiment_box.verification_module.property_generator.one2any_pr
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.verification_module.nnenum_module import NnenumModule
-from torch import nn, load
+from torch import load
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
 import pytest
-from result import Err, Ok
+from result import Ok
 from autoverify.verifier.verification_result import CompleteVerificationData
 
 

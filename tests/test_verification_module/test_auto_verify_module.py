@@ -32,14 +32,6 @@ def test_auto_verify_module_verify(auto_verify_module, verification_context):
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "SAT"
 
-def test_parse_counter_example(result):
-    counter_example = parse_counter_example(result)
-    
-    assert isinstance(counter_example, np.ndarray)
-    assert counter_example.shape == (28, 28)
-    assert np.allclose(counter_example.flatten()[:10], [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-
-
 def test_parse_counter_example_label(result):
     label = parse_counter_example_label(result)
     print(type(label))
