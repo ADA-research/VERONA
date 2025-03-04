@@ -12,7 +12,7 @@ from robustness_experiment_box.database.dataset.data_point import DataPoint
 class IDIndex:
     """
     A class to represent an index and its corresponding ID for images.
-    This distinction needs to be made because sometimes images have 
+    This distinction needs to be made because sometimes images have
     specific names and not just integer names.
     """
     index: int
@@ -35,7 +35,7 @@ class ImageFileDataset(ExperimentDataset):
         Args:
             image_folder (Path): The folder containing the images.
             label_file (Path): The file containing the labels.
-            preprocessing (transforms.Compose, optional): 
+            preprocessing (transforms.Compose, optional):
             The preprocessing transformations to apply to the images.
         """
         self.image_folder = image_folder
@@ -56,7 +56,7 @@ class ImageFileDataset(ExperimentDataset):
         Get the list of labeled images.
 
         Returns:
-            list[tuple[Path, int]]: The list of image paths 
+            list[tuple[Path, int]]: The list of image paths
             and their corresponding labels.
         """
         data = [(self.image_folder / image_path, label)
@@ -76,7 +76,7 @@ class ImageFileDataset(ExperimentDataset):
             image_label_file (Path): The file containing the labels.
 
         Returns:
-            pd.DataFrame: The DataFrame containing 
+            pd.DataFrame: The DataFrame containing
             the merged image paths and labels.
         """
         image_path_list = [file.name for file in image_folder.iterdir()]

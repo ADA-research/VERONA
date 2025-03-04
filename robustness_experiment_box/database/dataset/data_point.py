@@ -26,8 +26,8 @@ class DataPoint:
             dict: The dictionary representation of the DataPoint.
         """
         return {
-            'id': self.id, 
-            'label': self.label, 
+            'id': self.id,
+            'label': self.label,
             'data': self.data.numpy().tolist()
         }
 
@@ -43,7 +43,7 @@ class DataPoint:
             DataPoint: The created DataPoint.
         """
         return cls(
-            id=data['id'], 
-            label=data['label'], 
+            id=data['id'],
+            label=data['label'],
             data=torch.tensor(np.array(data['data']).astype(np.float32))
         )

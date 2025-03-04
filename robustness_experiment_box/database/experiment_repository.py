@@ -79,11 +79,15 @@ class ExperimentRepository:
         now = datetime.now()
         now_string = now.strftime("%d-%m-%Y+%H_%M")
 
-        self.act_experiment_path = self.base_path / f"{experiment_name}_{now_string}"
+        self.act_experiment_path = (self.base_path /
+                                     f"{experiment_name}_{now_string}")
 
         if os.path.exists(self.get_results_path()):
-            raise Exception("Error, there is already a directory with results with the same name, make sure no results will be overwritten")
-        else: 
+            raise Exception(
+                "Error, there is already a directory with results with the same name, "
+                "make sure no results will be overwritten"
+            )
+        else:
             os.makedirs(self.get_results_path())
         os.makedirs(self.get_tmp_path())
 
@@ -103,7 +107,7 @@ class ExperimentRepository:
         Args:
             data (dict): The configuration data to save.
         """
-        with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile: 
+        with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
 
     def get_network_list(self) -> list[Network]:
@@ -166,7 +170,8 @@ class ExperimentRepository:
         Args:
             network (Network): The network to verify.
             data_point (DataPoint): The data point to verify.
-            property_generator (PropertyGenerator): The property generator to use.
+            property_generator (PropertyGenerator):
+                The property generator to use.
 
         Returns:
             VerificationContext: The created verification context.
@@ -192,7 +197,11 @@ class ExperimentRepository:
         result_df_path = self.get_results_path() / DEFAULT_RESULT_CSV_NAME
         if result_df_path.exists():
             df = pd.read_csv(result_df_path, index_col=0)
-            df["network"] = df.network_path.str.split("/").apply(lambda x: x[-1]).apply(lambda x : x.split(".")[0])
+            df["network"] = (
+                df.network_path.str.split("/")
+                .apply(lambda x: x[-1])
+                .apply(lambda x: x.split(".")[0])
+            )
 
             return df
         else:
@@ -262,7 +271,7 @@ class ExperimentRepository:
 
         Args:
             file_path (Path): The path to save the YAML file.
-            verification_context (VerificationContext): 
+            verification_context (VerificationContext):
             The verification context to save.
 
         Returns:

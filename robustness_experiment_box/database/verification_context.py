@@ -73,7 +73,7 @@ class VerificationContext:
         """
         self.tmp_path.unlink()
 
-    def save_status_list(self, 
+    def save_status_list(self,
                          epsilon_status_list: list[EpsilonStatus]) -> None:
         """
         Save the list of epsilon statuses to a CSV file.
@@ -110,7 +110,7 @@ class VerificationContext:
         Returns:
             dict: The dictionary representation of the VerificationContext.
         """
-        return { 
+        return {
             'network': self.network.to_dict(),
             'data_point': self.data_point.to_dict(),
             'tmp_path': str(self.tmp_path),
@@ -124,7 +124,7 @@ class VerificationContext:
         Create a VerificationContext from a dictionary.
 
         Args:
-            data (dict): The dictionary containing the 
+            data (dict): The dictionary containing the
                 VerificationContext attributes.
 
         Returns:

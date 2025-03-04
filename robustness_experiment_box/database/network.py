@@ -13,9 +13,9 @@ class Network:
 
     Attributes:
         path (Path): The path to the network file.
-        onnx_model (onnx.ModelProto, optional): 
+        onnx_model (onnx.ModelProto, optional):
             The loaded ONNX model. Defaults to None.
-        torch_model_wrapper (TorchModelWrapper, optional): 
+        torch_model_wrapper (TorchModelWrapper, optional):
             The PyTorch model wrapper. Defaults to None.
     """
 

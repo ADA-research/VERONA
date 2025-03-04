@@ -3,7 +3,8 @@ import torch
 
 class TorchModelWrapper(torch.nn.Module):
     """
-    A wrapper class for a PyTorch model to reshape the input before passing it to the model.
+    A wrapper class for a PyTorch model to reshape the input before passing
+    it to the model.
     """
 
     def __init__(self, torch_model: torch.nn.Module, input_shape: tuple[int]):
@@ -13,7 +14,7 @@ class TorchModelWrapper(torch.nn.Module):
 
         Args:
             torch_model (torch.nn.Module): The PyTorch model to wrap.
-            input_shape (tuple[int]): The input shape to 
+            input_shape (tuple[int]): The input shape to
                 reshape the input tensor.
 
         """
