@@ -1,4 +1,4 @@
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
+from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator  # noqa: E501
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 import numpy as np
 

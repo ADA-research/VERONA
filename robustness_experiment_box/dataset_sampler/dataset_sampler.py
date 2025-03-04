@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
+from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset  # noqa: E501
 
 
 class DatasetSampler(ABC):

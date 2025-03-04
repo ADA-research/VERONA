@@ -1,17 +1,17 @@
 import logging
+from pathlib import Path
+from autoverify.verifier import AbCrown
+
+from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler  # noqa: E501
+from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import BinarySearchEpsilonValueEstimator  # noqa: E501
+from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule  # noqa: E501
+from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset  # noqa: E501
+from robustness_experiment_box.database.experiment_repository import ExperimentRepository  # noqa: E501
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator  # noqa: E501
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s",
                     level=logging.INFO)
 
-from pathlib import Path
-from autoverify.verifier import AbCrown
-
-from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
-from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import BinarySearchEpsilonValueEstimator
-from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
-from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
 
 experiment_name = "auto_verify"
 timeout = 600
@@ -23,7 +23,7 @@ epsilon_list = [0.001, 0.005, 0.01, 0.02, 0.05, 0.08]
 
 dataset = ImageFileDataset(image_folder=image_folder,
                            label_file=image_label_file)
-    
+
 file_database = ExperimentRepository(base_path=experiment_repository_path,
                                      network_folder=network_folder)
 

@@ -5,8 +5,8 @@ import re
 import logging
 import autoverify
 from autoverify.verifier.verification_result import CompleteVerificationData
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from robustness_experiment_box.database.verification_context import VerificationContext  # noqa: E501
+from robustness_experiment_box.verification_module.verification_module import VerificationModule  # noqa: E501
 
 logger = logging.getLogger(__name__)
 

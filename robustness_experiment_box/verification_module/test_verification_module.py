@@ -1,8 +1,8 @@
 from autoverify.verifier.verification_result import CompleteVerificationData
 
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import VerificationResult
+from robustness_experiment_box.verification_module.verification_module import VerificationModule  # noqa: E501
+from robustness_experiment_box.database.verification_context import VerificationContext  # noqa: E501
+from robustness_experiment_box.database.verification_result import VerificationResult  # noqa: E501
 
 
 class TestVerificationModule(VerificationModule):

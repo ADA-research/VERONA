@@ -1,4 +1,4 @@
-from robustness_experiment_box.verification_module.attacks.attack import Attack
+from robustness_experiment_box.verification_module.attacks.attack import Attack  # noqa: E501
 from torch import Tensor, nn
 from torch.nn.modules import Module
 import torch
@@ -45,7 +45,7 @@ class PGDAttack(Attack):
         Returns:
             Tensor: The perturbed data.
         """
-        # adapted from: https://github.com/Harry24k/adversarial-attacks-pytorch/blob/master/torchattacks/attacks/pgd.py
+        # adapted from: https://github.com/Harry24k/adversarial-attacks-pytorch/blob/master/torchattacks/attacks/pgd.py  # noqa: E501
         loss_fn = nn.CrossEntropyLoss()
 
         adv_images = data.clone().detach()

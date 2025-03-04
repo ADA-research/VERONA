@@ -4,7 +4,7 @@ import torch
 import numpy as np
 from onnx2torch import convert
 from pathlib import Path
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper  # noqa: E501
 
 
 class Network:

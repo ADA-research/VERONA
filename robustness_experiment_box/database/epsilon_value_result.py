@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.verification_context import VerificationContext  # noqa: E501
 
 
 @dataclass

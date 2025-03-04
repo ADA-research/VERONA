@@ -4,7 +4,7 @@ import torch
 import torchvision.transforms as transforms
 from typing_extensions import Self
 from dataclasses import dataclass
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
+from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset  # noqa: E501
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 
 
