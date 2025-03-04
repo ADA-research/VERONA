@@ -13,7 +13,9 @@ class VerificationContext:
     This class saved all the relevant information for a verification run.
     """
 
-    def __init__(self, network: Network, data_point: DataPoint, tmp_path: Path, property_generator: PropertyGenerator, save_epsilon_results: bool = True) -> None:
+    def __init__(self, network: Network, data_point: DataPoint, tmp_path: Path,
+                 property_generator: PropertyGenerator,
+                 save_epsilon_results: bool = True) -> None:
         """
         Initialize the VerificationContext with the given parameters.
 

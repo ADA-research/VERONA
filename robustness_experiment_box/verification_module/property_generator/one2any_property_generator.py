@@ -82,7 +82,8 @@ class One2AnyPropertyGenerator(PropertyGenerator):
                 result += f"\t(and (>= Y_{i} Y_{image_class}))\n"
             result += "))\n"
 
-        property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
+        property_name = f"property_{image_class}_" \
+                        f"{str(epsilon).replace('.', '_')}"
 
         return VNNLibProperty(name=property_name, content=result)
 
