@@ -8,7 +8,6 @@ from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
-from robustness_experiment_box.verification_module.nnenum_module import NnenumModule
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
@@ -37,12 +36,6 @@ def attack_estimation_module(attack):
 def verification_context(network, datapoint, tmp_path):
     property_generator = One2AnyPropertyGenerator()
     return VerificationContext(network, datapoint, tmp_path, property_generator)
-
-@pytest.fixture
-def nnenum_module():
-    return NnenumModule(timeout=60.0)
-
-
 @pytest.fixture
 def verifier():
     return TestVerificationModule()
