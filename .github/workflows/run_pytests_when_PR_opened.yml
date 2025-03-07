@@ -41,7 +41,7 @@ jobs:
           conda run -n verona pip install pytest  # Installs pytest explicitly
       - name : Install autoattack
         run: |
-          pip install git+https://github.com/fra31/auto-attack #autoattack is an optional package
+          conda run -n verona pip install git+https://github.com/fra31/auto-attack #autoattack is an optional package
 
       - name: Run pytest
         run: |
