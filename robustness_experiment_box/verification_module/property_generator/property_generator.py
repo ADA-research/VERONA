@@ -1,3 +1,4 @@
+import importlib
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -29,9 +30,22 @@ class PropertyGenerator(ABC):
     def get_dict_for_epsilon_result(self) -> dict:
         pass
 
+    @abstractmethod
     def to_dict(self):
         pass
 
     @classmethod
     def from_dict(cls, data: dict):
-        pass
+        class_name = data.pop("type", None)
+        module_name = data.pop("module", None)  # Get module info
+
+        if not class_name or not module_name:
+            raise ValueError("Missing 'class' or 'module' key in dictionary")
+
+        try:
+            module = importlib.import_module(module_name)  # Dynamically import module
+            subclass = getattr(module, class_name)  # Get class from module
+        except (ModuleNotFoundError, AttributeError) as e:
+            raise ValueError(f"Could not import {class_name} from {module_name}: {e}") from e
+
+        return subclass.from_dict(data)  # Call subclass's `from_dict`

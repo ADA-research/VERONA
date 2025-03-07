@@ -16,7 +16,8 @@ class PredictionsBasedSampler(DatasetSampler):
         Initialize the PredictionsBasedSampler with the given parameter.
 
         Args:
-            sample_correct_predictions (bool, optional): Whether to sample data points with correct predictions. Defaults to True as in the JAIR paper.
+            sample_correct_predictions (bool, optional): Whether to sample data points with correct predictions. 
+            Defaults to True as in the JAIR paper.
         """
         self.sample_correct_predictions = sample_correct_predictions
 
@@ -48,7 +49,7 @@ class PredictionsBasedSampler(DatasetSampler):
                 )[0]
                 predicted_label = np.argmax(prediction_onnx)
             except Exception as e:
-                raise Exception(f"Opening inference session for network {network.path} failed with error: {e}")
+                raise Exception(f"Opening inference session for network {network.path} failed with error: {e}")  # noqa: B904
 
             if self.sample_correct_predictions:
                 if predicted_label == int(data_point.label):
@@ -58,3 +59,4 @@ class PredictionsBasedSampler(DatasetSampler):
                     selected_indices.append(data_point.id)
 
         return dataset.get_subset(selected_indices)
+
