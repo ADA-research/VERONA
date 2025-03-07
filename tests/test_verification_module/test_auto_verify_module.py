@@ -1,20 +1,25 @@
-import pytest
-import numpy as np
 from pathlib import Path
-from result import Err, Ok
-from torch import load
-from unittest.mock import MagicMock
-from robustness_experiment_box.verification_module.auto_verify_module import parse_counter_example, parse_counter_example_label
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import One2OnePropertyGenerator
+
+import numpy as np
+import pytest
 from autoverify.verifier.verification_result import CompleteVerificationData
+
 from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.verification_module.auto_verify_module import (
+    parse_counter_example,
+    parse_counter_example_label,
+)
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+    One2AnyPropertyGenerator,
+)
+from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+    One2OnePropertyGenerator,
+)
 
 
 @pytest.fixture(params=[One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def property_generator(request):
     return request.param
-
 @pytest.fixture
 def tmp_path():
     return Path("/tmp")
@@ -40,7 +45,6 @@ def test_parse_counter_example(result, verification_context):
 
     assert counter_example.shape == verification_context.data_point.data.shape
 
-    # assert np.allclose(counter_example.flatten()[:10], [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])  # TODO: add new assert once merged
 
 def test_parse_counter_example_label(result):
     label = parse_counter_example_label(result)

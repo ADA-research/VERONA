@@ -1,13 +1,13 @@
 import logging
 import time
+
 logger = logging.getLogger(__name__)
 
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
-from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
+from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 
 
 class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
@@ -27,13 +27,17 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         """
         epsilon_status_list = [EpsilonStatus(x, None) for x in self.epsilon_value_list]
         start_time = time.time()
-        highest_unsat_value, lowest_sat_value, epsilon_status_list = self.iterative_search(verification_context, epsilon_status_list)
+        highest_unsat_value, lowest_sat_value, epsilon_status_list = self.iterative_search(
+            verification_context, epsilon_status_list
+        )
         duration = time.time() - start_time
         epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value, lowest_sat_value, duration)
 
         return epsilon_value_result
 
-    def iterative_search(self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]) -> float:
+    def iterative_search(
+        self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]
+    ) -> float:
         """
         Perform an iterative search to find the highest UNSAT and smallest SAT epsilon values.
 
@@ -42,10 +46,9 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
             epsilon_status_list (list[EpsilonStatus]): The list of epsilon statuses.
 
         Returns:
-            float: The highest UNSAT and smallest SAT epsilon values and the status list. 
+            float: The highest UNSAT and smallest SAT epsilon values and the status list.
         """
         for index in range(0, len(epsilon_status_list)):
-            
             outcome = self.verifier.verify(verification_context, epsilon_status_list[index].value)
             result = outcome.result
             epsilon_status_list[index].result = result
@@ -56,15 +59,19 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         highest_unsat = None
 
         if len([x for x in epsilon_status_list if x.result == VerificationResult.UNSAT]) > 0:
-            highest_unsat = max([index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.UNSAT])
+            highest_unsat = max(
+                [index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.UNSAT]
+            )
 
-        highest_unsat_value = epsilon_status_list[highest_unsat].value if not highest_unsat is None else 0
+        highest_unsat_value = epsilon_status_list[highest_unsat].value if highest_unsat is not None else 0
 
         lowest_sat = None
 
         if len([x for x in epsilon_status_list if x.result == VerificationResult.SAT]) > 0:
-            lowest_sat = min([index  for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.SAT])
+            lowest_sat = min(
+                [index for index, x in enumerate(epsilon_status_list) if x.result == VerificationResult.SAT]
+            )
 
-        lowest_sat_value = epsilon_status_list[lowest_sat].value if not lowest_sat is None else "undefined"
+        lowest_sat_value = epsilon_status_list[lowest_sat].value if lowest_sat is not None else "undefined"
 
         return highest_unsat_value, lowest_sat_value, epsilon_status_list

@@ -1,8 +1,8 @@
-from autoverify.verifier.verification_result import CompleteVerificationData
 import subprocess
 
+from autoverify.verifier.verification_result import CompleteVerificationData
+
 from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
@@ -16,7 +16,6 @@ class NnenumModule(VerificationModule):
         Initialize the NnenumModule with a specific timeout.
             timeout (float): The timeout for the verification process.
         """
-        self.property_generator = PropertyGenerator()
         self.timeout = timeout
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
@@ -29,11 +28,11 @@ class NnenumModule(VerificationModule):
         Returns:
             str | CompleteVerificationData: The result of the verification, either SAT or UNSAT, along with the duration.
         """
-        image, _ = verification_context.labeled_image.load(-1)
+        image = verification_context.data_point.data.reshape(-1).detach().numpy()
 
-        vnnlib_property = self.property_generator.create_vnnlib_property(image, verification_context.labeled_image.label, epsilon, 10, 0, 1)
+        vnnlib_property = verification_context.property_generator.create_vnnlib_property(image, verification_context.data_point.label, epsilon)
         
         verification_context.save_vnnlib_property(vnnlib_property)
         result = subprocess.run(f"python -m nnenum.nnenum {str(verification_context.network.path)} {str(vnnlib_property.path)} {str(self.timeout)}", shell=True, capture_output=True, text=True)
-
-        print(result)
+        #TODO: we should be returning CompleteVerificationData here
+        return result

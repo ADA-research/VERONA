@@ -1,8 +1,8 @@
-from robustness_experiment_box.verification_module.attacks.attack import Attack
-from torch import Tensor, nn
-from torch.nn.modules import Module
-import torch
 from autoattack import AutoAttack
+from torch import Tensor
+from torch.nn.modules import Module
+
+from robustness_experiment_box.verification_module.attacks.attack import Attack
 
 
 class AutoAttackWrapper(Attack):
@@ -14,7 +14,7 @@ class AutoAttackWrapper(Attack):
         Attack (class): The base class for attacks.
     """
 
-    def __init__(self, device='cuda', norm='Linf', version='standard', verbose=False) -> None:
+    def __init__(self, device="cuda", norm="Linf", version="standard", verbose=False) -> None:
         """
         Initialize the AutoAttackWrapper with specific parameters.
 
@@ -43,8 +43,11 @@ class AutoAttackWrapper(Attack):
         Returns:
             Tensor: The perturbed data.
         """
-        adversary = AutoAttack(model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose)
+        adversary = AutoAttack(
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
+        )
         data = data.unsqueeze(0)
+
         # auto attack requires NCHW input format
         perturbed_data = adversary.run_standard_evaluation(data, target)
         return perturbed_data.to(self.device)
