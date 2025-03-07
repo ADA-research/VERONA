@@ -1,7 +1,8 @@
-from robustness_experiment_box.verification_module.attacks.attack import Attack
+import torch
 from torch import Tensor, nn
 from torch.nn.modules import Module
-import torch
+
+from robustness_experiment_box.verification_module.attacks.attack import Attack
 
 
 class PGDAttack(Attack):
@@ -54,7 +55,7 @@ class PGDAttack(Attack):
         if self.randomise:
             adv_images = adv_images + torch.empty_like(data).uniform_(-epsilon, epsilon)
             adv_images = torch.clamp(adv_images, min=0, max=1).detach()
-        
+
         for i in range(0, self.number_iterations):
             adv_images.requires_grad = True
             output = model(adv_images)
@@ -65,5 +66,5 @@ class PGDAttack(Attack):
             adv_images = adv_images.detach() + step_size * grad.sign()
             delta = torch.clamp(adv_images - data, min=-epsilon, max=epsilon)
             adv_images = torch.clamp(data + delta, min=0, max=1).detach()
-        
+
         return adv_images
