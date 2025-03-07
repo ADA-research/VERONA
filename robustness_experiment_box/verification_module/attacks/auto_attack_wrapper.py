@@ -47,7 +47,7 @@ class AutoAttackWrapper(Attack):
             model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
         )
         data = data.unsqueeze(0)
-        print(target)
+
         # auto attack requires NCHW input format
         perturbed_data = adversary.run_standard_evaluation(data, target)
         return perturbed_data.to(self.device)

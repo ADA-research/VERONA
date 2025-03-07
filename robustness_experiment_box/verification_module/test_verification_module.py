@@ -65,16 +65,16 @@ class TestVerificationModule(VerificationModule):
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.
-        It returns SAT or UNSAT based on the size of epsilon. 
+        It returns a tensor of the data
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
-            epsilon (float): The test perturbation. 
-
-        Raises:
-            Exception: When no network path is found in the verification context. 
-            Exception: When no image path is found in the verification context.
+            torch_model (Module): The model to attack.
+            data_on_device (Tensor): The input data to perturb.
+            target_on_device (Tensor): The target labels for the data.
+            epsilon (float): The perturbation magnitude
+        Not all args are used as this is a test module and we do not need to perturb the data. 
+        We do need the args as the function signature is fixed by the parent class.        
         Returns:
-            str | CompleteVerificationData: the result including verification result and time taken.
+            tensor: the data tensor, either perturbed or not
         """
 
         if epsilon >= 0.5:

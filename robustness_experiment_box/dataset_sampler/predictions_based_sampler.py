@@ -58,7 +58,5 @@ class PredictionsBasedSampler(DatasetSampler):
                 if predicted_label != int(data_point.label):
                     selected_indices.append(data_point.id)
 
-       #TODO: what if we want to sample just all datapoints?
-        
         return dataset.get_subset(selected_indices)
 
