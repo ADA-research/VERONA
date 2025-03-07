@@ -1,10 +1,14 @@
 from pathlib import Path
 
+import numpy as np
 import pytest
 from autoverify.verifier.verification_result import CompleteVerificationData
 
 from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.auto_verify_module import parse_counter_example_label
+from robustness_experiment_box.verification_module.auto_verify_module import (
+    parse_counter_example,
+    parse_counter_example_label,
+)
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
@@ -35,8 +39,14 @@ def test_auto_verify_module_verify(auto_verify_module, verification_context):
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "SAT"
 
+def test_parse_counter_example(result, verification_context):
+    counter_example = parse_counter_example(result, verification_context)
+    assert isinstance(counter_example, np.ndarray)
+
+    assert counter_example.shape == verification_context.data_point.data.shape
+
+
 def test_parse_counter_example_label(result):
     label = parse_counter_example_label(result)
-    print(type(label))
     assert isinstance(label, int)
     assert label == 0

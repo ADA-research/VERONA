@@ -54,8 +54,11 @@ def auto_verify_module(verifier):
 
 @pytest.fixture
 def result(datapoint):
-    data = """
-   (X_3 0.1)
-   (Y_0 0.2)
-    """
-    return Ok(CompleteVerificationData(result="SAT", counter_example=data, took =10))
+    # Flatten the tensor and format each value
+    formatted_strings = [f"(X_{i} {datapoint.data.flatten()[i]:.4f})" for i in range(28 * 28)]
+
+    # Join all entries with newlines
+    result = "\n".join(formatted_strings)
+    result += "\n(Y_0 0.3)"
+
+    return Ok(CompleteVerificationData(result="SAT", counter_example=result, took =10))
