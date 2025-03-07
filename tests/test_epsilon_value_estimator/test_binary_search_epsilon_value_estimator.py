@@ -66,7 +66,7 @@ class TestBinarySearchEpsilonValueEstimator:
 
         assert epsilon_value_result.epsilon == expected_result
 
-def test_compute_epsilon_value(epsilon_value_estimator, verification_context, verifier):
+def test_compute_epsilon_value_correct(epsilon_value_estimator, verification_context, verifier):
     # Mock the verifier's verify method to return different results
     verifier.verify.side_effect = [
         MagicMock(result=VerificationResult.SAT, took=1.0),
