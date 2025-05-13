@@ -73,7 +73,7 @@ class ImageFileDataset(ExperimentDataset):
         Returns:
             pd.DataFrame: The DataFrame containing the merged image paths and labels.
         """
-        image_path_list = [file.name for file in image_folder.iterdir()]
+        image_path_list = sorted(file.name for file in image_folder.iterdir())  #SORT FOR CONSISTENT LOADING
 
         image_path_df = pd.DataFrame(image_path_list, columns=["image"])
         image_label_df = pd.read_csv(image_label_file, index_col=0)
