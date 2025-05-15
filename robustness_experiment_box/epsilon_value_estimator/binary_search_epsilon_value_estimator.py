@@ -1,13 +1,13 @@
 import logging
 import time
-
-logger = logging.getLogger(__name__)
-
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+
+
+logger = logging.getLogger(__name__)
 
 
 class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):

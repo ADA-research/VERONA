@@ -14,7 +14,7 @@ class TorchModelWrapper(torch.nn.Module):
             torch_model (torch.nn.Module): The PyTorch model to wrap.
             input_shape (tuple[int]): The input shape to reshape the input tensor.
         """
-        super(TorchModelWrapper, self).__init__()
+        super(self).__init__()
         self.torch_model = torch_model
         self.input_shape = input_shape
 
