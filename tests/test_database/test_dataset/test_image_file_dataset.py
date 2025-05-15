@@ -1,6 +1,5 @@
 import pytest
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-
 import torch
 import pandas as pd
 
@@ -21,14 +20,30 @@ def mock_image_file_dataset(tmp_path, mocker):
     print("please please", label_data)
     # Mock torch.load to return a tensor
     mocker.patch("torch.load", return_value=torch.tensor([1.0, 2.0, 3.0]))
+    
+    #try out what happens when we mock the transform
+    mock_transform = mocker.Mock()
+    mock_transform.return_value = torch.tensor([0.5])
+    dataset = ImageFileDataset(image_folder=image_folder, label_file=label_file, preprocessing=mock_transform)
 
+    dummy_image = torch.tensor([1.0])
+    
+    # Act
+    result = dataset.preprocessing(dummy_image)
+
+    # Assert
+    mock_transform.assert_called_once_with(dummy_image)
+    assert torch.equal(result, torch.tensor([0.5]))
+
+    #Assert whether folders and files exist
     assert image_folder.exists()
     assert label_file.exists()
     assert label_data.equals(pd.read_csv(label_file))
     assert len(list(image_folder.iterdir())) == 3
     assert len(label_data) == 3
-  
-    return ImageFileDataset(image_folder=image_folder, label_file=label_file)
+    
+    #return imagefiledataset with the preprocessing
+    return dataset
 
 
 
@@ -47,7 +62,7 @@ def test_getitem(mock_image_file_dataset):
     # Assert
     assert data_point.id == "image_1"
     assert data_point.label == 1
-    assert torch.equal(data_point.data, torch.tensor([1.0, 2.0, 3.0]))
+    assert torch.equal(data_point.data, torch.tensor([0.5]))
 
 
 def test_merge_label_file_with_images(mock_image_file_dataset):
@@ -92,3 +107,4 @@ def test_get_subset(mock_image_file_dataset):
     assert len(subset) == 2
     assert subset[0].id == "image_0"
     assert subset[1].id == "image_2"
+

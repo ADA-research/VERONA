@@ -32,7 +32,6 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         Returns:
             VNNLibProperty: An object containing the name and content of the VNNLib property.
         """
-        negate_spec = False
 
         x = image
         mean = 0
@@ -60,18 +59,13 @@ class One2AnyPropertyGenerator(PropertyGenerator):
             result += f"(assert (>= X_{i} {x_lb[i]:.8f}))\n"
 
         result += "\n; Definition of output constraints\n"
-        if negate_spec:
-            for i in range(self.number_classes):
-                if i == image_class:
-                    continue
-                result += f"(assert (<= Y_{i} Y_{image_class}))\n"
-        else:
-            result += "(assert (or\n"
-            for i in range(self.number_classes):
-                if i == image_class:
-                    continue
-                result += f"\t(and (>= Y_{i} Y_{image_class}))\n"
-            result += "))\n"
+    
+        result += "(assert (or\n"
+        for i in range(self.number_classes):
+            if i == image_class:
+                continue
+            result += f"\t(and (>= Y_{i} Y_{image_class}))\n"
+        result += "))\n"
 
         property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
 

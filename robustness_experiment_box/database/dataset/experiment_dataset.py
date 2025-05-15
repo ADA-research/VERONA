@@ -8,12 +8,12 @@ from robustness_experiment_box.database.dataset.data_point import DataPoint
 class ExperimentDataset(ABC):
     @abstractmethod
     def __len__(self) -> int:
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def __getitem__(self, idx: int) -> DataPoint:
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_subset(self, indices: list[int]) -> Self:
-        pass
+        pass # pragma: no cover
