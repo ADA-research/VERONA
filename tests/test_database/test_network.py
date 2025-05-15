@@ -1,8 +1,6 @@
-import pytest
-from pathlib import Path
 import onnx
-import torch
-import numpy as np
+import pytest
+
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
 

@@ -1,7 +1,9 @@
-import pytest
-from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-import torch
 import pandas as pd
+import pytest
+import torch
+
+from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
+
 
 @pytest.fixture
 def mock_image_file_dataset(tmp_path, mocker):

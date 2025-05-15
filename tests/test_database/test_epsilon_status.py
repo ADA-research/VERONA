@@ -1,4 +1,3 @@
-import pytest
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from robustness_experiment_box.database.verification_result import VerificationResult
 

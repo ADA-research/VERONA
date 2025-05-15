@@ -1,14 +1,16 @@
-import pytest
-import pandas as pd
 import os
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.verification_context import VerificationContext
+
+import pandas as pd
+import pytest
 import torch
-from robustness_experiment_box.analysis.report_creator import ReportCreator
 import yaml
+
+from robustness_experiment_box.database.dataset.data_point import DataPoint
+from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from robustness_experiment_box.database.experiment_repository import ExperimentRepository
+from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.verification_context import VerificationContext
+
 #TODO: some of these are double fixtures, add them to one file. 
 
 class MockVerificationContext:
@@ -107,7 +109,8 @@ def test_initialize_new_experiment(mock_experiment_repository):
     assert (mock_experiment_repository.act_experiment_path / "results").exists()
     assert (mock_experiment_repository.act_experiment_path / "tmp").exists()
 
-    with pytest.raises(Exception, match="Error, there is already a directory with results with the same name, make sure no results will be overwritten"):
+    with pytest.raises(Exception, match="Error, there is already a directory with results with the same name, " \
+    "make sure no results will be overwritten"):
         mock_experiment_repository.initialize_new_experiment(experiment_name)
 
 
@@ -181,7 +184,8 @@ def test_save_result(mock_experiment_repository, mock_epsilon_value_result):
     assert df.iloc[0]["smallest_sat_value"] == 0.3
     assert df.iloc[0]["total_time"] == 1.23
     
-    #do it again to test what happes when the result file already exists and make sure it does not override the first results
+    #do it again to test what happes when the result 
+    # file already exists and make sure it does not override the first results
     mock_experiment_repository.save_result(mock_epsilon_value_result)
     df = pd.read_csv(result_path, index_col=0)
     assert len(df) == 2

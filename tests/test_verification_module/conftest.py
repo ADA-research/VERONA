@@ -1,5 +1,4 @@
 import pytest
-import autoverify
 from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Ok
 from torch import load

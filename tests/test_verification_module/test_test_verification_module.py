@@ -1,15 +1,14 @@
 import pytest
 import torch
 from torch import tensor
+from autoverify.verifier.verification_result import CompleteVerificationData
+from result import Ok
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.verification_module.test_verification_module import TestVerificationModule
-from autoverify.verifier.verification_result import CompleteVerificationData
-from result import Ok
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )

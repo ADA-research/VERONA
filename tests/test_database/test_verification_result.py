@@ -1,4 +1,3 @@
-import pytest
 from robustness_experiment_box.database.verification_result import VerificationResult
 
 

@@ -1,5 +1,5 @@
-import pytest
 from pathlib import Path
+
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 
 
