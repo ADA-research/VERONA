@@ -26,7 +26,7 @@ def tmp_path():
 
 @pytest.fixture
 def verification_context(network, data_point, tmp_path):
-    return VerificationContext(network, data_point, tmp_path, save_epsilon_results=False)
+    return VerificationContext(network, data_point, tmp_path, save_epsilon_results=False, property_generator=None)
 
 
 class MockVerificationModule(VerificationModule):

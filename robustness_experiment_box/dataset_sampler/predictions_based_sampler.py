@@ -49,7 +49,7 @@ class PredictionsBasedSampler(DatasetSampler):
                 )[0]
                 predicted_label = np.argmax(prediction_onnx)
             except Exception as e:
-                raise Exception(f"Opening inference session for network {network.path} failed with error: {e}") from e
+                raise Exception(f"Opening inference session for network {network.path} failed with error: {e}")  # noqa: B904
 
             if self.sample_correct_predictions:
                 if predicted_label == int(data_point.label):
@@ -59,3 +59,4 @@ class PredictionsBasedSampler(DatasetSampler):
                     selected_indices.append(data_point.id)
 
         return dataset.get_subset(selected_indices)
+
