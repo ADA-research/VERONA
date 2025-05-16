@@ -1,8 +1,9 @@
 import logging
-from pathlib import Path
 import torch
-import torchvision
 import torchvision.transforms as transforms
+import torchvision
+
+from pathlib import Path
 
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
@@ -35,8 +36,8 @@ def create_distribution(
     for network in network_list:
         try:
             sampled_data = dataset_sampler.sample(network, dataset)
-        except:
-            logging.info(f"failed for network: {network}")
+        except Exception as e:
+            logging.info(f"failed for network: {network} with error: {e}")
             failed_networks.append(network)
             continue
         for data_point in sampled_data:

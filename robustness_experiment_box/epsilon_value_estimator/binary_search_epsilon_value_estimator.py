@@ -74,7 +74,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         """
         try:
             max_epsilon_value = max([x.value for x in epsilon_status_list])
-        except: 
+        except ValueError:
             return 0
         smallest_sat = None
 

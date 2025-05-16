@@ -39,7 +39,7 @@ class TestVerificationModule(VerificationModule):
             return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
         
 
-    def verify_property(self, network_path:Path, vnnlib_property_path:Path, timeout:int) -> str | CompleteVerificationData:
+    def verify_property(self, network_path:Path, vnnlib_property_path:Path) -> str | CompleteVerificationData:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.
         It returns SAT or UNSAT based on the size of epsilon. 

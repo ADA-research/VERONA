@@ -94,7 +94,13 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         Returns:
             dict: The dictionary representation of the One2AnyPropertyGenerator.
         """
-        return dict(number_classes=self.number_classes, data_lb=self.data_lb, data_ub=self.data_ub, type = self.__class__.__name__, module = self.__class__.__module__, )
+        return dict(
+            number_classes=self.number_classes,
+            data_lb=self.data_lb,
+            data_ub=self.data_ub,
+            type=self.__class__.__name__,
+            module=self.__class__.__module__,
+        )
     
     
     @classmethod
