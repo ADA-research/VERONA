@@ -1,9 +1,5 @@
 import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
 from pathlib import Path
-
 from autoverify.verifier import AbCrown
 
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
@@ -16,6 +12,8 @@ from robustness_experiment_box.verification_module.auto_verify_module import Aut
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
+
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 experiment_name = "auto_verify"
 timeout = 600

@@ -1,12 +1,6 @@
 import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
 from pathlib import Path
-
 import torch
-
-torch.manual_seed(0)
 import torchvision
 import torchvision.transforms as transforms
 from autoverify.verifier import AbCrown, Nnenum
@@ -29,6 +23,8 @@ from robustness_experiment_box.verification_module.property_generator.one2one_pr
 )
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+torch.manual_seed(0)
 
 def create_distribution(
     experiment_repository: ExperimentRepository,

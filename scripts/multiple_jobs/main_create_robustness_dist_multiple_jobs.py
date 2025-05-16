@@ -1,13 +1,7 @@
 import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
 from pathlib import Path
-
 import numpy as np
 import torch
-
-torch.manual_seed(0)
 import os
 import stat
 from datetime import datetime
@@ -21,6 +15,8 @@ from robustness_experiment_box.verification_module.property_generator.one2any_pr
     One2AnyPropertyGenerator,
 )
 
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+torch.manual_seed(0)
 
 def write_slurm_script(
     slurm_script_template: str,
