@@ -124,7 +124,8 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
                 epsilon_status_list[midpoint].time = outcome.took
                 verification_context.save_result(epsilon_status_list[midpoint])
                 logger.debug(
-                    f"current epsilon value: {epsilon_status_list[midpoint].result}, took: {epsilon_status_list[midpoint].time}"  # noqa: E501
+                    f"current epsilon value: {epsilon_status_list[midpoint].result},"
+                    "took: {epsilon_status_list[midpoint].time}"  
                 )
 
             if epsilon_status_list[midpoint].result == VerificationResult.UNSAT:

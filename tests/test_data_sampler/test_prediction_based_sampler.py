@@ -1,10 +1,11 @@
-import pytest
-
 from pathlib import Path
+
+import pytest
 
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
+
 
 @pytest.fixture
 def network():
