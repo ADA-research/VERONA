@@ -1,7 +1,7 @@
 import logging
 import argparse
-from pathlib import Path
 
+from pathlib import Path
 from autoverify.verifier import AbCrown
 
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
@@ -35,7 +35,8 @@ if __name__ == "__main__":
     # create the binary search module
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=eps_list.copy(), verifier=verifier)
 
-    # This is the same verification context as in the main file and its loaded from the yaml file we created in the main file
+    # This is the same verification context as in the main file and
+    # its loaded from the yaml file we created in the main file
     verification_context = baby_experiment_repository.load_verification_context_from_yaml(
         Path(args.file_verification_context)
     )

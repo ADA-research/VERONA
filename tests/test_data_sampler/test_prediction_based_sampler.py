@@ -1,6 +1,6 @@
-from pathlib import Path
-
 import pytest
+
+from pathlib import Path
 
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
 from robustness_experiment_box.database.network import Network
