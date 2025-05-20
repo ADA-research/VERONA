@@ -37,8 +37,7 @@ def verification_context(network, datapoint, tmp_path, property_generator):
 def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
-    print("HELP1", context_dict['network'])
-    print("HELP2",{'network_path': tmp_path / "network.onnx"} )
+
     assert context_dict['network'] == {'network_path': str(tmp_path / "network.onnx")}
     assert context_dict['data_point']['id'] == "1"
     assert context_dict['data_point']['label'] == 0

@@ -19,7 +19,7 @@ def mock_image_file_dataset(tmp_path, mocker):
     # Create mock label file
     label_data = pd.DataFrame({"image": [f"image_{i}.pt" for i in range(3)], "label": [0, 1, 2]})
     label_data.to_csv(label_file, index=False)
-    print("please please", label_data)
+   
     # Mock torch.load to return a tensor
     mocker.patch("torch.load", return_value=torch.tensor([1.0, 2.0, 3.0]))
     
