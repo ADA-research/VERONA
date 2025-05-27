@@ -15,7 +15,8 @@ class TestVerificationModule(VerificationModule):
         A module for testing other parts of the pipeline. This module does not actually verify anything.
         It returns SAT or UNSAT based on the size of epsilon.
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
+            verification_context (VerificationContext): The context for verification,
+            including the model and data point.
             epsilon (float): The test perturbation.
 
         Raises:
@@ -38,12 +39,15 @@ class TestVerificationModule(VerificationModule):
             return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
         
 
-    def verify_property(self, network_path:Path, vnnlib_property_path:Path, timeout:int) -> str | CompleteVerificationData:
+    def verify_property(
+        self, network_path: Path, vnnlib_property_path: Path, timeout: int
+    ) -> str | CompleteVerificationData:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.
         It returns SAT or UNSAT based on the size of epsilon. 
         Args:
-            verification_context (VerificationContext): The context for verification, including the model and data point.
+            verification_context (VerificationContext): The context for verification, 
+            including the model and data point.
             epsilon (float): The test perturbation. 
 
         Raises:
@@ -52,6 +56,7 @@ class TestVerificationModule(VerificationModule):
         Returns:
             str | CompleteVerificationData: the result including verification result and time taken.
         """
+        
 
         if not Path(network_path).exists():
             raise Exception("[TestVerificationModule]: network path not found")
@@ -59,7 +64,7 @@ class TestVerificationModule(VerificationModule):
         if not Path(vnnlib_property_path).exists():
             raise Exception("[TestVerificationModule]: image path not found")
         
-        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=10.0))
+        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=timeout))
 
    
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:

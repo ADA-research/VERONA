@@ -56,7 +56,7 @@ class PGDAttack(Attack):
             adv_images = adv_images + torch.empty_like(data).uniform_(-epsilon, epsilon)
             adv_images = torch.clamp(adv_images, min=0, max=1).detach()
 
-        for i in range(0, self.number_iterations):
+        for _ in range(0, self.number_iterations):
             adv_images.requires_grad = True
             output = model(adv_images)
 

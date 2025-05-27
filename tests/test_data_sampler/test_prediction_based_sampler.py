@@ -6,6 +6,7 @@ from robustness_experiment_box.database.dataset.image_file_dataset import ImageF
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 
+
 @pytest.fixture
 def network():
     return Network("./tests/test_experiment/data/networks/mnist-net_256x2.onnx")
