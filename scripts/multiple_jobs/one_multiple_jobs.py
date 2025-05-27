@@ -1,9 +1,5 @@
-import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
-
 import argparse
+import logging
 from pathlib import Path
 
 from autoverify.verifier import AbCrown
@@ -13,6 +9,8 @@ from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_val
     BinarySearchEpsilonValueEstimator,
 )
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
+
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 if __name__ == "__main__":
     # parse arguments from batch script.
@@ -37,7 +35,8 @@ if __name__ == "__main__":
     # create the binary search module
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=eps_list.copy(), verifier=verifier)
 
-    # This is the same verification context as in the main file and its loaded from the yaml file we created in the main file
+    # This is the same verification context as in the main file and
+    # its loaded from the yaml file we created in the main file
     verification_context = baby_experiment_repository.load_verification_context_from_yaml(
         Path(args.file_verification_context)
     )

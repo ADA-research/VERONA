@@ -6,7 +6,8 @@ from robustness_experiment_box.verification_module.property_generator.property_g
 
 class One2AnyPropertyGenerator(PropertyGenerator):
     """One2AnyPropertyGenerator generates properties for untargeted verification of neural networks.
-    This means the property is violated if we can find any class other than the target class that has a higher output value.
+    This means the property is violated if we can find any class other than the target class 
+    that has a higher output value.
     """
 
     def __init__(self, number_classes: int = 10, data_lb: int = 0, data_ub: int = 1):
@@ -87,7 +88,13 @@ class One2AnyPropertyGenerator(PropertyGenerator):
         Returns:
             dict: The dictionary representation of the One2AnyPropertyGenerator.
         """
-        return dict(number_classes=self.number_classes, data_lb=self.data_lb, data_ub=self.data_ub, type = self.__class__.__name__, module = self.__class__.__module__, )
+        return dict(
+            number_classes=self.number_classes,
+            data_lb=self.data_lb,
+            data_ub=self.data_ub,
+            type=self.__class__.__name__,
+            module=self.__class__.__module__,
+        )
     
     
     @classmethod

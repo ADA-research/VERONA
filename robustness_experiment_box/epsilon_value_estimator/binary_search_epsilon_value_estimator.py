@@ -6,6 +6,8 @@ from robustness_experiment_box.database.verification_context import Verification
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
 
+logger = logging.getLogger(__name__)
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +40,8 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         )
 
         logger.info(
-            f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, epsilon_result: {epsilon_value_result.epsilon}"
+            f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, "
+            f"epsilon_result: {epsilon_value_result.epsilon}"  
         )
         return epsilon_value_result
 
@@ -74,7 +77,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         """
         try:
             max_epsilon_value = max([x.value for x in epsilon_status_list])
-        except: 
+        except ValueError:
             return 0
         smallest_sat = None
 
@@ -124,7 +127,8 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
                 epsilon_status_list[midpoint].time = outcome.took
                 verification_context.save_result(epsilon_status_list[midpoint])
                 logger.debug(
-                    f"current epsilon value: {epsilon_status_list[midpoint].result}, took: {epsilon_status_list[midpoint].time}"
+                    f"current epsilon value: {epsilon_status_list[midpoint].result},"
+                    "took: {epsilon_status_list[midpoint].time}"  
                 )
 
             if epsilon_status_list[midpoint].result == VerificationResult.UNSAT:

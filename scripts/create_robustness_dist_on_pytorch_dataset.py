@@ -1,12 +1,7 @@
 import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
 from pathlib import Path
 
 import torch
-
-torch.manual_seed(0)
 import torchvision
 import torchvision.transforms as transforms
 from autoverify.verifier import AbCrown, Nnenum
@@ -29,6 +24,8 @@ from robustness_experiment_box.verification_module.property_generator.one2one_pr
 )
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+torch.manual_seed(0)
 
 def create_distribution(
     experiment_repository: ExperimentRepository,
@@ -42,8 +39,8 @@ def create_distribution(
     for network in network_list:
         try:
             sampled_data = dataset_sampler.sample(network, dataset)
-        except:
-            logging.info(f"failed for network: {network}")
+        except Exception as e:
+            logging.info(f"failed for network: {network} with error: {e}")
             failed_networks.append(network)
             continue
         for data_point in sampled_data:

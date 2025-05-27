@@ -1,16 +1,11 @@
 import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
+import os
+import stat
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
 import torch
-
-torch.manual_seed(0)
-import os
-import stat
-from datetime import datetime
 
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
@@ -21,6 +16,8 @@ from robustness_experiment_box.verification_module.property_generator.one2any_pr
     One2AnyPropertyGenerator,
 )
 
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+torch.manual_seed(0)
 
 def write_slurm_script(
     slurm_script_template: str,
@@ -80,8 +77,10 @@ def create_distribution(
         "#SBATCH --partition=graceGPU \n"
         "#SBATCH --exclude=ethnode[07] \n"
         "#SBATCH --output={slurm_scripts_path}/slurm_output_%A_%a.out \n"
-        "python multiple_jobs/one_multiple_jobs.py --file_verification_context {file_verification_context} --base_path_experiment_repository "
-        "{base_path_experiment_repository} --network_folder {network_folder} --experiment_name {experiment_name} --epsilon_list {epsilon_list} "
+        "python multiple_jobs/one_multiple_jobs.py --file_verification_context {file_verification_context}"
+        "--base_path_experiment_repository "
+        "{base_path_experiment_repository} --network_folder {network_folder}"
+        "--experiment_name {experiment_name} --epsilon_list {epsilon_list} "
     )
 
     network_list = experiment_repository.get_network_list()
@@ -99,8 +98,8 @@ def create_distribution(
     for network in network_list:
         try:
             sampled_data = dataset_sampler.sample(network, dataset)
-        except:
-            logging.info(f"failed for network: {network}")
+        except Exception as e:
+            logging.info(f"failed for network: {network} with error: {e}")
             failed_networks.append(network)
             continue
 
