@@ -38,7 +38,8 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         )
 
         logger.info(
-            f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, epsilon_result: {epsilon_value_result.epsilon}"  # noqa: E501
+            f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, "
+            f"epsilon_result: {epsilon_value_result.epsilon}"  
         )
         return epsilon_value_result
 
