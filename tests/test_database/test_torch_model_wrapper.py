@@ -1,30 +1,6 @@
 import pytest
 import torch
 
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
-
-
-class MockTorchModel(torch.nn.Module):
-    """
-    A mock PyTorch model for testing purposes.
-    """
-
-    def forward(self, x):
-        return torch.sum(x).unsqueeze(0)
-
-
-
-@pytest.fixture
-def mock_torch_model():
-    return MockTorchModel()
-
-
-@pytest.fixture
-def torch_model_wrapper(mock_torch_model):
-    # Define an input shape for the wrapper
-    input_shape = (2, 3)
-    return TorchModelWrapper(torch_model=mock_torch_model, input_shape=input_shape)
-
 
 def test_torch_model_wrapper_initialization(torch_model_wrapper, mock_torch_model):
 

@@ -25,12 +25,12 @@ class PropertyGenerator(ABC):
     @abstractmethod
     def create_vnnlib_property(self, image: np.array, image_class: int, epsilon: float) -> VNNLibProperty:
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-        pass 
+      
 
     @abstractmethod
     def get_dict_for_epsilon_result(self) -> dict:
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-        pass 
+
 
     @abstractmethod
     def to_dict(self):

@@ -4,10 +4,11 @@ from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 
 
-def test_cannot_instantiate_verification_module():
-    """Ensure VerificationModule cannot be instantiated directly."""
+def test_cannot_instantiate_experimentdataset():
+    """Ensure ExperimentDataset cannot be instantiated directly."""
     with pytest.raises(TypeError):
         ExperimentDataset()
+        
 class MockExperimentDataset(ExperimentDataset):
     def __init__(self, data):
         self._data = data

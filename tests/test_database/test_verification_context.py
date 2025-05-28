@@ -17,28 +17,12 @@ from robustness_experiment_box.verification_module.property_generator.one2one_pr
     One2OnePropertyGenerator,
 )
 
-
-@pytest.fixture
-def network(tmp_path):
-    return Network(tmp_path / "network.onnx")
-
-
-@pytest.fixture
-def datapoint():
-    return DataPoint("1", 0, torch.tensor([0.1, 0.2, 0.3]))  
-
-
-@pytest.fixture
-def verification_context(network, datapoint, tmp_path, property_generator):
-    return VerificationContext(network, datapoint, tmp_path, property_generator)
-
-
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
 
-    assert context_dict['network'] == {'network_path': str(tmp_path / "network.onnx")}
+    assert context_dict['network'] == {'network_path': str(tmp_path / "mock_model.onnx")}
     assert context_dict['data_point']['id'] == "1"
     assert context_dict['data_point']['label'] == 0
     assert np.allclose(context_dict['data_point']["data"],[0.1, 0.2, 0.3], atol = 1e-5)
@@ -50,7 +34,7 @@ def test_to_dict(verification_context, tmp_path):
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_from_dict(tmp_path, verification_context):
     data = {
-        'network': {'network_path': tmp_path / "network.onnx"},
+        'network': {'network_path': tmp_path / "mock_model.onnx"},
         'data_point': {'id': "1", 'label': 0, 'data': [0.1, 0.2, 0.3]}, 
         'tmp_path': str(tmp_path),
         'property_generator': verification_context.property_generator.to_dict(),
@@ -59,7 +43,7 @@ def test_from_dict(tmp_path, verification_context):
 
     context = VerificationContext.from_dict(data)
     assert isinstance(context, VerificationContext)
-    assert context.network.path == tmp_path / "network.onnx"
+    assert context.network.path == tmp_path / "mock_model.onnx"
     assert context.data_point.id == "1"
     assert context.data_point.label == 0
     assert np.allclose(context.data_point.data.numpy(), [0.1, 0.2, 0.3], atol=1e-5)  
@@ -90,7 +74,7 @@ def test_save_status_list(verification_context):
 
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
-def test_save_result(verification_context):
+def test_save_result_per_epsilon(verification_context, mock_experiment_repository):
     # First result (triggers the 'else' branch - new file)
     epsilon_status1 = EpsilonStatus(0.1, None)
     verification_context.save_result(epsilon_status1)
@@ -102,7 +86,7 @@ def test_save_result(verification_context):
     save_path = Path(verification_context.tmp_path) / "epsilons_df.csv"
     assert save_path.exists()
 
-    df = pd.read_csv(save_path)
+    df = mock_experiment_repository.get_result_df()
     assert len(df) == 2
     assert df.iloc[0]["epsilon_value"] == 0.1
     assert df.iloc[1]["epsilon_value"] == 0.2

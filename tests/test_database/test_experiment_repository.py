@@ -6,121 +6,69 @@ import torch
 import yaml
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.verification_context import VerificationContext
 
-#TODO: some of these are double fixtures, add them to one file. 
 
-class MockVerificationContext:
-    """
-    A mock class for VerificationContext to simulate its behavior for testing.
-    """
-
-    def get_dict_for_epsilon_result(self):
-        return {"mock_key": "mock_value"}
-    
-    def to_dict(self):
-        return {"mock_key": "mock_value"}
-
-
-
-
-@pytest.fixture
-def mock_experiment_repository(tmp_path):
-    base_path = tmp_path / "experiments"
-    base_path.mkdir()
-    network_folder = base_path / "networks"
-    network_folder.mkdir()
-    return ExperimentRepository(base_path=base_path, network_folder=network_folder)
-
-@pytest.fixture
-def mock_verification_context():
-    return MockVerificationContext()
-
-@pytest.fixture 
-def mock_epsilon_value_result(mock_verification_context):
-    epsilon = 0.5
-    smallest_sat_value = 0.3
-    time_taken = 1.23
-
-    result = EpsilonValueResult(
-        verification_context=mock_verification_context,
-        epsilon=epsilon,
-        smallest_sat_value=smallest_sat_value,
-        time=time_taken,
-    )
-
-    return result
-
-
-
-
-def test_get_act_experiment_path(mock_experiment_repository):
+def test_get_act_experiment_path(experiment_repository):
     # Arrange
-    mock_experiment_repository.act_experiment_path = mock_experiment_repository.base_path / "test_experiment"
+    experiment_repository.act_experiment_path = experiment_repository.base_path / "test_experiment"
 
     # Act
-    path = mock_experiment_repository.get_act_experiment_path()
+    path = experiment_repository.get_act_experiment_path()
 
     # Assert
-    assert path == mock_experiment_repository.base_path / "test_experiment"
+    assert path == experiment_repository.base_path / "test_experiment"
 
 
-def test_get_act_experiment_path_no_experiment(mock_experiment_repository):
+def test_get_act_experiment_path_no_experiment(experiment_repository):
     # Act & Assert
     with pytest.raises(Exception, match="No experiment loaded"):
-        mock_experiment_repository.get_act_experiment_path()
+        experiment_repository.get_act_experiment_path()
 
 
-def test_get_results_path(mock_experiment_repository):
-    # Arrange
-    mock_experiment_repository.act_experiment_path = mock_experiment_repository.base_path / "test_experiment"
+def test_get_results_path(experiment_repository):
 
-    # Act
-    results_path = mock_experiment_repository.get_results_path()
+    experiment_repository.act_experiment_path = experiment_repository.base_path / "test_experiment"
 
-    # Assert
-    assert results_path == mock_experiment_repository.base_path / "test_experiment" / "results"
+    results_path = experiment_repository.get_results_path()
+
+    assert results_path == experiment_repository.base_path / "test_experiment" / "results"
 
 
-def test_get_tmp_path(mock_experiment_repository):
-    # Arrange
-    mock_experiment_repository.act_experiment_path = mock_experiment_repository.base_path / "test_experiment"
+def test_get_tmp_path(experiment_repository):
 
-    # Act
-    tmp_path = mock_experiment_repository.get_tmp_path()
+    experiment_repository.act_experiment_path = experiment_repository.base_path / "test_experiment"
 
-    # Assert
-    assert tmp_path == mock_experiment_repository.base_path / "test_experiment" / "tmp"
+    tmp_path = experiment_repository.get_tmp_path()
+
+    assert tmp_path == experiment_repository.base_path / "test_experiment" / "tmp"
 
 
-def test_initialize_new_experiment(mock_experiment_repository):
-    # Arrange
+def test_initialize_new_experiment(experiment_repository):
+ 
     experiment_name = "test_experiment"
 
-    # Act
-    mock_experiment_repository.initialize_new_experiment(experiment_name)
+    experiment_repository.initialize_new_experiment(experiment_name)
 
-    # Assert
-    assert mock_experiment_repository.act_experiment_path is not None
-    assert mock_experiment_repository.act_experiment_path.name.startswith(experiment_name)
-    assert (mock_experiment_repository.act_experiment_path / "results").exists()
-    assert (mock_experiment_repository.act_experiment_path / "tmp").exists()
+
+    assert experiment_repository.act_experiment_path is not None
+    assert experiment_repository.act_experiment_path.name.startswith(experiment_name)
+    assert (experiment_repository.act_experiment_path / "results").exists()
+    assert (experiment_repository.act_experiment_path / "tmp").exists()
 
     with pytest.raises(Exception, match="Error, there is already a directory with results with the same name, " \
     "make sure no results will be overwritten"):
-        mock_experiment_repository.initialize_new_experiment(experiment_name)
+        experiment_repository.initialize_new_experiment(experiment_name)
 
 
-def test_cleanup_tmp_directory(mock_experiment_repository):
+def test_cleanup_tmp_directory(experiment_repository):
  
     experiment_name = "test_experiment"
-    mock_experiment_repository.initialize_new_experiment(experiment_name)
+    experiment_repository.initialize_new_experiment(experiment_name)
 
     # Create a dummy file in the tmp directory to ensure file.unlink() is covered
-    tmp_path = mock_experiment_repository.get_tmp_path()
+    tmp_path = experiment_repository.get_tmp_path()
     tmp_path.mkdir(parents=True, exist_ok=True)
     dummy_file = tmp_path / "dummy.txt"
     dummy_file.write_text("temporary content")
@@ -129,37 +77,37 @@ def test_cleanup_tmp_directory(mock_experiment_repository):
     assert dummy_file.exists()
 
     # Run the cleanup method
-    mock_experiment_repository.cleanup_tmp_directory()
+    experiment_repository.cleanup_tmp_directory()
 
     # Assert the directory and file are both gone
     assert not dummy_file.exists()
     assert not tmp_path.exists()
 
-def test_load_experiment(mock_experiment_repository):
-    assert mock_experiment_repository.act_experiment_path is None
+def test_load_experiment(experiment_repository, mock_experiment_repository):
+    assert experiment_repository.act_experiment_path is None
     experiment_path = "experiments"
-    mock_experiment_repository.load_experiment(experiment_path)
+    experiment_repository.load_experiment(experiment_path)
     
-    assert mock_experiment_repository.act_experiment_path == mock_experiment_repository.base_path/ experiment_path
+    assert experiment_repository.act_experiment_path == mock_experiment_repository.base_path/ experiment_path
 
 
-def test_get_network_list(mock_experiment_repository):
+def test_get_network_list(experiment_repository):
 
     experiment_name = "test_experiment"
-    mock_experiment_repository.initialize_new_experiment(experiment_name)
-    network_path = mock_experiment_repository.network_folder / "network1"
+    experiment_repository.initialize_new_experiment(experiment_name)
+    network_path = experiment_repository.network_folder / "network1"
     network_path.mkdir()
-    network_list = mock_experiment_repository.get_network_list()
+    network_list = experiment_repository.get_network_list()
 
     assert len(network_list) == 1
-    assert network_list[0].path == mock_experiment_repository.network_folder /"network1"
+    assert network_list[0].path == experiment_repository.network_folder /"network1"
 
 
-def test_save_results(mock_experiment_repository, mock_epsilon_value_result):
-    mock_experiment_repository.initialize_new_experiment("test_experiment")
-    result_path = mock_experiment_repository.get_results_path() / "result_df.csv"
+def test_save_results(experiment_repository, epsilon_value_result):
+    experiment_repository.initialize_new_experiment("test_experiment")
+    result_path = experiment_repository.get_results_path() / "result_df.csv"
   
-    mock_experiment_repository.save_results([mock_epsilon_value_result,mock_epsilon_value_result])
+    experiment_repository.save_results([epsilon_value_result,epsilon_value_result])
 
     assert result_path.exists()
     df = pd.read_csv(result_path, index_col=0)
@@ -170,12 +118,12 @@ def test_save_results(mock_experiment_repository, mock_epsilon_value_result):
 
 
 
-def test_save_result(mock_experiment_repository, mock_epsilon_value_result):
+def test_save_result(experiment_repository, epsilon_value_result, mock_experiment_repository):
 
-    mock_experiment_repository.initialize_new_experiment("test_experiment")
-    result_path = mock_experiment_repository.get_results_path() / "result_df.csv"
+    experiment_repository.initialize_new_experiment("test_experiment")
+    result_path = experiment_repository.get_results_path() / "result_df.csv"
 
-    mock_experiment_repository.save_result(mock_epsilon_value_result)
+    experiment_repository.save_result(epsilon_value_result)
 
     assert result_path.exists()
     df = pd.read_csv(result_path, index_col=0)
@@ -186,7 +134,7 @@ def test_save_result(mock_experiment_repository, mock_epsilon_value_result):
     
     #do it again to test what happes when the result 
     # file already exists and make sure it does not override the first results
-    mock_experiment_repository.save_result(mock_epsilon_value_result)
+    mock_experiment_repository.save_result(epsilon_value_result)
     df = pd.read_csv(result_path, index_col=0)
     assert len(df) == 2
     assert df.iloc[1]["epsilon_value"] == 0.5
@@ -195,18 +143,18 @@ def test_save_result(mock_experiment_repository, mock_epsilon_value_result):
 
 
 
-def test_get_file_name(mock_experiment_repository, tmp_path):
+def test_get_file_name(experiment_repository, tmp_path):
 
     file_path = tmp_path / "example_file.txt"
     file_path.touch()
 
-    file_name = mock_experiment_repository.get_file_name(file_path)
+    file_name = experiment_repository.get_file_name(file_path)
 
     assert file_name == "example_file"
 
 
-def test_create_verification_context(mock_experiment_repository, tmp_path):
-    mock_experiment_repository.initialize_new_experiment("test_experiment")
+def test_create_verification_context(experiment_repository, tmp_path):
+    experiment_repository.initialize_new_experiment("test_experiment")
 
     # Create a sample Network, DataPoint, and PropertyGenerator
     network_path = tmp_path / "network.onnx"
@@ -222,7 +170,7 @@ def test_create_verification_context(mock_experiment_repository, tmp_path):
     property_generator = DummyPropertyGenerator()
 
   
-    verification_context = mock_experiment_repository.create_verification_context(
+    verification_context = experiment_repository.create_verification_context(
         network, data_point, property_generator
     )
 
