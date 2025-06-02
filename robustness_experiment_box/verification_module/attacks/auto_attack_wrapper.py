@@ -29,6 +29,7 @@ class AutoAttackWrapper(Attack):
         self.norm = norm
         self.version = version
         self.verbose = verbose
+        self.name = f"AutoAttackWrapper (norm={self.norm}, version={self.version})"
 
     def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
         """

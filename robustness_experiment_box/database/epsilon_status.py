@@ -13,6 +13,7 @@ class EpsilonStatus:
     value: float
     result: VerificationResult | None
     time: float = None
+    verifier: str = None   
 
     def to_dict(self) -> dict:
         """
@@ -21,4 +22,4 @@ class EpsilonStatus:
         Returns:
             dict: The dictionary representation of the EpsilonStatus.
         """
-        return dict(epsilon_value=self.value, result=self.result, time=self.time)
+        return dict(epsilon_value=self.value, result=self.result, time=self.time, verifier=self.verifier)
