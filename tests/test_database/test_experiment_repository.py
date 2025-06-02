@@ -11,18 +11,14 @@ from robustness_experiment_box.database.verification_context import Verification
 
 
 def test_get_act_experiment_path(experiment_repository):
-    # Arrange
     experiment_repository.act_experiment_path = experiment_repository.base_path / "test_experiment"
 
-    # Act
     path = experiment_repository.get_act_experiment_path()
 
-    # Assert
     assert path == experiment_repository.base_path / "test_experiment"
 
 
 def test_get_act_experiment_path_no_experiment(experiment_repository):
-    # Act & Assert
     with pytest.raises(Exception, match="No experiment loaded"):
         experiment_repository.get_act_experiment_path()
 

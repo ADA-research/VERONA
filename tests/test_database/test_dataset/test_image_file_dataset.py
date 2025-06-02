@@ -7,7 +7,6 @@ from robustness_experiment_box.database.dataset.image_file_dataset import ImageF
 
 @pytest.fixture
 def mock_image_file_dataset(tmp_path, mocker):
-    # Arrange
     image_folder = tmp_path / "images"
     image_folder.mkdir()
     label_file = tmp_path / "labels.csv"
@@ -30,10 +29,8 @@ def mock_image_file_dataset(tmp_path, mocker):
 
     dummy_image = torch.tensor([1.0])
     
-    # Act
     result = dataset.preprocessing(dummy_image)
 
-    # Assert
     mock_transform.assert_called_once_with(dummy_image)
     assert torch.equal(result, torch.tensor([0.5]))
 
@@ -50,41 +47,33 @@ def mock_image_file_dataset(tmp_path, mocker):
 
 
 def test_len(mock_image_file_dataset):
-    # Act
     dataset_length = len(mock_image_file_dataset)
 
-    # Assert
     assert dataset_length == 3
 
 
 def test_getitem(mock_image_file_dataset):
-    # Act
     data_point = mock_image_file_dataset[1]
     
-    # Assert
     assert data_point.id == "image_1"
     assert data_point.label == 1
     assert torch.equal(data_point.data, torch.tensor([0.5]))
 
 
 def test_merge_label_file_with_images(mock_image_file_dataset):
-    # Act
     merged_df = mock_image_file_dataset.merge_label_file_with_images(
         mock_image_file_dataset.image_folder, mock_image_file_dataset.label_file
     )
 
-    # Assert
     assert len(merged_df) == 3
     assert "image" in merged_df.columns
     assert "label" in merged_df.columns
 
 
 def test_get_id_index_from_value(mock_image_file_dataset):
-    # Act
     id_index = mock_image_file_dataset.get_id_index_from_value("image_1")
     id_index_missing = mock_image_file_dataset.get_id_index_from_value("image_4")
    
-    # Assert
     assert id_index.id == "image_1"
     assert id_index.index == 1
     assert id_index_missing == -1
@@ -92,20 +81,16 @@ def test_get_id_index_from_value(mock_image_file_dataset):
 
 
 def test_get_id_indices_from_value_list(mock_image_file_dataset):
-    # Act
     id_indices = mock_image_file_dataset.get_id_indices_from_value_list(["image_0", "image_2"])
 
-    # Assert
     assert len(id_indices) == 2
     assert id_indices[0].id == "image_0"
     assert id_indices[1].id == "image_2"
 
 
 def test_get_subset(mock_image_file_dataset):
-    # Act
     subset = mock_image_file_dataset.get_subset(["image_0", "image_2"])
-
-    # Assert
+    
     assert len(subset) == 2
     assert subset[0].id == "image_0"
     assert subset[1].id == "image_2"

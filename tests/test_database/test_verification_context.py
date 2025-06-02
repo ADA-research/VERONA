@@ -3,11 +3,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-import torch
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
@@ -16,6 +13,7 @@ from robustness_experiment_box.verification_module.property_generator.one2any_pr
 from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
     One2OnePropertyGenerator,
 )
+
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_to_dict(verification_context, tmp_path):
