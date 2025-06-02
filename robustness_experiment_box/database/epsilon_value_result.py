@@ -13,6 +13,7 @@ class EpsilonValueResult:
     epsilon: float
     smallest_sat_value: float
     time: float = None
+    verifier: str = None
 
     def to_dict(self) -> dict:
         """
@@ -26,5 +27,6 @@ class EpsilonValueResult:
             epsilon_value=self.epsilon,
             smallest_sat_value=self.smallest_sat_value,
             total_time=self.time,
+            verifier=self.verifier,
         )
         return ret

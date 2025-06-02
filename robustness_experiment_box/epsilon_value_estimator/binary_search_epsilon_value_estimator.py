@@ -25,7 +25,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         Returns:
             EpsilonValueResult: The result of the epsilon value estimation.
         """
-        epsilon_status_list = [EpsilonStatus(x, None) for x in self.epsilon_value_list]
+        epsilon_status_list = [EpsilonStatus(x, None, None, self.verifier.name) for x in self.epsilon_value_list]
 
         start_time = time.time()
         highest_unsat_value, smallest_sat_value = self.binary_search(verification_context, epsilon_status_list)
@@ -35,6 +35,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
             epsilon=highest_unsat_value,
             smallest_sat_value=smallest_sat_value,
             time=duration,
+            verifier=self.verifier.name,
         )
 
         logger.info(
