@@ -34,8 +34,13 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
             verification_context, epsilon_status_list
         )
         duration = time.time() - start_time
-        epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value,
-                                                  lowest_sat_value, duration, self.verifier.name)
+        epsilon_value_result = EpsilonValueResult(
+            verification_context,
+            highest_unsat_value,
+            lowest_sat_value,
+            duration,
+            self.verifier.name
+        )
 
         return epsilon_value_result
     
