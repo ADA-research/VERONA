@@ -28,6 +28,7 @@ class PGDAttack(Attack):
         self.number_iterations = number_iterations
         self.step_size = step_size
         self.randomise = randomise
+        self.name = f"PGDAttack (iterations={self.number_iterations}, step_size={self.step_size}, randomise={self.randomise})"
 
     def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
         """

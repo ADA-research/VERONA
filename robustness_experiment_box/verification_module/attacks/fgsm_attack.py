@@ -13,6 +13,19 @@ class FGSMAttack(Attack):
         execute(model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
             Executes the FGSM attack on the given model and data.
     """
+    def __init__(self) -> None:
+        """
+        Initialize the AutoAttackWrapper with specific parameters.
+
+        Args:
+            device (str, optional): The device to run the attack on. Defaults to 'cuda'.
+            norm (str, optional): The norm to use for the attack. Defaults to 'Linf'.
+            version (str, optional): The version of AutoAttack to use. Defaults to 'standard'.
+            verbose (bool, optional): Whether to print verbose output. Defaults to False.
+        """
+        super().__init__()
+        self.name = None
+
 
     def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
         """
@@ -27,6 +40,7 @@ class FGSMAttack(Attack):
         Returns:
             Tensor: The perturbed data.
         """
+        self.name = f"FGSMAttack (epsilon={epsilon}, target={target.item()})"
         data.requires_grad = True
         output = model(data)
         loss_fn = nn.CrossEntropyLoss()

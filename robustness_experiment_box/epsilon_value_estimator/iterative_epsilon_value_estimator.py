@@ -26,13 +26,13 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         Returns:
             EpsilonValueResult: The result of the epsilon value estimation.
         """
-        epsilon_status_list = [EpsilonStatus(x, None) for x in self.epsilon_value_list]
+        epsilon_status_list = [EpsilonStatus(x, None, None, self.verifier.name) for x in self.epsilon_value_list]
         start_time = time.time()
         highest_unsat_value, lowest_sat_value, epsilon_status_list = self.iterative_search(
             verification_context, epsilon_status_list
         )
         duration = time.time() - start_time
-        epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value, lowest_sat_value, duration)
+        epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value, lowest_sat_value, duration, self.verifier.name)
 
         return epsilon_value_result
 

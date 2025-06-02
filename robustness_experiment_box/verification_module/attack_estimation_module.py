@@ -26,6 +26,7 @@ class AttackEstimationModule(VerificationModule):
             attack (Attack): The attack to be used for robustness estimation.
         """
         self.attack = attack
+        self.name = f"AttackEstimationModule ({attack.name})"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
