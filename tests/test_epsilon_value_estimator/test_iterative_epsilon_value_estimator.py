@@ -38,8 +38,7 @@ def test_compute_epsilon_value(epsilon_value_estimator, verification_context, ve
         MagicMock(result=VerificationResult.SAT, took=1.0),
     ]
 
-    result = epsilon_value_estimator.compute_epsilon_value(verification_context)
-
+    result = epsilon_value_estimator.compute_epsilon_value(verification_context, reverse_search=False)
     assert isinstance(result, EpsilonValueResult)
     assert result.epsilon== 0.2
     assert result.smallest_sat_value == 0.3
@@ -65,3 +64,25 @@ def test_iterative_search(epsilon_value_estimator, verification_context, verifie
     assert lowest_sat_value == 0.3
     assert len(updated_epsilon_status_list) == len(epsilon_value_estimator.epsilon_value_list)
     assert all(isinstance(status, EpsilonStatus) for status in updated_epsilon_status_list)
+
+@pytest.mark.parametrize("reverse_search, expected_highest_unsat, expected_lowest_sat", [
+    (True, 0.2, 0.3)    # Descending order
+])
+def test_compute_epsilon_value_directions(
+    epsilon_value_estimator, verification_context, verifier, 
+    reverse_search, expected_highest_unsat, expected_lowest_sat
+):
+    verifier.verify.side_effect = [
+        MagicMock(result=VerificationResult.SAT, took=1.0),
+        MagicMock(result=VerificationResult.SAT, took=1.0),
+        MagicMock(result=VerificationResult.SAT, took=1.0),
+        MagicMock(result=VerificationResult.UNSAT, took=1.0),
+        MagicMock(result=VerificationResult.UNSAT, took=1.0),
+    ]
+
+    result = epsilon_value_estimator.compute_epsilon_value(
+        verification_context, reverse_search=reverse_search
+    )
+    assert result.epsilon == expected_highest_unsat
+    assert result.smallest_sat_value == expected_lowest_sat
+
