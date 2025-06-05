@@ -13,7 +13,11 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
     """
     A class to estimate the epsilon value using an iterative search with configurable direction.
     """
-    def compute_epsilon_value(self, verification_context: VerificationContext, reverse_search=False) -> EpsilonValueResult:
+    def compute_epsilon_value(
+    self,
+    verification_context: VerificationContext,
+    reverse_search=False,
+) -> EpsilonValueResult:
         """
         Compute the epsilon value using an iterative search.
 
@@ -30,11 +34,15 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
             verification_context, epsilon_status_list
         )
         duration = time.time() - start_time
-        epsilon_value_result = EpsilonValueResult(verification_context, highest_unsat_value, lowest_sat_value, duration)
+        epsilon_value_result = EpsilonValueResult(verification_context, 
+                                                  highest_unsat_value, 
+                                                  lowest_sat_value, 
+                                                  duration)
 
         return epsilon_value_result
     
-    def iterative_search(self, verification_context: VerificationContext, 
+    def iterative_search(self, 
+                         verification_context: VerificationContext, 
                         epsilon_status_list: list[EpsilonStatus]) -> tuple[float, float, list]:
         """
         Perform search and determine results based on actual epsilon values. 
