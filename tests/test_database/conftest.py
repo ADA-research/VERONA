@@ -27,7 +27,7 @@ def mock_verification_context():
 
 
 @pytest.fixture
-def mock_experiment_repository(tmp_path):
+def experiment_repository(tmp_path):
     base_path = tmp_path / "experiments"
     base_path.mkdir()
     network_folder = base_path / "networks"
@@ -53,7 +53,7 @@ def epsilon_value_result(mock_verification_context):
 
 @pytest.fixture
 def network(tmp_path):
-    onnx_file = tmp_path / "mock_model.onnx"
+    onnx_file = tmp_path / "network.onnx"
     onnx_file.touch()
     return Network(path=onnx_file)
 

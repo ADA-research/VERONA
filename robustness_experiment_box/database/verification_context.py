@@ -77,10 +77,9 @@ class VerificationContext:
         Delete the temporary path and its contents.
         """
       
-        if self.tmp_path.is_file():
-            self.tmp_path.unlink()
-        else:
-            self.tmp_path.rmdir()
+
+        self.tmp_path.unlink()
+
 
     def save_status_list(self, epsilon_status_list: list[EpsilonStatus]) -> None:
         """

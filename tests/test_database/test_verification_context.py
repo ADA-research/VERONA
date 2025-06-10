@@ -20,7 +20,7 @@ def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
 
-    assert context_dict['network'] == {'network_path': str(tmp_path / "mock_model.onnx")}
+    assert context_dict['network'] == {'network_path': str(tmp_path / "network.onnx")}
     assert context_dict['data_point']['id'] == "1"
     assert context_dict['data_point']['label'] == 0
     assert np.allclose(context_dict['data_point']["data"],[0.1, 0.2, 0.3], atol = 1e-5)
@@ -32,7 +32,7 @@ def test_to_dict(verification_context, tmp_path):
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_from_dict(tmp_path, verification_context):
     data = {
-        'network': {'network_path': tmp_path / "mock_model.onnx"},
+        'network': {'network_path': tmp_path / "network.onnx"},
         'data_point': {'id': "1", 'label': 0, 'data': [0.1, 0.2, 0.3]}, 
         'tmp_path': str(tmp_path),
         'property_generator': verification_context.property_generator.to_dict(),
@@ -41,7 +41,7 @@ def test_from_dict(tmp_path, verification_context):
 
     context = VerificationContext.from_dict(data)
     assert isinstance(context, VerificationContext)
-    assert context.network.path == tmp_path / "mock_model.onnx"
+    assert context.network.path == tmp_path / "network.onnx"
     assert context.data_point.id == "1"
     assert context.data_point.label == 0
     assert np.allclose(context.data_point.data.numpy(), [0.1, 0.2, 0.3], atol=1e-5)  
@@ -51,7 +51,6 @@ def test_from_dict(tmp_path, verification_context):
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_save_vnnlib_property(verification_context):
-    verification_context.delete_tmp_path()
     vnnlib_property = VNNLibProperty(name="test_property", content="test_content")
     verification_context.save_vnnlib_property(vnnlib_property)
     save_path = Path(verification_context.tmp_path) / "test_property.vnnlib"
@@ -72,10 +71,14 @@ def test_save_status_list(verification_context):
 
 
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
-def test_save_result_per_epsilon(verification_context, mock_experiment_repository):
+def test_save_result_per_epsilon(verification_context, experiment_repository):
+    
+    experiment_repository.initialize_new_experiment("test_experiment")
+    
     # First result (triggers the 'else' branch - new file)
     epsilon_status1 = EpsilonStatus(0.1, None)
     verification_context.save_result(epsilon_status1)
+    
 
     # Second result (triggers the 'if result_df_path.exists()' branch - append)
     epsilon_status2 = EpsilonStatus(0.2, None)
@@ -84,7 +87,7 @@ def test_save_result_per_epsilon(verification_context, mock_experiment_repositor
     save_path = Path(verification_context.tmp_path) / "epsilons_df.csv"
     assert save_path.exists()
 
-    df = mock_experiment_repository.get_result_df()
+    df = pd.read_csv(save_path)
     assert len(df) == 2
     assert df.iloc[0]["epsilon_value"] == 0.1
     assert df.iloc[1]["epsilon_value"] == 0.2
@@ -105,13 +108,12 @@ def test_delete_tmp_path(verification_context):
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_get_dict_for_epsilon_result(verification_context, tmp_path):
     network_file = tmp_path / "network.onnx"
-    network_file.touch()  # create the file)
+    network_file.touch()  # create the file
 
     verification_context.tmp_path = Path("/tmp/some_tmp_dir")
     verification_context.tmp_path.mkdir(parents=True, exist_ok=True)
 
     result_dict = verification_context.get_dict_for_epsilon_result()
-
     assert result_dict["network_path"] == network_file.resolve()
     assert result_dict["image_id"] == "1"
     assert result_dict["original_label"] == 0
