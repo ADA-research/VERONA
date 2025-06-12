@@ -6,7 +6,7 @@ from robustness_experiment_box.verification_module.property_generator.property_g
 
 class One2OnePropertyGenerator(PropertyGenerator):
     """One2OnePropertyGenerator generates properties for targeted verification of neural networks.
-    This means the property is violated if we can find a higher output value for the specificied class.
+    This means the property is violated if we can find a higher output value for the pre-specified target class.
     """
 
     def __init__(self, target_class: int, number_classes: int = 10, data_lb: int = 0, data_ub: int = 1):
