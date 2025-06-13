@@ -6,7 +6,7 @@ from robustness_experiment_box.database.verification_context import Verification
 @dataclass
 class EpsilonValueResult:
     """
-    A class defining the verification result of a single verification.
+    A dataclass defining the verification result of a single verification.
     """
 
     verification_context: VerificationContext
