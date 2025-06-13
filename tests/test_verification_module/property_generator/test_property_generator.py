@@ -7,3 +7,7 @@ def test_cannot_instantiate_property_generator():
     """Ensure PropertyGenerator cannot be instantiated directly."""
     with pytest.raises(TypeError):
         PropertyGenerator()
+
+
+
+

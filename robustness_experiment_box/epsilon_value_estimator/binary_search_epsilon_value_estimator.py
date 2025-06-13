@@ -10,6 +10,9 @@ from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator i
 logger = logging.getLogger(__name__)
 
 
+logger = logging.getLogger(__name__)
+
+
 class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
     """
     A class to get the critical epsilon value using binary search.

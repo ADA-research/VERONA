@@ -20,6 +20,19 @@ def test_create_vnnlib_property(property_generator):
     assert vnnlib_property.name == "property_0_0_1"
     assert "; Spec for image and epsilon 0.10000" in vnnlib_property.content
 
+    content = vnnlib_property.content
+    assert "; Spec for image and epsilon 0.10000" in content
+    assert "(declare-const X_0 Real)" in content
+    assert "(declare-const Y_0 Real)" in content
+    assert "(assert (or" in content
+    assert "(assert (>= X_0 0.40000000))" in content
+    assert "(assert (<= X_0 0.60000000))" in content
+
+    # Make sure correct number of inputs/outputs declared
+    assert content.count("(declare-const X_") == len(image)
+    assert content.count("(declare-const Y_") == property_generator.number_classes
+
+
 def test_get_dict_for_epsilon_result(property_generator):
     result_dict = property_generator.get_dict_for_epsilon_result()
     assert isinstance(result_dict, dict)
