@@ -266,3 +266,14 @@ class ExperimentRepository:
         with open(file_path) as file:
             data = yaml.safe_load(file)
             return VerificationContext.from_dict(data)
+
+    def cleanup_tmp_directory(self):
+        """
+        Delete the temporary folder of the active experiment.
+        """
+        
+        tmp_path = self.get_tmp_path()
+        if tmp_path.exists():
+            for file in tmp_path.iterdir():
+                file.unlink()
+            tmp_path.rmdir()

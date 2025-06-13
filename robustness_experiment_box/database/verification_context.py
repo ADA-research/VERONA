@@ -76,7 +76,10 @@ class VerificationContext:
         """
         Delete the temporary path and its contents.
         """
+      
+
         self.tmp_path.unlink()
+
 
     def save_status_list(self, epsilon_status_list: list[EpsilonStatus]) -> None:
         """
