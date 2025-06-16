@@ -12,7 +12,7 @@ from robustness_experiment_box.verification_module.property_generator.property_g
 class VerificationContext:
     """
     A class to represent the context for verification.
-    This class saved all the relevant information for a verification run.
+    This class saves all the relevant information for a verification run.
     """
 
     def __init__(

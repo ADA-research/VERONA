@@ -7,7 +7,7 @@ from robustness_experiment_box.database.verification_result import VerificationR
 class EpsilonStatus:
     """
     A class to represent the status of the verification.
-    meaning it records the epsilon value, the result (SAT, UNSAT, TIMEOUT, ERROR) and running time.
+    It records the epsilon value, the result (SAT, UNSAT, TIMEOUT, ERROR) and running time.
     """
 
     value: float
