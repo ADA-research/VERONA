@@ -19,7 +19,7 @@ class TestVerificationModule(VerificationModule):
             timeout (float): The timeout for the verification process.
             config (Path, optional): The configuration file for the verifier.
         """
-        self.name = f"TestVerificationModule " 
+        self.name = "TestVerificationModule " 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
         A module for testing other parts of the pipeline. This module does not actually verify anything.
