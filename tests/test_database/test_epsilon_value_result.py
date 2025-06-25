@@ -37,12 +37,12 @@ def test_epsilon_value_result_to_dict(mock_verification_context):
 
     result_dict = result.to_dict()
 
-
     assert result_dict == {
         "mock_key": "mock_value",
         "epsilon_value": epsilon,
         "smallest_sat_value": smallest_sat_value,
         "total_time": time_taken,
+        'verifier': None
     }
 
 

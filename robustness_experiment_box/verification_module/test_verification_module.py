@@ -10,6 +10,16 @@ from robustness_experiment_box.verification_module.verification_module import Ve
 
 
 class TestVerificationModule(VerificationModule):
+    
+    def __init__(self) -> None:
+        """
+        Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
+        Args:
+            verifier (Verifier): The verifier to be used for robustness verification.
+            timeout (float): The timeout for the verification process.
+            config (Path, optional): The configuration file for the verifier.
+        """
+        self.name = f"TestVerificationModule " 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
         A module for testing other parts of the pipeline. This module does not actually verify anything.
