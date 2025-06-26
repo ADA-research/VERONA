@@ -17,39 +17,38 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        activate-environment: verona  # This will create and activate the environment
-        python-version: "3.10"  
-        auto-activate-base: false
-
-    - name: Install pip dependencies
-      run: |
-        conda run -n verona pip install -r requirements.txt  # Install pip packages
-
-    - name: Install local package
-      run: |
-        conda run -n verona pip install -e .  # Install your local package in editable mode
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: verona  # This will create and activate the environment
+          python-version: "3.10"  
+          auto-activate-base: false
+  
+      - name: Install pip dependencies
+        run: |
+          conda run -n verona pip install -r requirements.txt  # Install pip packages
+  
+      - name: Install local package
+        run: |
+          conda run -n verona pip install -e .  # Install your local package in editable mode
+          
+      - name: Install pytest
+        run: |
+          conda run -n verona pip install pytest  # Installs pytest explicitly
+      - name : Install autoattack
+        run: |
+          conda run -n verona pip install git+https://github.com/fra31/auto-attack #autoattack is an optional package
+      - name : Install pytest mock
+       run: |
+          conda run -n verona pip install pytest-mock
+  
+      - name: Run pytest
+        run: |
+          conda run -n verona python -m pytest tests/ --verbose 
+  
+  
         
-    - name: Install pytest
-      run: |
-        conda run -n verona pip install pytest  # Installs pytest explicitly
-    - name : Install autoattack
-      run: |
-        conda run -n verona pip install git+https://github.com/fra31/auto-attack #autoattack is an optional package
-    - name : Install pytest mock
-     run: |
-        conda run -n verona pip install pytest-mock
-
-    - name: Run pytest
-      run: |
-        conda run -n verona python -m pytest tests/ --verbose 
-
-
-      
