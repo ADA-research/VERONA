@@ -32,6 +32,7 @@ def verification_context(network, data_point, tmp_path):
 class MockVerificationModule(VerificationModule):
     def __init__(self, result_dict: dict):
         self.result_dict = result_dict
+        self.name = "MockVerificationModule"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         return CompleteVerificationData(self.result_dict[epsilon], took=10.0)

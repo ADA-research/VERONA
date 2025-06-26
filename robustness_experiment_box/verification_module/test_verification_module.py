@@ -10,6 +10,13 @@ from robustness_experiment_box.verification_module.verification_module import Ve
 
 
 class TestVerificationModule(VerificationModule):
+    def __init__(self) -> None:
+        """
+        Initialize the TestVerificationModule.
+        """
+        super().__init__()
+        self.name = "TestVerificationModule"
+        
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
         A module for testing other parts of the pipeline. This module does not actually verify anything.

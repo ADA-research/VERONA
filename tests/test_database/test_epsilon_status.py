@@ -29,6 +29,7 @@ def test_epsilon_status_to_dict():
         "epsilon_value": epsilon_value,
         "result": result,
         "time": time_taken,
+        "verifier":None
     }
 
 
