@@ -30,6 +30,7 @@ class AutoVerifyModule(VerificationModule):
         self.verifier = verifier
         self.timeout = timeout
         self.config = config
+        self.name = f"AutoVerifyModule ({verifier.name})" 
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """

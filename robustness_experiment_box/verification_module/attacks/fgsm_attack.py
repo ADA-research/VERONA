@@ -13,6 +13,14 @@ class FGSMAttack(Attack):
         execute(model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
             Executes the FGSM attack on the given model and data.
     """
+    def __init__(self) -> None:
+        """
+        Initialize the FGSM to record the name
+        Args:
+            
+        """
+        super().__init__()
+        self.name = None
 
     def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
         """
@@ -27,6 +35,7 @@ class FGSMAttack(Attack):
         Returns:
             Tensor: The perturbed data.
         """
+        self.name = f"FGSMAttack (epsilon={epsilon}, target={target.item()})"
         data.requires_grad = True
         output = model(data)
         loss_fn = nn.CrossEntropyLoss()

@@ -43,6 +43,7 @@ def test_epsilon_value_result_to_dict(mock_verification_context):
         "epsilon_value": epsilon,
         "smallest_sat_value": smallest_sat_value,
         "total_time": time_taken,
+        "verifier": None
     }
 
 
