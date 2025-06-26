@@ -43,7 +43,7 @@ jobs:
         run: |
           conda run -n verona pip install git+https://github.com/fra31/auto-attack #autoattack is an optional package
       - name : Install pytest mock
-         run: |
+        run: |
           conda run -n verona pip install pytest-mock
   
       - name: Run pytest
