@@ -1,7 +1,8 @@
 import logging
 from pathlib import Path
 
-from autoverify.verifier import AbCrown
+from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
+from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
 
 from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
@@ -9,7 +10,6 @@ from robustness_experiment_box.dataset_sampler.predictions_based_sampler import 
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
@@ -42,7 +42,7 @@ file_database.save_configuration(
 )
 
 property_generator = One2AnyPropertyGenerator()
-verifier = AutoVerifyModule(verifier=AbCrown(), timeout=timeout)
+verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=15, step_size=0.05))   
 
 epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
 dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)

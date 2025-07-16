@@ -5,9 +5,6 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
-from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
-from robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
-
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
@@ -17,13 +14,18 @@ from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_val
     BinarySearchEpsilonValueEstimator,
 )
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
+from robustness_experiment_box.verification_module.attacks.fgsm_attack import FGSMAttack
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
+from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+    One2OnePropertyGenerator,
+)
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
-torch.manual_seed(0)
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+torch.manual_seed(0)
 
 def create_distribution(
     experiment_repository: ExperimentRepository,
@@ -55,6 +57,7 @@ def create_distribution(
 
 
 def main():
+    timeout = 600
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
     experiment_repository_path = Path("../tests/test_experiment")
     network_folder = Path("../tests/test_experiment/data/networks")
@@ -66,11 +69,11 @@ def main():
 
     experiment_repository = ExperimentRepository(base_path=experiment_repository_path, network_folder=network_folder)
 
-    # Create distribution using AutoAttack
-    experiment_name = "AutoAttack"
-    property_generator = One2AnyPropertyGenerator()
+    # Create distribution using one-to-one verification with FGSM attack
+    experiment_name = "fgsm_one2one"
+    property_generator = One2OnePropertyGenerator(target_class=1)
 
-    verifier = AttackEstimationModule(attack=AutoAttackWrapper())
+    verifier = AttackEstimationModule(attack=FGSMAttack())
 
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(
         epsilon_value_list=epsilon_list.copy(), verifier=verifier
@@ -83,9 +86,32 @@ def main():
             experiment_repository_path=str(experiment_repository_path),
             network_folder=str(network_folder),
             dataset=str(dataset),
+            timeout=timeout,
             epsilon_list=[str(x) for x in epsilon_list],
         )
     )
+    create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator, property_generator)
+
+    # Create distribution using FGSM attack with one-to-any property generator
+    experiment_name = "fgsm_one2any"
+    property_generator = One2AnyPropertyGenerator()
+    verifier = AttackEstimationModule(attack=FGSMAttack())
+    epsilon_value_estimator = BinarySearchEpsilonValueEstimator(
+        epsilon_value_list=epsilon_list.copy(), verifier=verifier
+    )
+    dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
+    experiment_repository.initialize_new_experiment(experiment_name)
+    experiment_repository.save_configuration(
+        dict(
+            experiment_name=experiment_name,
+            experiment_repository_path=str(experiment_repository_path),
+            network_folder=str(network_folder),
+            dataset=str(dataset),
+            timeout=timeout,
+            epsilon_list=[str(x) for x in epsilon_list],
+        )
+    )
+
     create_distribution(experiment_repository, dataset, dataset_sampler, epsilon_value_estimator, property_generator)
 
 

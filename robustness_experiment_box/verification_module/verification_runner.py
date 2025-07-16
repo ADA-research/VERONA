@@ -1,25 +1,31 @@
 import logging
 import re
 from pathlib import Path
+from abc import ABC, abstractmethod
+from typing import Optional
 
-import autoverify
 import numpy as np
-from autoverify.verifier.verification_result import CompleteVerificationData
-from result import Err, Ok
-
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from robustness_experiment_box.database.verification_result import CompleteVerificationData
+from result import Err, Ok
 
 logger = logging.getLogger(__name__)
 
-
+class Verifier(ABC):
+    """
+    Abstract base class for verifiers. Concrete verifiers should implement this interface.
+    """
+    @abstractmethod
+    def verify_property(self, network_path, property_path, timeout, config=None):
+        pass
 
 class AutoVerifyModule(VerificationModule):
     """
     A module for automatically verifying the robustness of a model using a specified verifier.
     """
 
-    def __init__(self, verifier: autoverify.verifier.verifier.Verifier, timeout: float, config: Path = None) -> None:
+    def __init__(self, verifier: Verifier, timeout: float, config: Optional[Path] = None) -> None:
         """
         Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
         Args:
@@ -30,7 +36,7 @@ class AutoVerifyModule(VerificationModule):
         self.verifier = verifier
         self.timeout = timeout
         self.config = config
-        self.name = f"AutoVerifyModule ({verifier.name})" 
+        self.name = f"AutoVerifyModule ({getattr(verifier, 'name', type(verifier).__name__)})"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
@@ -60,12 +66,18 @@ class AutoVerifyModule(VerificationModule):
                 verification_context.network.path, vnnlib_property.path, timeout=self.timeout
             )
 
+        if result is None:
+            logger.error("Verifier returned None.")
+            return "ERR"
         if isinstance(result, Ok):
             outcome = result.unwrap()
             return outcome
         elif isinstance(result, Err):
             logger.info(f"Error during verification: {result.unwrap_err()}")
             return result.unwrap_err()
+        else:
+            logger.error("Verifier returned an unexpected result type.")
+            return "ERR"
 
 def parse_counter_example(result: Ok, verification_context: VerificationContext) -> np.ndarray:
     """
@@ -79,6 +91,7 @@ def parse_counter_example(result: Ok, verification_context: VerificationContext)
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
+    
     counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers if x.strip()])
 
     return counter_example_array.reshape(verification_context.data_point.data.shape)

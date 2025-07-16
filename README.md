@@ -88,6 +88,7 @@ In addition, in the notebooks folder a jupyter notebook is provided to give an o
 
 ## Related Papers
 This package was created to simplify reproducing and extending the results of two different lines of work of the ADA research group. Please consider citing these works when using this package for your research. 
+
 ### Robustness distributions 
 - @article{BosEtAl23,
     author = "Bosman, Annelot W. and Hoos, Holger H. and van Rijn, Jan N.",
@@ -95,15 +96,39 @@ This package was created to simplify reproducing and extending the results of tw
     year = "2023",
     journal = "6th Workshop on Formal Methods for ML-Enabled Autonomous Systems (FoMLAS) co-located with the 35th International Conference on Computer Aided Verification (CAV 2023)",
     booktitle = "to appear"
+}
   
 - https://ada.liacs.leidenuniv.nl/papers/BosEtAl23.pdf
 - An extended version of this work is currently under review. 
+}
+
 ### Per-class robustness distributions
 - @inproceedings{BosEtAl24,
-    author = {Bosman, Annelot W. and M\“unz, Anna L. and Hoos, Holger H. and van Rijn, Jan N.},
+    author = {Bosman, Annelot W. and Münz, Anna L. and Hoos, Holger H. and van Rijn, Jan N.},
     title = {{A Preliminary Study to Examining Per-Class Performance Bias via Robustness Distributions}},
     year = {2024},
-    booktitle = {The 7th International Symposium on AI Verification (SAIV) co-located with the 36th International Conference on Computer Aided Verification (CAV 2024)}
+    booktitle = {The 7th International Symposium on AI Verification (SAIV) co-located with the 36th International Conference on Computer Aided Verification (CAV 2024)},
+    url = {https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf}
 }
-- https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf
+
+### Upper bounds to Robustness distributions
+- @inproceedings{bergerEmpiricalAnalysisUpper,
+  title = {Empirical {{Analysis}} of {{Upper Bounds}} of {{Robustness Distributions}} Using {{Adversarial Attacks}}},
+  booktitle = {{{THE 19TH LEARNING AND IN}}℡{{LIGENT OPTIMIZATION CONFERENCE}}},
+  author = {Berger, Aaron and Eberhardt, Nils and Bosman, Annelot Willemijn and Duwe, Henning and family=Rijn, given=Jan N., prefix=van, useprefix=true and Hoos, Holger},
+  url = {https://openreview.net/forum?id=jsfqoRrsjy}
+}
+
+## Acknowledgements
+
+This package makes use of the following tools and libraries:
+
+- **AutoAttack** ([GitHub](https://github.com/fra31/auto-attack))
+    - F. Croce and M. Hein, “Mind the box: l_1 -APGD for sparse adversarial attacks on image classifiers,” in International Conference on Machine Learning, PMLR, 2021, pp. 2201–2211. [Online]. Available: http://proceedings.mlr.press/v139/croce21a.html
+    - F. Croce and M. Hein, “Reliable evaluation of adversarial robustness with an ensemble of diverse parameter-free attacks,” in International conference on machine learning, PMLR, 2020, pp. 2206–2216. [Online]. Available: https://proceedings.mlr.press/v119/croce20b.html
+
+- **auto-verify** ([GitHub](https://github.com/ADA-research/auto-verify))
+    - For integrating additional verifiers such as nnenum, AB-Crown, VeriNet, and Oval-Bab. Please refer to the auto-verify documentation for installation and usage details.
+
+We thank the authors and maintainers of these projects for their contributions to the robustness research community.
 

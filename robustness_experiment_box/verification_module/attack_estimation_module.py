@@ -1,8 +1,7 @@
 import time
-
 import torch
-from autoverify.verifier.verification_result import CompleteVerificationData
 
+from robustness_experiment_box.database.verification_result import CompleteVerificationData
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.verification_module.attacks.attack import Attack
@@ -59,8 +58,8 @@ class AttackEstimationModule(VerificationModule):
 
             duration = time.time() - start 
             if final_pred == target:
-                return CompleteVerificationData(result=VerificationResult.UNSAT, took=duration)
+                return CompleteVerificationData(result=VerificationResult.UNSAT.value, took=duration, counter_example="")
             else:
-                return CompleteVerificationData(result=VerificationResult.SAT, took=duration)
+                return CompleteVerificationData(result=VerificationResult.SAT.value, took=duration, counter_example="")
         else:
             raise NotImplementedError("Currently, only one 2 any verification is implemented for adversarial attacks.")
