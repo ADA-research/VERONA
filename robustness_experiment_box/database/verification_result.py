@@ -1,10 +1,17 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import Literal
 
 from result import Result
 
-"""Classes for data about verification."""
 
+class VerificationResult(str, Enum):
+    UNSAT = "UNSAT"
+    SAT = "SAT"
+    TIMEOUT = "TIMEOUT"
+    ERROR = "ERR"
+
+"""Classes for data about verification."""
 # TODO: Enum?
 VerificationResultString = Literal["SAT", "UNSAT", "TIMEOUT", "ERR"]
 
@@ -32,3 +39,4 @@ class CompleteVerificationData:
 CompleteVerificationResult = Result[
     CompleteVerificationData, CompleteVerificationData
 ]
+
