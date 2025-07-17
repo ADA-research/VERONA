@@ -7,6 +7,9 @@ The package can be used to create robustness distributions [Bosman, Hoos and van
 
 If you have any suggestions to enhance this package, feel free to create an issue or a pull-request.
 
+### Documentation
+In case you have more questions, yopu may find some useful information in the [VERONA documentation](https://deepwiki.com/ADA-research/VERONA).
+
 ## Setup
 - clone the repository locally
 - create new environment ```conda create -n verona python=3.10```
