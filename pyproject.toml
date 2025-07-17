@@ -4,6 +4,7 @@ version = "0.0.1"
 authors = [
   { name="Aaron Berger", email="aaron.berger@rwth-aachen.de" },
   { name="Annelot Bosmann", email="a.w.bosman@liacs.leidenuniv.n" },
+  { name="Hendrik Simon Baacke", email="hendrik.baacke@rwth-aachen.de" },
 ]
 description = "A robustness distribution generator"
 readme = "README.md"

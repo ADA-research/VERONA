@@ -1,22 +1,17 @@
 from pathlib import Path
 
-from autoverify.verifier.verification_result import CompleteVerificationData
+
 from result import Ok
 from torch import Tensor, load
-
+from robustness_experiment_box.database.verification_result import CompleteVerificationData
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
 class TestVerificationModule(VerificationModule):
-    def __init__(self) -> None:
-        """
-        Initialize the TestVerificationModule.
-        """
-        super().__init__()
-        self.name = "TestVerificationModule"
-        
+    name = "TestVerificationModule"
+
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
         A module for testing other parts of the pipeline. This module does not actually verify anything.
@@ -37,10 +32,10 @@ class TestVerificationModule(VerificationModule):
             raise Exception("[TestVerificationModule]: network path not found")
 
         if epsilon > 0.5:
-            return CompleteVerificationData(result=VerificationResult.SAT, took=10.0)
+            return CompleteVerificationData(result=VerificationResult.SAT.value, took=10.0)
 
         else:
-            return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
+            return CompleteVerificationData(result=VerificationResult.UNSAT.value, took=10.0)
         
 
     def verify_property(
@@ -68,7 +63,7 @@ class TestVerificationModule(VerificationModule):
         if not Path(vnnlib_property_path).exists():
             raise Exception("[TestVerificationModule]: image path not found")
         
-        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=timeout))
+        return Ok(CompleteVerificationData(result=VerificationResult.SAT.value, took=timeout))
 
    
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:

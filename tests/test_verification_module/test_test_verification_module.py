@@ -1,6 +1,6 @@
 import pytest
 import torch
-from autoverify.verifier.verification_result import CompleteVerificationData
+from robustness_experiment_box.database.verification_result import CompleteVerificationData
 from result import Ok
 from torch import tensor
 
@@ -14,7 +14,7 @@ from robustness_experiment_box.verification_module.property_generator.one2any_pr
 from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
     One2OnePropertyGenerator,
 )
-from robustness_experiment_box.verification_module.test_verification_module import TestVerificationModule
+from tests.test_verification_module.helpers.test_verification_module import TestVerificationModule
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 

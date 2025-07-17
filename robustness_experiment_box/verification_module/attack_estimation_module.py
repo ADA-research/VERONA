@@ -59,11 +59,9 @@ class AttackEstimationModule(VerificationModule):
             duration = time.time() - start 
             if final_pred == target:
                 return CompleteVerificationData(result=VerificationResult.UNSAT.value, 
-                took=duration, 
-                counter_example="")
+                took=duration)
             else:
                 return CompleteVerificationData(result=VerificationResult.SAT.value, 
-                took=duration, 
-                counter_example="")
+                took=duration)
         else:
             raise NotImplementedError("Currently, only one 2 any verification is implemented for adversarial attacks.")

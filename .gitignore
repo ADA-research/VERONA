@@ -3,3 +3,4 @@ dist/
 .coverage
 scripts/data/*
 scripts/manual_plots/*
+tests/test_experiment/*
