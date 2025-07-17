@@ -1,9 +1,9 @@
 import time
+
 import torch
 
-from robustness_experiment_box.database.verification_result import CompleteVerificationData
 from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import VerificationResult
+from robustness_experiment_box.database.verification_result import CompleteVerificationData, VerificationResult
 from robustness_experiment_box.verification_module.attacks.attack import Attack
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
@@ -58,8 +58,12 @@ class AttackEstimationModule(VerificationModule):
 
             duration = time.time() - start 
             if final_pred == target:
-                return CompleteVerificationData(result=VerificationResult.UNSAT.value, took=duration, counter_example="")
+                return CompleteVerificationData(result=VerificationResult.UNSAT.value, 
+                took=duration, 
+                counter_example="")
             else:
-                return CompleteVerificationData(result=VerificationResult.SAT.value, took=duration, counter_example="")
+                return CompleteVerificationData(result=VerificationResult.SAT.value, 
+                took=duration, 
+                counter_example="")
         else:
             raise NotImplementedError("Currently, only one 2 any verification is implemented for adversarial attacks.")

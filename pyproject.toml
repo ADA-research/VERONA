@@ -33,6 +33,7 @@ pythonpath = [
 
 [tool.ruff]
 line-length = 120
+exclude = ["notebooks"]
 
 [tool.ruff.lint]
 select = [

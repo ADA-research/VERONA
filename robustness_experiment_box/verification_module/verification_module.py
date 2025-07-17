@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from robustness_experiment_box.database.verification_result import CompleteVerificationData
 from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.verification_result import CompleteVerificationData
 
 
 class VerificationModule(ABC):

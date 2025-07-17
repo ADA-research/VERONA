@@ -1,14 +1,14 @@
 import logging
 import re
-from pathlib import Path
 from abc import ABC, abstractmethod
-from typing import Optional
+from pathlib import Path
 
 import numpy as np
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
-from robustness_experiment_box.database.verification_result import CompleteVerificationData
 from result import Err, Ok
+
+from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.database.verification_result import CompleteVerificationData
+from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class AutoVerifyModule(VerificationModule):
     A module for automatically verifying the robustness of a model using a specified verifier.
     """
 
-    def __init__(self, verifier: Verifier, timeout: float, config: Optional[Path] = None) -> None:
+    def __init__(self, verifier: Verifier, timeout: float, config: Path | None = None) -> None:
         """
         Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
         Args:

@@ -1,7 +1,6 @@
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 from typing import Literal
-from result import Result
 
 
 class VerificationResult(str, Enum):

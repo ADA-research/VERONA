@@ -1,19 +1,9 @@
 import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
 from pathlib import Path
 
 import torch
-
-torch.manual_seed(0)
 import torchvision
 import torchvision.transforms as transforms
-
-
-from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
-from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
-
 
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
 from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
@@ -24,14 +14,15 @@ from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_val
     BinarySearchEpsilonValueEstimator,
 )
 from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
-
+from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
+from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
-
-
+torch.manual_seed(0)
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 def create_distribution(
     experiment_repository: ExperimentRepository,
@@ -45,8 +36,8 @@ def create_distribution(
     for network in network_list:
         try:
             sampled_data = dataset_sampler.sample(network, dataset)
-        except:
-            logging.info(f"failed for network: {network}")
+        except Exception as e:
+            logging.info(f"failed for network: {network} with error: {e}")
             failed_networks.append(network)
             continue
         for data_point in sampled_data:
