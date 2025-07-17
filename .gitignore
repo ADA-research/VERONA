@@ -1,7 +1,5 @@
 __pycache__
 dist/
-tests/test_experiment/*
-!tests/test_experiment/data
 .coverage
 scripts/data/*
 scripts/manual_plots/*
