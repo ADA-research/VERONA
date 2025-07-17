@@ -61,7 +61,7 @@ def write_yaml_file(yaml_scripts_path: Path) -> Path:
 
 def get_network_name(network_path: Path) -> Path:
     root, _ = os.path.splitext(network_path)
-    return os.path.basename(root)
+    return Path(os.path.basename(root))
 
 
 def create_distribution(

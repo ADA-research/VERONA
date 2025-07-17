@@ -2,13 +2,12 @@ import argparse
 import logging
 from pathlib import Path
 
-from autoverify.verifier import AbCrown
-
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
+from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
+from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
@@ -28,8 +27,9 @@ if __name__ == "__main__":
     )
     baby_experiment_repository.load_experiment(experiment_name=args.experiment_name)
 
-    # load autoverify module for verification
-    verifier = AutoVerifyModule(verifier=AbCrown(), timeout=360)
+    # load autoverify module for verification (example)
+    #verifier = GenericVerifierModule(verifier=MyExternalToolVerifier(), timeout=360)
+    verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=10, step_size=0.01)) 
     eps_list = args.epsilon_list
 
     # create the binary search module

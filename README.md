@@ -15,9 +15,9 @@ If you have any suggestions to enhance this package, feel free to create an issu
 - install dependencies ```pip install -r requirements.txt```
 - install package locally (editable install for development) ```pip install -e .```
 
-This package was tested only on python version 3.10 and we cannot guarentee it working on any other python version at this point. 
+This package was tested only on python version 3.10 and we cannot guarentee it working on any other python version. 
 
-** If you want to use Autoverify with either OvalBab or Verinet, you should follow the installation guide of Autoverify at this point. Otherwise, some of the requirements of the VERONA package will clash with the installation requirements of the verifiers. After this, you can proceed with the VERONA installation guide. 
+
 
 ## Experiment Folder
 The following structure for an experiment folder is currently supported:
@@ -38,22 +38,57 @@ experiment/
 
 The images can be placed in it optionally, if one wants to execute the experiments using custom data. Otherwise, Pytorch Datasets can be used too and no image folder has to be created.
 
-## Available Verifiers
-
-### AutoVerify
-Auto verifiy offers the following verifiers:
-- nnenum https://github.com/stanleybak/nnenum
-- AB-Crown https://github.com/Verified-Intelligence/alpha-beta-CROWN
-- VeriNet https://github.com/vas-group-imperial/VeriNet
-- Oval-Bab https://github.com/oval-group/oval-bab
-
-If the auto verify module is used, the verifiers have to be installed as described in the auto-verify documentation.
-
-https://github.com/ADA-research/auto-verify
-
-
 ### Custom Verifiers
+The ada-verona does not entail the [auto-verify](https://github.com/ADA-research/auto-verify) integration in order to provide a leaner package composition. If you want to use the verifiers supported by [auto-verify](https://github.com/ADA-research/auto-verify) and do not wish to tinker with integrating your own verifiers, then we can refer to our ada-auto-verona package.
+
+<!-- **#TODO**: once package is up, add the link here. Prob. needs a catchier name also.  -->
+
 Custom verifiers can be implemented too, by using the [VerificationModule](robustness_experiment_box/verification_module/verification_module.py) interface.
+
+#### How to Add Your Own Verifier
+
+You can easily add your own verifier by following these steps:
+
+1. **Implement the `VerificationModule` interface:**
+   - Create a new class that inherits from `VerificationModule` (see `robustness_experiment_box/verification_module/verification_module.py`).
+   - Implement the `verify(self, verification_context: VerificationContext, epsilon: float)` method. This method should return either a string (e.g., "SAT", "UNSAT", "ERR") or a `CompleteVerificationData` object.
+
+   Example:
+   ```python
+   from robustness_experiment_box.verification_module.verification_module import VerificationModule
+
+   class MyCustomVerifier(VerificationModule):
+       def verify(self, verification_context, epsilon):
+           # Your custom verification logic here
+           # Return "SAT", "UNSAT", or a CompleteVerificationData object
+           return "UNSAT"
+   ```
+
+2. **(Optional) If your verifier wraps an external tool:**
+   - Implement the `Verifier` interface in `verification_runner.py`.
+   - Then, use the `GenericVerifierModule` to wrap your `Verifier` implementation, which will handle property file management and result parsing for you.
+
+   Example:
+   ```python
+   from robustness_experiment_box.verification_module.verification_runner import Verifier, GenericVerifierModule
+
+   class MyExternalToolVerifier(Verifier):
+       def verify_property(self, network_path, property_path, timeout, config=None):
+           # Call your external tool here
+           # Return Ok(result) or Err(error_message)
+           pass
+
+   my_verifier = MyExternalToolVerifier()
+   module = GenericVerifierModule(my_verifier, timeout=60)
+   ```
+
+3. **Register and use your verifier in your experiment scripts.**
+
+| Interface/Class         | Purpose                                      | Where to Implement/Use                |
+|------------------------|----------------------------------------------|---------------------------------------|
+| `VerificationModule`   | Main interface for all verifiers             | Subclass for custom logic             |
+| `Verifier`             | For verifiers wrapping external tools        | Subclass if using external binaries   |
+| `GenericVerifierModule`| Wraps a `Verifier` for property/result mgmt  | Use if you subclass `Verifier`        |
 
 ## Available Attacks
 Currently the package implements the following adversarial attack methods:
@@ -73,18 +108,21 @@ Then, the tests can be executed using ```pytest tests```
 
 ### Datasets
 - The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for executing the package on mnist or a custom dataset can be found in the ```scripts``` folder
-## Tutorial 
-### Example Scripts
-There are a few example scripts that can be found in the ```scripts``` folder. All these examples are made to be run out of the ```scripts``` folder, otherwise the paths might break. 
-- ```create_robustness_distribution_from_test_dataset.py``` gives an example of how to run VERONA with custom dataset and ab-crown. 
-- ```create_robustness_dist_on_pytorch_dataset.py``` shows how to load in a pytorch dataset and run VERONA with one-to-any verification on one-to-one verification where a target is specified.
-- The folder ```multiple_jobs``` shows an example of how to create a job for each network-image pair and run them on different nodes via SLURM. This is especially useful when working on a computer cluster.
-  This also makes it possible to distribute tasks over CPU and GPU for different verifiers in the same experiment for example.
 
-All verifiers can run on both GPU and CPU, except for ab-crown, which can only be employed on the GPU. So the resources necessary to run a script depend on the verifier used.
+### Getting Started: Guide and Example Scripts
 
-### Tutorial Notebook
-In addition, in the notebooks folder a jupyter notebook is provided to give an overview about the components in the package and how to use them.
+To help you get up and running with ada-verona, we provide a comprehensive tutorial notebook and a collection of practical example scripts:
+
+- **Main Guide:**
+  - The primary resource for learning how to use ada-verona is the Jupyter notebook found in the `notebooks` folder. This tutorial notebook offers an in-depth overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
+
+- **Quick-Start Example Scripts:**
+  - The `scripts` folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
+    - Running VERONA with a custom dataset and ab-crown (`create_robustness_distribution_from_test_dataset.py`).
+    - Loading a PyTorch dataset and running VERONA with one-to-any or one-to-one verification (`create_robustness_dist_on_pytorch_dataset.py`).
+    - Distributing jobs across multiple nodes using SLURM for large-scale experiments (`multiple_jobs` folder), including distributing tasks over CPU and GPU for different verifiers in the same experiment.
+
+The notebook is your main entry point for learning and understanding the package, while the scripts serve as practical templates and quick-start resources for your own experiments.
 
 ## Related Papers
 This package was created to simplify reproducing and extending the results of two different lines of work of the ADA research group. Please consider citing these works when using this package for your research. 
@@ -100,7 +138,7 @@ This package was created to simplify reproducing and extending the results of tw
   
 - https://ada.liacs.leidenuniv.nl/papers/BosEtAl23.pdf
 - An extended version of this work is currently under review. 
-}
+
 
 ### Per-class robustness distributions
 - @inproceedings{BosEtAl24,
@@ -111,7 +149,7 @@ This package was created to simplify reproducing and extending the results of tw
     url = {https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf}
 }
 
-### Upper bounds to Robustness distributions
+### Upper bounds to robustness distributions
 - @inproceedings{bergerEmpiricalAnalysisUpper,
   title = {Empirical {{Analysis}} of {{Upper Bounds}} of {{Robustness Distributions}} Using {{Adversarial Attacks}}},
   booktitle = {{{THE 19TH LEARNING AND IN}}℡{{LIGENT OPTIMIZATION CONFERENCE}}},

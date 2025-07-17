@@ -20,14 +20,14 @@ class Verifier(ABC):
     def verify_property(self, network_path, property_path, timeout, config=None):
         pass
 
-class AutoVerifyModule(VerificationModule):
+class GenericVerifierModule(VerificationModule):
     """
     A module for automatically verifying the robustness of a model using a specified verifier.
     """
 
     def __init__(self, verifier: Verifier, timeout: float, config: Path | None = None) -> None:
         """
-        Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
+        Initialize the GenericVerifierModule with a specific verifier, timeout, and optional configuration.
         Args:
             verifier (Verifier): The verifier to be used for robustness verification.
             timeout (float): The timeout for the verification process.
@@ -36,7 +36,7 @@ class AutoVerifyModule(VerificationModule):
         self.verifier = verifier
         self.timeout = timeout
         self.config = config
-        self.name = f"AutoVerifyModule ({getattr(verifier, 'name', type(verifier).__name__)})"
+        self.name = f"GenericVerifierModule ({getattr(verifier, 'name', type(verifier).__name__)})"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
