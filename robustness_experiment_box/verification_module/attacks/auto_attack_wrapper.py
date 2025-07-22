@@ -1,4 +1,5 @@
-from autoattack import AutoAttack
+
+from pyautoattack import AutoAttack
 from torch import Tensor
 from torch.nn.modules import Module
 
@@ -45,10 +46,29 @@ class AutoAttackWrapper(Attack):
             Tensor: The perturbed data.
         """
         adversary = AutoAttack(
-            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device
         )
         data = data.unsqueeze(0)
 
         # auto attack requires NCHW input format
         perturbed_data = adversary.run_standard_evaluation(data, target)
-        return perturbed_data.to(self.device)
+        
+        
+        if isinstance(perturbed_data, tuple):
+            print(f"PyAutoAttack returned a tuple with {len(perturbed_data)} elements")
+            for i, item in enumerate(perturbed_data):
+                print(f"Element {i} type: {type(item)}")
+                if hasattr(item, 'shape'):
+                    print(f"Element {i} shape: {item.shape}")
+                    #model's prediction after the attack
+                    if i == 1:
+                        print(f"Element {i} content: {item}")
+        
+
+        # Handle the case where perturbed_data is a tuple (which happens with pyautoattack)
+        if isinstance(perturbed_data, tuple):
+            # Return the first element of the tuple (the perturbed images)
+            return perturbed_data[0].to(self.device)
+        else:
+            # Original behavior for backward compatibility
+            return perturbed_data.to(self.device)

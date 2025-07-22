@@ -1,25 +1,66 @@
 # Robustness Experiment Box
 
-This VERONA package simplifies your experiment pipeline for performing local robustness verification on your networks and dataset. 
+The ada-verona package simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 The entire package is class-based, which means that extending the existing configurations is accessible and easy. 
-With only one script it should be possible to run an entire experiment with various networks, images and epsilons. 
-The package can be used to create robustness distributions [Bosman, Hoos and van Rijn, 2023] and per-class robustness distributions [Bosman et al., 2024] 
+With one script it is possible to run an entire experiment with various networks, images and perturbation magnitudes (epsilons). 
+The package can be used to create robustness distributions [Bosman, Hoos and van Rijn, 2023] and per-class robustness distributions [Bosman et al., 2024].
 
-If you have any suggestions to enhance this package, feel free to create an issue or a pull-request.
 
-### Documentation
-In case you have more questions, yopu may find some useful information in the [VERONA documentation](https://deepwiki.com/ADA-research/VERONA).
+## Authors
 
-## Setup
-- clone the repository locally
-- create new environment ```conda create -n verona python=3.10```
-- activate the environment ```conda activate verona```
-- change into verona directory ```cd VERONA```**
-- install dependencies ```pip install -r requirements.txt```
-- install package locally (editable install for development) ```pip install -e .```
+This package was created and is maintained by members the [ADA Research Group](https://adaresearch.wordpress.com/about/), which focuses on the development of AI techniques that complement human intelligence and automated algorithm design. The current core team includes:
+
+- **Annelot Bosman** (LIACS, Leiden University)
+- **Hendrik Baacke** (AIM, RWTH Aachen University)
+- **Aaron Berger** (TU Delft)
+
+## Installation
+
+### Installation Options
+
+ADA-VERONA offers several installation options to meet different needs:
+
+```bash
+# Default installation (includes GPU support and AutoAttack) using uv for faster installation (recommended)
+uv pip install ada-verona
+
+# Default installation (includes GPU support and AutoAttack)
+pip install ada-verona
+
+# CPU-only installation without GPU or AutoAttack
+pip install "ada-verona[cpu]"
+
+# Development installation with testing tools
+pip install "ada-verona[dev]"
+```
+
+> **Note:** When installing with extras (like `[cpu]` or `[dev]`), quotes are required around the package name to prevent shell expansion of the square brackets.
+
+### Installation Variants Explained
+
+| Variant | Description | Best For |
+|---------|-------------|----------|
+| `ada-verona` | Full installation with GPU support and AutoAttack | Most users, recommended default |
+| `ada-verona[cpu]` | CPU-only version with minimal dependencies | Basic usage, restricted environments |
+| `ada-verona[dev]` | Full installation plus development tools | Contributors, developers |
+
 
 This package was tested only on python version 3.10 and we cannot guarentee it working on any other python version. 
+## Documentation
+In case you have more questions, please refer to the [VERONA documentation](https://deepwiki.com/ADA-research/VERONA).
 
+## Contributing
+We welcome contributions to the ada-verona package! If you find a bug, have a feature request, or want to contribute code, please follow these steps:
+0. **Create an Issue:** Before starting work on a new feature or bug fix, please create an issue in the GitHub repository to discuss your plans. This helps us coordinate contributions and avoid duplicate work.
+1. **Fork the Repository:** Create a personal copy of the repository on GitHub.
+2. **Create a Branch:** Create a new branch for your feature or bug fix.
+3. **Make Changes:** Implement your changes in the codebase.
+4. **Test Your Changes:** Ensure that your changes do not break existing functionality and that new features work as intended.
+5. **Commit Your Changes:** Write clear and concise commit messages describing your changes.
+6. **Push to Your Fork:** Push your changes to your forked repository.
+7. **Create a Pull Request:** Open a pull request against the main repository, describing your changes and why they are needed.
+We appreciate all contributions, whether they are bug fixes, new features, or improvements to the documentation.
+8. **Review Process:** Your pull request will be reviewed by at least one of the maintainers. They may request changes or provide feedback.
 
 
 ## Experiment Folder
@@ -102,13 +143,6 @@ Currently the package implements the following adversarial attack methods:
 ### Custom Attacks
 Custom attacks can be implemented too, by using the [Attack](robustness_experiment_box/verification_module/attacks/attack.py) interface.
 
-## Testing
-Core parts of the package can be tested using pytest. In addition, the package was tested using various datasets described below.
-
-### Pytest
-To execute the pytests, first install the package with the dev dependencies using  ```pip install '.[dev]'```.
-Then, the tests can be executed using ```pytest tests```
-
 ### Datasets
 - The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for executing the package on mnist or a custom dataset can be found in the ```scripts``` folder
 
@@ -117,7 +151,7 @@ Then, the tests can be executed using ```pytest tests```
 To help you get up and running with ada-verona, we provide a comprehensive tutorial notebook and a collection of practical example scripts:
 
 - **Main Guide:**
-  - The primary resource for learning how to use ada-verona is the Jupyter notebook found in the `notebooks` folder. This tutorial notebook offers an in-depth overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
+  - The primary resource for learning how to use ada-verona is the Jupyter notebook found in the `notebooks` folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
 
 - **Quick-Start Example Scripts:**
   - The `scripts` folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
@@ -127,7 +161,7 @@ To help you get up and running with ada-verona, we provide a comprehensive tutor
 
 The notebook is your main entry point for learning and understanding the package, while the scripts serve as practical templates and quick-start resources for your own experiments.
 
-## Related Papers
+## Related Papers and Citation
 This package was created to simplify reproducing and extending the results of two different lines of work of the ADA research group. Please consider citing these works when using this package for your research. 
 
 ### Robustness distributions 
