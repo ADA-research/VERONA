@@ -1,9 +1,9 @@
-# Robustness Experiment Box
+# VERification Of Neural Architectures (VERONA)
 
 The ada-verona package simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 The entire package is class-based, which means that extending the existing configurations is accessible and easy. 
 With one script it is possible to run an entire experiment with various networks, images and perturbation magnitudes (epsilons). 
-The package can be used to create robustness distributions [Bosman, Hoos and van Rijn, 2023] and per-class robustness distributions [Bosman et al., 2024].
+The package can be used to create robustness distributions [Bosman,Berger, Hoos and van Rijn, 2023](https://ada.liacs.leidenuniv.nl/papers/BosEtAl25.pdf) and per-class robustness distributions [Bosman et al., 2024](https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf).
 
 
 ## Authors
@@ -11,8 +11,10 @@ The package can be used to create robustness distributions [Bosman, Hoos and van
 This package was created and is maintained by members the [ADA Research Group](https://adaresearch.wordpress.com/about/), which focuses on the development of AI techniques that complement human intelligence and automated algorithm design. The current core team includes:
 
 - **Annelot Bosman** (LIACS, Leiden University)
-- **Hendrik Baacke** (AIM, RWTH Aachen University)
 - **Aaron Berger** (TU Delft)
+- **Hendrik Baacke** (AIM, RWTH Aachen University)
+- **Holger H. Hoos** (AIM, RWTH Aachen University)
+- **Jan van Rijn** (LIACS, Leiden University)
 
 ## Installation
 
