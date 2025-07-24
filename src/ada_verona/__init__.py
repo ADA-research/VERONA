@@ -34,6 +34,29 @@ try:
 except ImportError:
     HAS_AUTOATTACK = False
     
+# Check for auto-verify availability and load plugin
+try:
+    from .robustness_experiment_box.verification_module.plugins.auto_verify_plugin import (
+        detect_auto_verify, 
+        list_auto_verify_verifiers, 
+        create_auto_verify_verifier,
+        get_auto_verify_plugin
+    )
+    HAS_AUTO_VERIFY = detect_auto_verify()
+    
+    if HAS_AUTO_VERIFY:
+        # Initialize the plugin to discover verifiers
+        _plugin = get_auto_verify_plugin()
+        AUTO_VERIFY_VERIFIERS = _plugin.get_available_verifiers()
+    else:
+        AUTO_VERIFY_VERIFIERS = []
+        
+except ImportError:
+    HAS_AUTO_VERIFY = False
+    AUTO_VERIFY_VERIFIERS = []
+    list_auto_verify_verifiers = lambda: []
+    create_auto_verify_verifier = lambda *args, **kwargs: None
+    
 # Warn if autoattack is not available
 if not HAS_AUTOATTACK:
     import warnings
@@ -43,10 +66,25 @@ if not HAS_AUTOATTACK:
         stacklevel=2
     )
 
+# Log auto-verify status
+if HAS_AUTO_VERIFY:
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"Auto-verify detected! Available verifiers: {AUTO_VERIFY_VERIFIERS}")
+else:
+    import warnings
+    warnings.warn(
+        "Auto-verify not found. Formal verification features will be limited to attacks. "
+        "To enable: install auto-verify in the same environment",
+        stacklevel=2
+    )
+
 __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
+    "HAS_AUTO_VERIFY", 
+    "AUTO_VERIFY_VERIFIERS",
     "analysis",
     "database",
     "dataset_sampler",
@@ -56,4 +94,6 @@ __all__ = [
     "DatasetSampler",
     "EpsilonValueEstimator",
     "VerificationModule",
+    "list_auto_verify_verifiers",
+    "create_auto_verify_verifier",
 ]
