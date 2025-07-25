@@ -4,15 +4,17 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ada-verona"
-version = "0.1.5"
+version = "0.1.6"
 description = "Neural Network Robustness Analysis Framework"
 authors = [
     {name = "Annelot Bosman", email = "a.w.bosman@liacs.leidenuniv.nl"},
     {name = "Hendrik Baacke", email = "hendrik.baacke@rwth-aachen.de"},
-    {name = "Aaron Berger", email = "A.Berger@tudelft.nl"}
+    {name = "Aaron Berger", email = "A.Berger@tudelft.nl"},
+    {name = "Jan van Rijn", email = "jan.vanrijn@liacs.leidenuniv.nl"},
+    {name = "Holger H. Hoos", email = "hh@aim.rwth-aachen.de"}
 ]
-author = "Annelot Bosmann, Hendrik Baacke, Aaron Berger"
-author_email = "a.w.bosman@liacs.leidenuniv.nl, hendrik.baacke@rwth-aachen.de, aaron.berger@rwth-aachen.de"
+author = "Annelot Bosmann, Hendrik Baacke, Aaron Berger, Jan van Rijn"
+author_email = "a.w.bosman@liacs.leidenuniv.nl, hendrik.baacke@rwth-aachen.de, aaron.berger@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
@@ -57,6 +59,7 @@ dependencies = [
     "pyautoattack>=0.2.0",
     "pynisher>=1.0.10",
     "pyparsing>=3.1.2",
+    "pyrfr>=0.9.0",
     "python-dateutil>=2.9.0",
     "PyYAML>=6.0.1",
     "regex>=2023.12.25",
@@ -122,6 +125,7 @@ cpu = [
     "psutil>=5.9.8",
     "pynisher>=1.0.10",
     "pyparsing>=3.1.2",
+    "pyrfr>=0.9.0",
     "python-dateutil>=2.9.0",
     "PyYAML>=6.0.1",
     "regex>=2023.12.25",
@@ -173,6 +177,7 @@ dev = [
     "pyautoattack>=0.2.0",
     "pynisher>=1.0.10",
     "pyparsing>=3.1.2",
+    "pyrfr>=0.9.0",
     "python-dateutil>=2.9.0",
     "PyYAML>=6.0.1",
     "regex>=2023.12.25",

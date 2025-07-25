@@ -56,5 +56,10 @@ scripts/data/*
 scripts/manual_plots/*
 tests/test_experiment/*
 
+#Src specific
+src/ada_verona/data/*
+src/ada_verona/tests/test_experiment/*
+
+
 # Keep .gitkeep files
 !**/.gitkeep
