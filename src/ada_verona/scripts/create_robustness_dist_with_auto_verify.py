@@ -154,13 +154,13 @@ def demonstrate_plugin_capabilities():
     print(f"PyAutoAttack available: {ada_verona.HAS_AUTOATTACK}")
     
     if ada_verona.HAS_AUTO_VERIFY:
-        print(f"\n📋 Available auto-verify verifiers:")
+        print("\n📋 Available auto-verify verifiers:")
         for verifier in ada_verona.AUTO_VERIFY_VERIFIERS:
             print(f"  • {verifier}")
             
-        print(f"\n💡 Usage example:")
-        print(f"  verifier = ada_verona.create_auto_verify_verifier('nnenum', timeout=600)")
-        print(f"  # Use verifier in BinarySearchEpsilonValueEstimator or other components")
+        print("\n💡 Usage example:")
+        print("  verifier = ada_verona.create_auto_verify_verifier('nnenum', timeout=600)")
+        print("  # Use verifier in BinarySearchEpsilonValueEstimator or other components")
     else:
         print("\n⚠️  Auto-verify not available - only attack-based verification available")
         print("   To enable formal verification, install auto-verify in the same environment")

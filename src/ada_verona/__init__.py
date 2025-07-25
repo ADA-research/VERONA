@@ -5,7 +5,7 @@ A comprehensive framework for analyzing neural network robustness
 through verification and adversarial testing.
 """
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __author__ = "ADA Research Group"
 
 # Import main components for easy access
@@ -37,10 +37,10 @@ except ImportError:
 # Check for auto-verify availability and load plugin
 try:
     from .robustness_experiment_box.verification_module.plugins.auto_verify_plugin import (
-        detect_auto_verify, 
-        list_auto_verify_verifiers, 
         create_auto_verify_verifier,
-        get_auto_verify_plugin
+        detect_auto_verify,
+        get_auto_verify_plugin,
+        list_auto_verify_verifiers,
     )
     HAS_AUTO_VERIFY = detect_auto_verify()
     
@@ -54,8 +54,12 @@ try:
 except ImportError:
     HAS_AUTO_VERIFY = False
     AUTO_VERIFY_VERIFIERS = []
-    list_auto_verify_verifiers = lambda: []
-    create_auto_verify_verifier = lambda *args, **kwargs: None
+    
+    def list_auto_verify_verifiers():
+        return []
+    
+    def create_auto_verify_verifier(*args, **kwargs):
+        return None
     
 # Warn if autoattack is not available
 if not HAS_AUTOATTACK:
@@ -74,7 +78,7 @@ if HAS_AUTO_VERIFY:
 else:
     import warnings
     warnings.warn(
-        "Auto-verify not found. Formal verification features will be limited to attacks. "
+        "Auto-verify not found. Verification features will be limited to attacks. "
         "To enable: install auto-verify in the same environment",
         stacklevel=2
     )

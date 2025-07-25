@@ -9,7 +9,7 @@ import importlib
 import importlib.util
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional
 
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 from ada_verona.robustness_experiment_box.database.verification_result import CompleteVerificationData
@@ -81,7 +81,7 @@ class AutoVerifyPlugin:
         except ImportError as e:
             logger.warning(f"Failed to discover auto-verify verifiers: {e}")
     
-    def get_available_verifiers(self) -> List[str]:
+    def get_available_verifiers(self) -> list[str]:
         """
         Get list of available auto-verify verifiers.
         
@@ -91,7 +91,7 @@ class AutoVerifyPlugin:
         return list(self._verifiers.keys()) if self.available else []
     
     def create_verifier_module(self, verifier_name: str, timeout: float = 600, 
-                             config: Optional[Path] = None, **kwargs) -> Optional['AutoVerifyVerifierModule']:
+                             config: Path | None = None, **kwargs) -> Optional['AutoVerifyVerifierModule']:
         """
         Create an ada-verona compatible verification module for an auto-verify verifier.
         
@@ -130,7 +130,7 @@ class AutoVerifyVerifierModule(VerificationModule):
     and ada-verona's VerificationModule interface.
     """
     
-    def __init__(self, auto_verify_verifier: Any, timeout: float, config: Optional[Path] = None):
+    def __init__(self, auto_verify_verifier: Any, timeout: float, config: Path | None = None):
         """
         Initialize the adapter module.
         
@@ -144,7 +144,7 @@ class AutoVerifyVerifierModule(VerificationModule):
         self.config = config
         self.name = f"AutoVerify-{getattr(auto_verify_verifier, 'name', type(auto_verify_verifier).__name__)}"
     
-    def verify(self, verification_context: VerificationContext, epsilon: float) -> Union[str, CompleteVerificationData]:
+    def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
         Verify the robustness using the auto-verify verifier.
         
@@ -237,7 +237,7 @@ def get_auto_verify_plugin() -> AutoVerifyPlugin:
     return _auto_verify_plugin
 
 
-def list_auto_verify_verifiers() -> List[str]:
+def list_auto_verify_verifiers() -> list[str]:
     """
     List all available auto-verify verifiers.
     
@@ -249,7 +249,7 @@ def list_auto_verify_verifiers() -> List[str]:
 
 
 def create_auto_verify_verifier(verifier_name: str, timeout: float = 600, 
-                               config: Optional[Path] = None, **kwargs) -> Optional[AutoVerifyVerifierModule]:
+                               config: Path | None = None, **kwargs) -> AutoVerifyVerifierModule | None:
     """
     Create an auto-verify verifier module.
     
