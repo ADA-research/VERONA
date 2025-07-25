@@ -1,4 +1,0 @@
-,epsilon_value,result,time,verifier
-0,0.005,UNSAT,0.0051860809326171,"AttackEstimationModule (PGDAttack (iterations=10, step_size=0.01, randomise=False))"
-1,0.05,UNSAT,0.0042164325714111,"AttackEstimationModule (PGDAttack (iterations=10, step_size=0.01, randomise=False))"
-2,0.08,UNSAT,0.004328489303588867,"AttackEstimationModule (PGDAttack (iterations=10, step_size=0.01, randomise=False))"
