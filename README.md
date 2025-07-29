@@ -14,6 +14,11 @@ The package can be used to create robustness distributions [Bosman, Berger, Hoos
     - [Installation Variants Explained](#installation-variants-explained)
   - [Documentation](#documentation)
   - [Getting Started: Guide and Example Scripts](#getting-started-guide-and-example-scripts)
+  - [Command-Line Interface](#command-line-interface)
+    - [Running Experiments](#running-experiments)
+    - [Using Auto-Verify Verifiers](#using-auto-verify-verifiers)
+    - [Listing Available Components](#listing-available-components)
+    - [Examples](#examples)
   - [Experiment Folder](#experiment-folder)
   - [Verification](#verification)
     - [Auto-Verify Plugin System](#auto-verify-plugin-system)
@@ -91,6 +96,85 @@ To help you get up and running with ada-verona, we provide a comprehensive tutor
     - Using auto-verify integration ([`create_robustness_dist_with_auto_verify.py`](./scripts/create_robustness_dist_with_auto_verify.py)).
 
 The notebook is your main entry point for learning and understanding the package, while the scripts serve as practical templates and quick-start resources for your own experiments.
+
+## Command-Line Interface
+
+ADA-VERONA provides a command-line interface (CLI) for running robustness experiments without writing Python code. The CLI allows you to:
+
+- Run robustness experiments with various networks, datasets, and verification methods
+- Use auto-verify verifiers through virtual environment names
+- List available components (verifiers, auto-verify environments)
+
+### Running Experiments
+
+The basic command to run a robustness experiment is:
+
+```bash
+ada-verona run --networks <path-to-networks> [options]
+```
+
+Key options include:
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--name` | Experiment name | `robustness_experiment` |
+| `--output` | Output directory | `./experiment_results` |
+| `--networks` | Directory with network files (.onnx) | (required) |
+| `--dataset` | Dataset to use (mnist, cifar10) | `mnist` |
+| `--verifier` | Verification method (pgd, fgsm, auto-verify) | `pgd` |
+| `--property` | Property type (one2any, one2one) | `one2any` |
+| `--epsilons` | List of epsilon values to search | `[0.001, 0.005, 0.01, 0.05]` |
+| `--sample-size` | Number of samples per network | `10` |
+| `--sample-correct` | Sample only correctly predicted inputs | `false` |
+
+### Using Auto-Verify Verifiers
+
+When using auto-verify verifiers, you can specify either the verifier name or the virtual environment name:
+
+```bash
+# Using verifier name
+ada-verona run --networks <path> --verifier auto-verify --auto-verify-name nnenum
+
+# Using virtual environment name (venv)
+ada-verona run --networks <path> --verifier auto-verify --auto-verify-venv nnenum
+```
+
+The `--auto-verify-venv` option allows you to specify which auto-verify virtual environment to use, which is particularly useful when you have multiple versions of the same verifier installed (e.g., different commits).
+
+### Listing Available Components
+
+You can list available components with:
+
+```bash
+# List all components
+ada-verona list
+
+# List available verifiers
+ada-verona list --verifiers
+
+# List auto-verify status and available verifiers
+ada-verona list --auto-verify
+
+# List auto-verify virtual environments
+ada-verona list --auto-verify-venvs
+```
+
+### Examples
+
+Basic experiment with PGD attack:
+```bash
+ada-verona run --networks ./models --name pgd_experiment --verifier pgd --epsilons 0.001 0.005 0.01
+```
+
+Using auto-verify with a specific virtual environment:
+```bash
+ada-verona run --networks ./models --name formal_verification --verifier auto-verify --auto-verify-venv nnenum --timeout 600
+```
+
+Customizing dataset and sampling:
+```bash
+ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct
+```
 
 ## Experiment Folder
 The following structure for an experiment folder is currently supported:
