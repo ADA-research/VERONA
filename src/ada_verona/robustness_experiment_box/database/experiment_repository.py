@@ -82,6 +82,7 @@ class ExperimentRepository:
         now = datetime.now()
         now_string = now.strftime("%d-%m-%Y+%H_%M")
 
+        # Create the experiment directory directly under base_path without additional subfolders
         self.act_experiment_path = self.base_path / f"{experiment_name}_{now_string}"
 
         if os.path.exists(self.get_results_path()):
@@ -207,38 +208,82 @@ class ExperimentRepository:
         df = pd.DataFrame()
         network_folders = [x for x in self.get_tmp_path().iterdir()]
         for network_folder in network_folders:
-            images_folders = [x for x in network_folders[0].iterdir()]
+            # Fix: use network_folder instead of network_folders[0]
+            images_folders = [x for x in network_folder.iterdir()]
             for image_folder in images_folders:
-                t_df = pd.read_csv(image_folder / per_epsilon_result_df_name, index_col=0)
-                t_df["network"] = network_folder.name
-                t_df["image"] = image_folder.name
-                df = pd.concat([df, t_df])
+                try:
+                    epsilon_file = image_folder / per_epsilon_result_df_name
+                    if epsilon_file.exists():
+                        t_df = pd.read_csv(epsilon_file, index_col=0)
+                        t_df["network"] = network_folder.name
+                        t_df["image"] = image_folder.name
+                        df = pd.concat([df, t_df])
+                except Exception as e:
+                    import logging
+                    logging.warning(f"Failed to read epsilon file at {image_folder}: {e}")
         return df
 
     def save_per_epsilon_result_df(self) -> None:
         """
         Save the per-epsilon result DataFrame to a CSV file.
         """
-        per_epsilon_result_df = self.get_per_epsilon_result_df()
-        per_epsilon_result_df.to_csv(self.get_results_path() / PER_EPSILON_RESULT_CSV_NAME)
+        try:
+            per_epsilon_result_df = self.get_per_epsilon_result_df()
+            if not per_epsilon_result_df.empty:
+                per_epsilon_result_df.to_csv(self.get_results_path() / PER_EPSILON_RESULT_CSV_NAME)
+            else:
+                import logging
+                logging.warning("No per-epsilon results found to save")
+        except Exception as e:
+            import logging
+            logging.error(f"Failed to save per-epsilon results: {e}")
 
     def save_plots(self) -> None:
         """
         Save the plots generated from the result DataFrame.
         """
-        df = self.get_result_df()
-        report_creator = ReportCreator(df)
-        hist_figure = report_creator.create_hist_figure()
-        hist_figure.savefig(self.get_results_path() / "hist_figure.png", bbox_inches="tight")
-
-        boxplot = report_creator.create_box_figure()
-        boxplot.savefig(self.get_results_path() / "boxplot.png", bbox_inches="tight")
-
-        kde_figure = report_creator.create_kde_figure()
-        kde_figure.savefig(self.get_results_path() / "kde_plot.png", bbox_inches="tight")
-
-        ecdf_figure = report_creator.create_ecdf_figure()
-        ecdf_figure.savefig(self.get_results_path() / "ecdf_plot.png", bbox_inches="tight")
+        try:
+            df = self.get_result_df()
+            if not df.empty:
+                report_creator = ReportCreator(df)
+                
+                # Save histogram figure
+                try:
+                    hist_figure = report_creator.create_hist_figure()
+                    hist_figure.savefig(self.get_results_path() / "hist_figure.png", bbox_inches="tight")
+                except Exception as e:
+                    import logging
+                    logging.warning(f"Failed to create histogram plot: {e}")
+                
+                # Save boxplot figure
+                try:
+                    boxplot = report_creator.create_box_figure()
+                    boxplot.savefig(self.get_results_path() / "boxplot.png", bbox_inches="tight")
+                except Exception as e:
+                    import logging
+                    logging.warning(f"Failed to create boxplot: {e}")
+                
+                # Save KDE figure
+                try:
+                    kde_figure = report_creator.create_kde_figure()
+                    kde_figure.savefig(self.get_results_path() / "kde_plot.png", bbox_inches="tight")
+                except Exception as e:
+                    import logging
+                    logging.warning(f"Failed to create KDE plot: {e}")
+                
+                # Save ECDF figure
+                try:
+                    ecdf_figure = report_creator.create_ecdf_figure()
+                    ecdf_figure.savefig(self.get_results_path() / "ecdf_plot.png", bbox_inches="tight")
+                except Exception as e:
+                    import logging
+                    logging.warning(f"Failed to create ECDF plot: {e}")
+            else:
+                import logging
+                logging.warning("No results found to generate plots")
+        except Exception as e:
+            import logging
+            logging.error(f"Failed to generate plots: {e}")
 
     def save_verification_context_to_yaml(self, file_path: Path, verification_context: VerificationContext) -> Path:
         """
@@ -273,9 +318,8 @@ class ExperimentRepository:
         """
         Delete the temporary folder of the active experiment.
         """
+        import shutil
         
         tmp_path = self.get_tmp_path()
         if tmp_path.exists():
-            for file in tmp_path.iterdir():
-                file.unlink()
-            tmp_path.rmdir()
+            shutil.rmtree(tmp_path)

@@ -55,6 +55,7 @@ venv.bak/
 scripts/data/*
 scripts/manual_plots/*
 tests/test_experiment/*
+experiment_runs/*
 
 #Src specific
 src/ada_verona/data/*

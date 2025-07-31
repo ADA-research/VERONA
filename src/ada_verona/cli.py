@@ -9,7 +9,6 @@ import argparse
 import logging
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 import torch
 import torchvision
@@ -55,7 +54,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         help="Name of the experiment"
     )
     run_parser.add_argument(
-        "--output", type=str, default="./experiment_results",
+        "--output", type=str, default="./experiment_runs",
         help="Output directory for experiment results"
     )
     run_parser.add_argument(
@@ -186,8 +185,9 @@ def create_verifier(args) -> VerificationModule:
         if args.auto_verify_venv:
             # Import auto-verify to access venv information
             try:
-                import autoverify
                 import subprocess
+
+                import autoverify
                 from autoverify.cli.install.venv_installers.venv_install import VENV_VERIFIER_DIR
                 
                 # Check if the specified venv exists
@@ -451,6 +451,7 @@ def list_components(args):
                         if tool_dir.exists():
                             try:
                                 import subprocess
+
                                 from autoverify.util.env import cwd
                                 with cwd(tool_dir):
                                     result = subprocess.run(
