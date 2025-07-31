@@ -18,8 +18,10 @@ The package can be used to create robustness distributions [Bosman, Berger, Hoos
     - [Running Experiments](#running-experiments)
     - [Using Auto-Verify Verifiers](#using-auto-verify-verifiers)
     - [Listing Available Components](#listing-available-components)
+  - [Experiment Folder and CLI Usage](#experiment-folder-and-cli-usage)
+    - [Directory Structure Options](#directory-structure-options)
+    - [Command-Line Usage](#command-line-usage)
     - [Examples](#examples)
-  - [Experiment Folder](#experiment-folder)
   - [Verification](#verification)
     - [Auto-Verify Plugin System](#auto-verify-plugin-system)
       - [Using the Plugin System](#using-the-plugin-system)
@@ -118,7 +120,6 @@ Key options include:
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--name` | Experiment name | `robustness_experiment` |
-| `--output` | Output directory | `./experiment_results` |
 | `--networks` | Directory with network files (.onnx) | (required) |
 | `--dataset` | Dataset to use (mnist, cifar10) | `mnist` |
 | `--verifier` | Verification method (pgd, fgsm, auto-verify) | `pgd` |
@@ -157,28 +158,14 @@ ada-verona list --auto-verify
 
 # List auto-verify virtual environments
 ada-verona list --auto-verify-venvs
+``
 ```
 
-### Examples
+## Experiment Folder and CLI Usage
 
-Basic experiment with PGD attack:
-```bash
-ada-verona run --networks ./models --name pgd_experiment --verifier pgd --epsilons 0.001 0.005 0.01
-```
+ADA-VERONA uses the following directory structure for experiments:
 
-Using auto-verify with a specific virtual environment:
-```bash
-ada-verona run --networks ./models --name formal_verification --verifier auto-verify --auto-verify-venv nnenum --timeout 600
-```
-
-Customizing dataset and sampling:
-```bash
-ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct
-```
-
-## Experiment Folder
-The following structure for an experiment folder is currently supported:
-
+**Note**: You must provide ONNX or torch network files in the networks directory. ada-verona will create directories automatically, but you need to supply your own network models.
 ```
 experiment/
 |-- data/
@@ -193,7 +180,47 @@ experiment/
 |   |-- ...
 ```
 
-The images can be placed in it optionally, if one wants to execute the experiments using custom data. Otherwise, PyTorch Datasets can be used too and no image folder has to be created.
+### Directory Structure Options
+
+You have two main options for organizing your experiment:
+
+1. **Default Structure**: Place an `experiment` folder in your working directory with the above structure. The CLI will use this by default.
+
+2. **Custom Paths**: Specify custom paths for networks, data, and output using command-line arguments.
+
+### Command-Line Usage
+
+Basic usage with default paths (expects networks in `./experiment/networks/`):
+```bash
+ada-verona run --name PGDattack --dataset mnist --verifier pgd --epsilons 0.05 --sample-correct
+```
+
+Specifying custom paths:
+```bash
+# relative paths
+ada-verona run --name my_experiment --networks ./my_models --output ./results --data-dir ./datasets
+
+# absolute paths
+ada-verona run --name my_experiment --networks /path/to/models --output /path/to/results --data-dir /path/to/data
+```
+
+### Examples
+
+Basic experiment with PGD attack (assumes existing experiment folder and networks in experiment/networks/):
+```bash
+ada-verona run --networks --name pgd_experiment --verifier pgd --epsilons 0.001 0.005 0.01
+```
+
+Using auto-verify with a specific virtual environment:
+```bash
+ada-verona run --networks ./models --name formal_verification --verifier auto-verify --auto-verify-venv abcrown --timeout 600
+```
+
+Customizing dataset and sampling:
+```bash
+ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct
+```
+
 
 ## Verification
 
@@ -201,9 +228,9 @@ The images can be placed in it optionally, if one wants to execute the experimen
 
 Ada-verona features a plugin architecture that allows seamless integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's available. This design provides several benefits:
 
-1. **Independence**: Ada-verona works perfectly without auto-verify, using attack-based verification methods
+1. **Independence**: Ada-verona works perfectly without auto-verify, using attack-based verification methods for empirical upper bounds.
 2. **Automatic Detection**: When auto-verify is installed in the same environment, its verifiers become automatically available
-3. **Unified Interface**: The same API works regardless of which verification backend is used
+3. **Interface**: The same API works regardless of which verification backend is used
 
 #### Using the Plugin System
 

@@ -15,6 +15,7 @@ import torchvision
 import torchvision.transforms as transforms
 
 import ada_verona
+from ada_verona.robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
 from ada_verona.robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
 from ada_verona.robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from ada_verona.robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
@@ -54,11 +55,11 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         help="Name of the experiment"
     )
     run_parser.add_argument(
-        "--output", type=str, default="./experiment_runs",
+        "--output", type=str, default="./experiment",
         help="Output directory for experiment results"
     )
     run_parser.add_argument(
-        "--networks", type=str, required=True,
+        "--networks", type=str, default="./experiment/networks",
         help="Directory containing network files (.onnx)"
     )
     
@@ -69,7 +70,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         default="mnist", help="Dataset to use"
     )
     dataset_group.add_argument(
-        "--data-dir", type=str, default="./data",
+        "--data-dir", type=str, default="./experiment/data",
         help="Directory for dataset storage/loading"
     )
     dataset_group.add_argument(
@@ -265,10 +266,19 @@ def load_dataset(args):
             logging.error("--custom-images and --custom-labels must be provided for custom dataset.")
             sys.exit(1)
             
-        # Custom dataset loading would go here
-        # This is a placeholder for custom dataset loading logic
-        logging.error("Custom dataset loading not implemented yet.")
-        sys.exit(1)
+        # Use the provided custom images and labels directly
+        custom_images_path = Path(args.custom_images)
+        custom_labels_path = Path(args.custom_labels)
+        
+        if not custom_images_path.exists() or not custom_images_path.is_dir():
+            logging.error(f"Custom images directory {custom_images_path} does not exist or is not a directory.")
+            sys.exit(1)
+            
+        if not custom_labels_path.exists() or not custom_labels_path.is_file():
+            logging.error(f"Custom labels file {custom_labels_path} does not exist or is not a file.")
+            sys.exit(1)
+            
+        return ImageFileDataset(image_folder=custom_images_path, label_file=custom_labels_path)
     
     # Default fallback
     logging.warning(f"Unknown dataset '{args.dataset}', falling back to MNIST.")
@@ -285,13 +295,16 @@ def run_experiment(args):
     Args:
         args: Command-line arguments
     """
+    # Create output directory
+    output_path = Path(args.output)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
     # Set up logging
     logging.basicConfig(
         format="%(asctime)s %(levelname)s %(message)s",
         level=logging.INFO,
         handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler(f"{args.name}.log")
+            logging.StreamHandler()
         ]
     )
     
@@ -312,19 +325,32 @@ def run_experiment(args):
             logging.info(f"Auto-verify verifier: {args.auto_verify_name}")
     logging.info(f"Epsilon values: {args.epsilons}")
     
-    # Create output directory
-    output_path = Path(args.output)
-    output_path.mkdir(parents=True, exist_ok=True)
     
     # Load dataset
     dataset = load_dataset(args)
-    logging.info(f"Dataset loaded: {dataset}")
+    logging.info("Dataset loaded.")
     
     # Create experiment repository
     experiment_repository = ExperimentRepository(
         base_path=output_path,
         network_folder=Path(args.networks)
     )
+    
+    # Ensure networks directory exists and contains network files
+    networks_path = Path(args.networks)
+    if not networks_path.exists():
+        logging.info(f"Creating networks directory: {args.networks}")
+        networks_path.mkdir(parents=True, exist_ok=True)
+        logging.error(f"No network files found in {args.networks}. Please add .onnx network files to this directory.")
+        logging.info("Experiment setup is complete, but cannot run without network files.")
+        sys.exit(1)
+    
+    # Check if the networks directory contains any .onnx files
+    onnx_files = list(networks_path.glob("*.onnx"))
+    if not onnx_files:
+        logging.error(f"No .onnx network files found in {args.networks}.")
+        logging.info("Please add network files to continue with the experiment.")
+        sys.exit(1)
     
     # Create property generator
     if args.property == "one2any":
@@ -344,9 +370,11 @@ def run_experiment(args):
     
     # Create dataset sampler
     dataset_sampler = PredictionsBasedSampler(
-        sample_correct_predictions=args.sample_correct,
-        number_of_samples=args.sample_size
+        sample_correct_predictions=args.sample_correct
     )
+    
+    # Note: PredictionsBasedSampler doesn't support number_of_samples parameter
+    # The sample size will be determined by the correct/incorrect predictions
     
     # Initialize experiment
     experiment_repository.initialize_new_experiment(args.name)
