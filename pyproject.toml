@@ -14,7 +14,7 @@ authors = [
     {name = "Holger H. Hoos", email = "hh@aim.rwth-aachen.de"}
 ]
 author = "Annelot Bosmann, Aaron Berger, Hendrik Baacke, Jan van Rijn, Holger H. Hoos"
-author_email = "a.w.bosman@liacs.leidenuniv.nl, hendrik.baacke@rwth-aachen.de, aaron.berger@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl, hh@aim.rwth-aachen.de"
+author_email = "a.w.bosman@liacs.leidenuniv.nl, aaron.berger@rwth-aachen.de, hendrik.baacke@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl, hh@aim.rwth-aachen.de"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
