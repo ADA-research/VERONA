@@ -147,22 +147,22 @@ def create_distribution_with_auto_verify(verifier_name: str = "nnenum"):
 
 def demonstrate_plugin_capabilities():
     """Demonstrate the plugin system capabilities."""
-    print("\n🔌 ADA-VERONA Plugin System Demo")
+    print("\nADA-VERONA Plugin System Demo")
     print("=" * 50)
     
     print(f"Auto-verify available: {ada_verona.HAS_AUTO_VERIFY}")
     print(f"PyAutoAttack available: {ada_verona.HAS_AUTOATTACK}")
     
     if ada_verona.HAS_AUTO_VERIFY:
-        print("\n📋 Available auto-verify verifiers:")
+        print("\nAvailable auto-verify verifiers:")
         for verifier in ada_verona.AUTO_VERIFY_VERIFIERS:
             print(f"  • {verifier}")
             
-        print("\n💡 Usage example:")
+        print("\nUsage example:")
         print("  verifier = ada_verona.create_auto_verify_verifier('nnenum', timeout=600)")
         print("  # Use verifier in BinarySearchEpsilonValueEstimator or other components")
     else:
-        print("\n⚠️  Auto-verify not available - only attack-based verification available")
+        print("\nAuto-verify not available - only attack-based verification available")
         print("   To enable formal verification, install auto-verify in the same environment")
 
 
@@ -174,8 +174,8 @@ if __name__ == "__main__":
     if ada_verona.HAS_AUTO_VERIFY and ada_verona.AUTO_VERIFY_VERIFIERS:
         # Use the first available verifier for demo
         verifier_name = ada_verona.AUTO_VERIFY_VERIFIERS[0]
-        print(f"\n🚀 Running example with {verifier_name}...")
+        print(f"\nRunning example with {verifier_name}...")
         create_distribution_with_auto_verify(verifier_name)
     else:
-        print("\n💡 Install auto-verify to run formal verification examples!")
-        print("   Example: pip install auto-verify") 
+        print("\Install auto-verify to run formal verification examples!")
+        print("Example: pip install auto-verify") 

@@ -1,1 +1,0 @@
-{"experiment_name": "PGDattack", "experiment_repository_path": "experiment_runs", "network_folder": "default", "dataset": "mnist", "verifier": "pgd", "property_type": "one2any", "epsilon_list": ["0.001", "0.005", "0.05", "0.08"], "sample_size": 10, "sample_correct": true}
