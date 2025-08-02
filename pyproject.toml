@@ -8,13 +8,13 @@ version = "0.1.6"
 description = "Neural Network Robustness Analysis Framework"
 authors = [
     {name = "Annelot Bosman", email = "a.w.bosman@liacs.leidenuniv.nl"},
-    {name = "Hendrik Baacke", email = "hendrik.baacke@rwth-aachen.de"},
     {name = "Aaron Berger", email = "A.Berger@tudelft.nl"},
+    {name = "Hendrik Baacke", email = "hendrik.baacke@rwth-aachen.de"},
     {name = "Jan van Rijn", email = "jan.vanrijn@liacs.leidenuniv.nl"},
     {name = "Holger H. Hoos", email = "hh@aim.rwth-aachen.de"}
 ]
-author = "Annelot Bosmann, Hendrik Baacke, Aaron Berger, Jan van Rijn"
-author_email = "a.w.bosman@liacs.leidenuniv.nl, hendrik.baacke@rwth-aachen.de, aaron.berger@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl"
+author = "Annelot Bosmann, Aaron Berger, Hendrik Baacke, Jan van Rijn, Holger H. Hoos"
+author_email = "a.w.bosman@liacs.leidenuniv.nl, hendrik.baacke@rwth-aachen.de, aaron.berger@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl, hh@aim.rwth-aachen.de"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}

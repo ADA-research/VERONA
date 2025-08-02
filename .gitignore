@@ -63,6 +63,8 @@ src/ada_verona/data/*
 src/ada_verona/tests/test_experiment/*
 src/ada_verona/experiment/*
 src/ada_verona/data/*
+src/ada_verona/scripts/data/*
+
 *.log
 
 

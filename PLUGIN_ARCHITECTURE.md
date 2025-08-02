@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the plugin architecture that enables **ada-verona** to work independently while optionally integrating with **auto-verify** when available. The system provides:
+This document describes the plugin architecture that enables **ada-verona** to work independently while optionally integrating with **auto-verify** when it is detected in the virtual environment. The system provides:
 
 - **Independent Operation**: ada-verona works without auto-verify
 - **Automatic Detection**: Integration when auto-verify is present

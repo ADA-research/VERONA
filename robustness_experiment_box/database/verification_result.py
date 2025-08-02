@@ -10,6 +10,7 @@ class VerificationResult(str, Enum):
     SAT = "SAT"
     TIMEOUT = "TIMEOUT"
     ERROR = "ERR"
+    UNKNOWN = "UNKNOWN"
 
 """Classes for data about verification."""
 # TODO: Enum?

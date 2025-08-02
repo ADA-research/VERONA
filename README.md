@@ -6,10 +6,24 @@ With one script it is possible to run an entire experiment with various networks
 
 The package can be used to create robustness distributions [Bosman, Berger, Hoos and van Rijn, 2025](https://jair.org/index.php/jair/article/view/18403), as well as empirically measuring robustness of networks using adversarial attacks and verify networks with formal verification tools using the [auto-verify](https://github.com/ADA-research/auto-verify) plugin that currently supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab).
 
+
+
 We plan to add more verifiers to the plugin in the future.
+
+## Important Notice: ada-auto-verify Plugin System Update
+
+**The ada-auto-verify package needs to be updated to be fully usable as a plugin system.** We are currently coordinating with the maintainers to implement the necessary changes. The updated release is projected to happen within **1-2 weeks** (approx. until 2025-08-15).
+
+Until the update is available, you can still use ada-verona for:
+- Empirical robustness measurement using adversarial attacks (FGSM, PGD, AutoAttack)
+- Upper bound estimation for robustness distributions
+- All core functionality without formal verification
+
+For formal verification capabilities, please check back for the updated ada-auto-verify package release.
 
 ## Table of Contents
 - [VERification Of Neural Architectures (VERONA)](#verification-of-neural-architectures-verona)
+  - [Important Notice: ada-auto-verify Plugin System Update](#important-notice-ada-auto-verify-plugin-system-update)
   - [Table of Contents](#table-of-contents)
   - [Authors](#authors)
   - [Installation](#installation)

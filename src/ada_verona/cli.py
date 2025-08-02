@@ -186,9 +186,6 @@ def create_verifier(args) -> VerificationModule:
         if args.auto_verify_venv:
             # Import auto-verify to access venv information
             try:
-                import subprocess
-
-                import autoverify
                 from autoverify.cli.install.venv_installers.venv_install import VENV_VERIFIER_DIR
                 
                 # Check if the specified venv exists
@@ -353,10 +350,7 @@ def run_experiment(args):
         sys.exit(1)
     
     # Create property generator
-    if args.property == "one2any":
-        property_generator = One2AnyPropertyGenerator()
-    else:  # one2one
-        property_generator = One2OnePropertyGenerator()
+    property_generator = One2AnyPropertyGenerator() if args.property == "one2any" else One2OnePropertyGenerator()
     
     # Create verifier
     verifier = create_verifier(args)
@@ -465,7 +459,6 @@ def list_components(args):
     if args.auto_verify_venvs:
         print("\nAuto-verify virtual environments:")
         try:
-            import autoverify
             from autoverify.cli.install.venv_installers.venv_install import VENV_VERIFIER_DIR
             
             if VENV_VERIFIER_DIR.exists():
