@@ -3,7 +3,10 @@
 The ada-verona package simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 The entire package is class-based, which means that extending the existing configurations is accessible and easy. 
 With one script it is possible to run an entire experiment with various networks, images and perturbation magnitudes (epsilons). 
-The package can be used to create robustness distributions [Bosman, Berger, Hoos and van Rijn, 2023](https://ada.liacs.leidenuniv.nl/papers/BosEtAl25.pdf) and per-class robustness distributions [Bosman et al., 2024](https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf).
+
+The package can be used to create robustness distributions [Bosman, Berger, Hoos and van Rijn, 2025](https://jair.org/index.php/jair/article/view/18403), as well as empirically measuring robustness of networks using adversarial attacks and verify networks with formal verification tools using the [auto-verify](https://github.com/ADA-research/auto-verify) plugin that currently supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab).
+
+We plan to add more verifiers to the plugin in the future.
 
 ## Table of Contents
 - [VERification Of Neural Architectures (VERONA)](#verification-of-neural-architectures-verona)
@@ -33,8 +36,8 @@ The package can be used to create robustness distributions [Bosman, Berger, Hoos
   - [Datasets](#datasets)
   - [Related Papers and Citation](#related-papers-and-citation)
     - [Robustness distributions](#robustness-distributions)
-    - [Per-class robustness distributions](#per-class-robustness-distributions)
     - [Upper bounds to robustness distributions](#upper-bounds-to-robustness-distributions)
+    - [Per-class robustness distributions](#per-class-robustness-distributions)
   - [Acknowledgements](#acknowledgements)
   - [Contributing](#contributing)
 
@@ -266,6 +269,9 @@ pip install ada-verona
 # Then install auto-verify
 pip install auto-verify
 
+# View the current auto-verify configuration
+auto-verify config show
+
 # Configure environment (optional, but recommended)
 auto-verify config set-env venv  # Use Python venv + uv (recommended)
 # or
@@ -343,43 +349,57 @@ The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for
 
 ## Related Papers and Citation
 
-This package was created to simplify reproducing and extending the results of two different lines of work of the ADA research group. Please consider citing these works when using this package for your research. 
+This package was created to simplify reproducing and extending the results of two different lines of work of the ADA research group. 
 
 ### Robustness distributions 
+
+**Please cite this paper when you have used VERONA in your experiments:**
+```bibtex
+@article{BosEtAl25,
+author = {Annelot W Bosman, Aaron Berger, Holger H Hoos, Jan N van Rijn},
+title = {Robustness Distributions in Neural Network Verification},
+booktitle = {Journal of Artificial Intelligence Research}.
+year = {2025}
+}
+```
+- [Paper link](https://jair.org/index.php/jair/article/view/18403)
+
+A short introduction to the concept of robustness distributions can be found in the following paper:
 ```bibtex
 @article{BosEtAl23,
     author = "Bosman, Annelot W. and Hoos, Holger H. and van Rijn, Jan N.",
     title = "A Preliminary Study of Critical Robustness Distributions in Neural Network Verification",
     year = "2023",
-    journal = "6th Workshop on Formal Methods for ML-Enabled Autonomous Systems (FoMLAS) co-located with the 35th International Conference on Computer Aided Verification (CAV 2023)",
-    booktitle = "to appear"
+    journal = "6th Workshop on Formal Methods for ML-Enabled Autonomous Systems (FoMLAS) co-located with the 35th International Conference on Computer Aided Verification (CAV 2023)"
 }
 ```
   
 - [Paper link](https://ada.liacs.leidenuniv.nl/papers/BosEtAl23.pdf)
-- An extended version of this work is currently under review. 
 
+### Upper bounds to robustness distributions
+
+The concept of using adversarial attacks to compute upper bounds to robustness distributions is introduced in the following paper:
+```bibtex
+@inproceedings{bergerEmpiricalAnalysisUpper,
+  title = {Empirical {{Analysis}} of {{Upper Bounds}} of {{Robustness Distributions}} Using {{Adversarial Attacks}}},
+  booktitle = {{{THE 19TH LEARNING AND IN}}℡{{LIGENT OPTIMIZATION CONFERENCE}}},
+  author = {Berger, Aaron and Eberhardt, Nils and Bosman, Annelot Willemijn and Duwe, Henning and family=Rijn, given=Jan N., prefix=van, useprefix=true and Hoos, Holger}
+}
+```
+- [Paper link](https://openreview.net/forum?id=jsfqoRrsjy)
 
 ### Per-class robustness distributions
+
+The concept of per-class robustness distributions is introduced in the following paper:
 ```bibtex
 @inproceedings{BosEtAl24,
     author = {Bosman, Annelot W. and Münz, Anna L. and Hoos, Holger H. and van Rijn, Jan N.},
     title = {{A Preliminary Study to Examining Per-Class Performance Bias via Robustness Distributions}},
     year = {2024},
-    booktitle = {The 7th International Symposium on AI Verification (SAIV) co-located with the 36th International Conference on Computer Aided Verification (CAV 2024)},
-    url = {https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf}
+    booktitle = {The 7th International Symposium on AI Verification (SAIV) co-located with the 36th International Conference on Computer Aided Verification (CAV 2024)}
 }
 ```
-
-### Upper bounds to robustness distributions
-```bibtex
-@inproceedings{bergerEmpiricalAnalysisUpper,
-  title = {Empirical {{Analysis}} of {{Upper Bounds}} of {{Robustness Distributions}} Using {{Adversarial Attacks}}},
-  booktitle = {{{THE 19TH LEARNING AND IN}}℡{{LIGENT OPTIMIZATION CONFERENCE}}},
-  author = {Berger, Aaron and Eberhardt, Nils and Bosman, Annelot Willemijn and Duwe, Henning and family=Rijn, given=Jan N., prefix=van, useprefix=true and Hoos, Holger},
-  url = {https://openreview.net/forum?id=jsfqoRrsjy}
-}
-```
+- [Paper link](https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf)
 
 ## Acknowledgements
 
@@ -390,9 +410,9 @@ This package makes use of the following tools and libraries:
     - F. Croce and M. Hein, "Reliable evaluation of adversarial robustness with an ensemble of diverse parameter-free attacks," in International conference on machine learning, PMLR, 2020, pp. 2206–2216. [Online]. Available: https://proceedings.mlr.press/v119/croce20b.html
 
 - **auto-verify** ([GitHub](https://github.com/ADA-research/auto-verify))
-    - For integrating additional verifiers such as nnenum, AB-Crown, VeriNet, and Oval-Bab. Please refer to the [auto-verify documentation](https://deepwiki.com/ADA-research/auto-verify/6.2-vnn-comp-format) for installation and usage details.
+    - For integrating verifiers [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab). Please refer to the [auto-verify documentation](https://github.com/ADA-research/auto-verify) for details about auto-verify.
 
-We thank the authors and maintainers of these projects for their contributions to the robustness research community.
+We thank the authors and maintainers of these projects, as well as the authors and maintainers of the verifiers for their contributions to the robustness research community.
 
 ## Contributing
 
@@ -416,4 +436,4 @@ We welcome contributions to the ada-verona package! If you find a bug, have a fe
 
 9. **Review Process:** Your pull request will be reviewed by at least one of the maintainers. They may request changes or provide feedback.
 
-Thank you for contributing!
+Thank you for contributing! 
