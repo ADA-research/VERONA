@@ -23,8 +23,8 @@ jobs:
       - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          activate-environment: verona  # This will create and activate the environment
-          python-version: "3.10"  
+          python-version: "3.10" 
+          activate-environment: verona  # This will create and activate the environment 
           auto-activate-base: false
   
       - name: Install pip dependencies
