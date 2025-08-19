@@ -27,6 +27,12 @@ jobs:
           activate-environment: verona  # This will create and activate the environment
           python-version: "3.10"  
           auto-activate-base: false
+          
+      - name: Debug Python environment
+        run: |
+          python --version
+          which python
+          pip --version
   
       - name: Install pip dependencies
         run: |
