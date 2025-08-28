@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Union
 
 import numpy as np
 import torch
@@ -23,7 +22,7 @@ class BaseNetwork(ABC):
         pass
 
     @abstractmethod
-    def get_input_shape(self) -> Union[np.ndarray, tuple[int, ...]]:
+    def get_input_shape(self) -> np.ndarray | tuple[int, ...]:
         """
         Get the input shape of the model.
 

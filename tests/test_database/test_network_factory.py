@@ -1,10 +1,9 @@
-import pytest
-import pandas as pd
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
-from robustness_experiment_box.database.network_factory import NetworkFactory
+import pandas as pd
+import pytest
+
 from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.network_factory import NetworkFactory
 from robustness_experiment_box.database.pytorch_network import PyTorchNetwork
 
 

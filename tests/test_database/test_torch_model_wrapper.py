@@ -1,5 +1,7 @@
 import torch
 
+from ada_verona.robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+
 
 def test_torch_model_wrapper_initialization(torch_model_wrapper, mock_torch_model):
 

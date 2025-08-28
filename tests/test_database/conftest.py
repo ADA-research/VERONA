@@ -5,7 +5,6 @@ import torch
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.database.base_network import BaseNetwork
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
 from robustness_experiment_box.database.verification_context import VerificationContext

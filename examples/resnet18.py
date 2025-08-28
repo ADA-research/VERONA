@@ -8,7 +8,7 @@ class ResNet18(nn.Module):
     """
     
     def __init__(self, num_classes=10):
-        super(ResNet18, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)

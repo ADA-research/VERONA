@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Union
 
 import pandas as pd
 
@@ -31,11 +30,7 @@ class NetworkFactory:
         Raises:
             ValueError: If the network type is not supported or required fields are missing.
         """
-        if "type" not in row:
-            # Default to ONNX for backward compatibility
-            network_type = "onnx"
-        else:
-            network_type = row["type"].lower()
+        network_type = "onnx" if "type" not in row else row["type"].lower()
 
         if network_type == "onnx":
             if "network_path" not in row:
@@ -75,9 +70,9 @@ class NetworkFactory:
         try:
             df = pd.read_csv(csv_path)
         except pd.errors.EmptyDataError:
-            raise ValueError(f"Networks CSV file is empty: {csv_path}")
+            raise ValueError(f"Networks CSV file is empty: {csv_path}") from None
         except pd.errors.ParserError as e:
-            raise ValueError(f"Error parsing networks CSV file: {e}")
+            raise ValueError(f"Error parsing networks CSV file: {e}") from e
 
         required_columns = ["name"]
         missing_columns = [col for col in required_columns if col not in df.columns]
@@ -90,7 +85,7 @@ class NetworkFactory:
                 network = NetworkFactory.create_network_from_csv_row(row, networks_dir)
                 networks.append(network)
             except Exception as e:
-                raise ValueError(f"Error creating network from row {row.to_dict()}: {e}")
+                raise ValueError(f"Error creating network from row {row.to_dict()}: {e}") from e
 
         return networks
 

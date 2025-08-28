@@ -1,6 +1,6 @@
-import pytest
-from pathlib import Path
 from unittest.mock import Mock
+
+import pytest
 
 from robustness_experiment_box.database.base_network import BaseNetwork
 
@@ -110,10 +110,6 @@ def test_input_shape_flexibility():
     assert input_shape == [1, 3, 224, 224]
     
     # Test that it can be converted to tuple for PyTorch operations
-    import numpy as np
-    if hasattr(input_shape, 'tolist'):
-        shape_tuple = tuple(input_shape.tolist())
-    else:
-        shape_tuple = tuple(input_shape)
+    shape_tuple = tuple(input_shape.tolist()) if hasattr(input_shape, 'tolist') else tuple(input_shape)
     
     assert shape_tuple == (1, 3, 224, 224)

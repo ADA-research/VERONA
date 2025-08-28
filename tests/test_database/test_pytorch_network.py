@@ -1,7 +1,7 @@
+from pathlib import Path
+
 import pytest
 import torch
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 from robustness_experiment_box.database.pytorch_network import PyTorchNetwork
 

@@ -9,11 +9,12 @@ This script shows how to:
 4. Use it for inference
 """
 
+import shutil
+import tempfile
+from pathlib import Path
+
 import torch
 import torch.nn as nn
-from pathlib import Path
-import tempfile
-import shutil
 
 
 class SimpleModel(nn.Module):
@@ -84,8 +85,8 @@ simple_pytorch,pytorch,,models/simple_model.py,models/simple_model_weights.pt"""
 def test_pytorch_network_loading():
     """Test loading a PyTorch network using VERONA infrastructure."""
     try:
-        from ada_verona.robustness_experiment_box.database.pytorch_network import PyTorchNetwork
         from ada_verona.robustness_experiment_box.database.network_factory import NetworkFactory
+        from ada_verona.robustness_experiment_box.database.pytorch_network import PyTorchNetwork
         
         print("✓ PyTorch network classes imported successfully")
         
@@ -100,7 +101,7 @@ def test_pytorch_network_loading():
         print(f"✓ PyTorchNetwork created with name: {network.name}")
         
         # Test model loading
-        model = network.load_pytorch_model()
+        network.load_pytorch_model()
         print("✓ PyTorch model loaded successfully")
         
         # Test inference
@@ -135,8 +136,8 @@ def test_pytorch_network_loading():
 def test_onnx_compatibility():
     """Test that ONNX networks still work."""
     try:
-        from ada_verona.robustness_experiment_box.database.network import Network
         from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+        from ada_verona.robustness_experiment_box.database.network import Network
         
         print("\nTesting ONNX compatibility...")
         
