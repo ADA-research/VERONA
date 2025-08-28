@@ -15,12 +15,18 @@ from robustness_experiment_box.verification_module.property_generator.one2one_pr
 )
 
 
+@pytest.fixture
+def property_generator():
+    """Provide a property generator for testing."""
+    return One2AnyPropertyGenerator()
+
+
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
 
-    assert context_dict['network'] == {'network_path': str(tmp_path / "network.onnx")}
+    assert context_dict['network'] == {'network_path': str(tmp_path / "network.onnx"), 'type': 'onnx'}
     assert context_dict['data_point']['id'] == "1"
     assert context_dict['data_point']['label'] == 0
     assert np.allclose(context_dict['data_point']["data"],[0.1, 0.2, 0.3], atol = 1e-5)
@@ -32,7 +38,7 @@ def test_to_dict(verification_context, tmp_path):
 @pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_from_dict(tmp_path, verification_context):
     data = {
-        'network': {'network_path': tmp_path / "network.onnx"},
+        'network': {'network_path': str(tmp_path / "network.onnx"), 'type': 'onnx'},
         'data_point': {'id': "1", 'label': 0, 'data': [0.1, 0.2, 0.3]}, 
         'tmp_path': str(tmp_path),
         'property_generator': verification_context.property_generator.to_dict(),
@@ -64,7 +70,7 @@ def test_save_vnnlib_property(verification_context):
 def test_save_status_list(verification_context):
     epsilon_status_list = [EpsilonStatus(0.1, None), EpsilonStatus(0.2, None)]
     verification_context.save_status_list(epsilon_status_list)
-    save_path = Path(verification_context.tmp_path) / "epsilon_results.csv"
+    save_path = Path(verification_context.tmp_path) / "epsilons_df.csv"
     assert save_path.exists()
     df = pd.read_csv(save_path)
     assert len(df) == 2
@@ -114,7 +120,7 @@ def test_get_dict_for_epsilon_result(verification_context, tmp_path):
     verification_context.tmp_path.mkdir(parents=True, exist_ok=True)
 
     result_dict = verification_context.get_dict_for_epsilon_result()
-    assert result_dict["network_path"] == network_file.resolve()
+    assert result_dict["network_path"] == {'network_path': str(network_file), 'type': 'onnx'}
     assert result_dict["image_id"] == "1"
     assert result_dict["original_label"] == 0
     assert result_dict["tmp_path"] == verification_context.tmp_path

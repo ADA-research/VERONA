@@ -5,6 +5,7 @@ import torch
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
+from robustness_experiment_box.database.base_network import BaseNetwork
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
 from robustness_experiment_box.database.verification_context import VerificationContext
@@ -20,6 +21,7 @@ class MockVerificationContext:
     
     def to_dict(self):
         return {"mock_key": "mock_value"}
+
 
 @pytest.fixture
 def mock_verification_context():
@@ -57,6 +59,7 @@ def network(tmp_path):
     onnx_file.touch()
     return Network(path=onnx_file)
 
+
 @pytest.fixture
 def mock_graph():
     # Define the input and output tensors
@@ -79,6 +82,7 @@ def mock_graph():
     )
     return graph
 
+
 class MockTorchModel(torch.nn.Module):
     """
     A mock PyTorch model for testing purposes.
@@ -86,7 +90,6 @@ class MockTorchModel(torch.nn.Module):
 
     def forward(self, x):
         return torch.sum(x).unsqueeze(0)
-
 
 
 @pytest.fixture
@@ -107,5 +110,13 @@ def datapoint():
 
 
 @pytest.fixture
-def verification_context(network, datapoint, tmp_path, property_generator):
+def verification_context(network, datapoint, tmp_path):
+    class DummyPropertyGenerator:
+        def get_dict_for_epsilon_result(self):
+            return {}
+        
+        def to_dict(self):
+            return {}
+    
+    property_generator = DummyPropertyGenerator()
     return VerificationContext(network, datapoint, tmp_path, property_generator)

@@ -4,7 +4,7 @@ import pandas as pd
 
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
 from ada_verona.robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
 from ada_verona.robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from ada_verona.robustness_experiment_box.verification_module.property_generator.property_generator import (
     PropertyGenerator,
@@ -19,7 +19,7 @@ class VerificationContext:
 
     def __init__(
         self,
-        network: Network,
+        network: BaseNetwork,
         data_point: DataPoint,
         tmp_path: Path,
         property_generator: PropertyGenerator,
@@ -29,7 +29,7 @@ class VerificationContext:
         Initialize the VerificationContext with the given parameters.
 
         Args:
-            network (Network): The network to be verified.
+            network (BaseNetwork): The network to be verified.
             data_point (DataPoint): The data point to be verified.
             tmp_path (Path): The temporary path for saving intermediate results.
             property_generator (PropertyGenerator): The property generator for creating verification properties.
@@ -52,7 +52,7 @@ class VerificationContext:
             dict: The dictionary representation of the epsilon result.
         """
         return dict(
-            network_path=self.network.path.resolve(),
+            network_path=self.network.to_dict(),
             image_id=self.data_point.id,
             original_label=self.data_point.label,
             tmp_path=self.tmp_path.resolve(),
@@ -141,7 +141,15 @@ class VerificationContext:
         Returns:
             VerificationContext: The created VerificationContext.
         """
-        network = Network.from_dict(data["network"])
+        # Recreate the network from its dictionary representation
+        network_data = data["network"]
+        if network_data.get("type") == "pytorch":
+            from ada_verona.robustness_experiment_box.database.pytorch_network import PyTorchNetwork
+            network = PyTorchNetwork.from_dict(network_data)
+        else:
+            from ada_verona.robustness_experiment_box.database.network import Network
+            network = Network.from_dict(network_data)
+        
         data_point = DataPoint.from_dict(data["data_point"])
         tmp_path = Path(data["tmp_path"])
         property_generator = PropertyGenerator.from_dict(data["property_generator"])

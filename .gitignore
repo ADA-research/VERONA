@@ -50,6 +50,10 @@ venv.bak/
 *.swp
 *.swo
 .DS_Store
+.cursor/
+.cursorrules/
+.cursorignore/  
+.specstory/
 
 # Project specific
 scripts/data/*

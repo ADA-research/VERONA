@@ -10,10 +10,15 @@ def test_network_initialization(network):
     assert network.torch_model_wrapper is None
 
 
+def test_network_name_property(network):
+    """Test the name property returns the path stem."""
+    assert network.name == "network"
+
+
 def test_to_dict(network):
     network_dict = network.to_dict()
 
-    assert network_dict == {"network_path": str(network.path)}
+    assert network_dict == {"network_path": str(network.path), "type": "onnx"}
 
 
 def test_from_dict(tmp_path):

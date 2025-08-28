@@ -1,0 +1,150 @@
+import importlib.util
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import torch
+
+from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+from ada_verona.robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+
+
+class PyTorchNetwork(BaseNetwork):
+    """
+    A class representing a PyTorch network with architecture and weights files.
+
+    Attributes:
+        architecture_path (Path): Path to the .py file containing the model architecture.
+        weights_path (Path): Path to the .pt/.pth file containing the model weights.
+        model (torch.nn.Module, optional): The loaded PyTorch model. Defaults to None.
+        torch_model_wrapper (TorchModelWrapper, optional): The PyTorch model wrapper. Defaults to None.
+    """
+
+    def __init__(self, architecture_path: Path, weights_path: Path) -> None:
+        """
+        Initialize the PyTorchNetwork with architecture and weights paths.
+
+        Args:
+            architecture_path (Path): Path to the .py file containing the model architecture.
+            weights_path (Path): Path to the .pt/.pth file containing the model weights.
+        """
+        self.architecture_path = architecture_path
+        self.weights_path = weights_path
+        self.model = None
+        self.torch_model_wrapper = None
+
+    @property
+    def name(self) -> str:
+        """
+        Get the name of the network.
+
+        Returns:
+            str: The name of the network.
+        """
+        return self.weights_path.stem
+
+    def load_model(self) -> torch.nn.Module:
+        """
+        Load the PyTorch model from the architecture and weights files.
+
+        Returns:
+            torch.nn.Module: The loaded PyTorch model.
+        """
+        if self.model is None:
+            # Load the model architecture
+            spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
+            if spec is None or spec.loader is None:
+                raise ImportError(f"Could not load model architecture from {self.architecture_path}")
+            
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            
+            # Look for a model instance in the module
+            model = None
+            for attr_name in dir(module):
+                attr = getattr(module, attr_name)
+                if isinstance(attr, torch.nn.Module):
+                    model = attr
+                    break
+            
+            if model is None:
+                # Try to find a function that creates the model
+                for attr_name in dir(module):
+                    attr = getattr(module, attr_name)
+                    if callable(attr) and not attr_name.startswith('_'):
+                        try:
+                            model = attr()
+                            if isinstance(model, torch.nn.Module):
+                                break
+                        except Exception:
+                            continue
+            
+            if model is None:
+                raise ValueError(f"No PyTorch model found in {self.architecture_path}")
+            
+            # Load the weights
+            if self.weights_path.exists():
+                state_dict = torch.load(self.weights_path, map_location='cpu')
+                model.load_state_dict(state_dict)
+            
+            self.model = model
+        
+        return self.model
+
+    def get_input_shape(self) -> np.ndarray:
+        """
+        Get the input shape of the PyTorch model.
+        This is a placeholder - PyTorch models don't have fixed input shapes like ONNX models.
+
+        Returns:
+            np.ndarray: A default input shape [1, 3, 224, 224] for image models.
+        """
+        # Default shape for common image models
+        # This could be made configurable or extracted from the model if needed
+        return np.array([1, 3, 224, 224])
+
+    def load_pytorch_model(self) -> torch.nn.Module:
+        """
+        Load the PyTorch model and wrap it in a TorchModelWrapper.
+
+        Returns:
+            torch.nn.Module: The wrapped PyTorch model.
+        """
+        if self.torch_model_wrapper is None:
+            model = self.load_model()
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            model = model.to(device)
+            model.eval()
+            
+            self.torch_model_wrapper = TorchModelWrapper(model, self.get_input_shape())
+        
+        return self.torch_model_wrapper
+
+    def to_dict(self) -> dict:
+        """
+        Convert the PyTorchNetwork to a dictionary.
+
+        Returns:
+            dict: The dictionary representation of the PyTorchNetwork.
+        """
+        return {
+            "architecture_path": str(self.architecture_path),
+            "weights_path": str(self.weights_path),
+            "type": "pytorch"
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "PyTorchNetwork":
+        """
+        Create a PyTorchNetwork from a dictionary.
+
+        Args:
+            data (dict): The dictionary containing the PyTorchNetwork attributes.
+
+        Returns:
+            PyTorchNetwork: The created PyTorchNetwork.
+        """
+        return cls(
+            architecture_path=Path(data["architecture_path"]),
+            weights_path=Path(data["weights_path"])
+        )

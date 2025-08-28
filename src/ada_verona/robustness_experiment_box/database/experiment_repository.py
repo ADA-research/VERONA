@@ -9,7 +9,8 @@ import yaml
 from ada_verona.robustness_experiment_box.analysis.report_creator import ReportCreator
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
 from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+from ada_verona.robustness_experiment_box.database.network_factory import NetworkFactory
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 from ada_verona.robustness_experiment_box.verification_module.property_generator.property_generator import (
     PropertyGenerator,
@@ -17,6 +18,7 @@ from ada_verona.robustness_experiment_box.verification_module.property_generator
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
 PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"
+NETWORKS_CSV_NAME = "networks.csv"
 
 
 class ExperimentRepository:
@@ -112,16 +114,28 @@ class ExperimentRepository:
         with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
 
-    def get_network_list(self) -> list[Network]:
+    def get_network_list(self) -> list[BaseNetwork]:
         """
         Get the list of networks from the network folder.
+        
+        This method first tries to load networks from a CSV file, and if it fails,
+        falls back to scanning the directory for ONNX files (backward compatibility).
 
         Returns:
-            list[Network]: The list of networks.
+            list[BaseNetwork]: The list of networks.
         """
-        network_path_list = [file for file in self.network_folder.iterdir()]
-        network_list = [Network(x) for x in network_path_list]
-        return network_list
+        networks_csv_path = self.network_folder / NETWORKS_CSV_NAME
+        
+        if networks_csv_path.exists():
+            try:
+                return NetworkFactory.create_networks_from_csv(networks_csv_path, self.network_folder)
+            except Exception as e:
+                # Log the error but continue with directory scanning for backward compatibility
+                print(f"Warning: Could not load networks from CSV: {e}")
+                print("Falling back to directory scanning for ONNX files.")
+        
+        # Fallback to directory scanning (backward compatibility)
+        return NetworkFactory.create_networks_from_directory(self.network_folder)
 
     def save_results(self, results: list[EpsilonValueResult]) -> None:
         """
@@ -161,20 +175,20 @@ class ExperimentRepository:
         return file.name.split(".")[0]
 
     def create_verification_context(
-        self, network: Network, data_point: DataPoint, property_generator: PropertyGenerator
+        self, network: BaseNetwork, data_point: DataPoint, property_generator: PropertyGenerator
     ) -> VerificationContext:
         """
         Create a verification context for the given network, data point, and property generator.
 
         Args:
-            network (Network): The network to verify.
+            network (BaseNetwork): The network to verify.
             data_point (DataPoint): The data point to verify.
             property_generator (PropertyGenerator): The property generator to use.
 
         Returns:
             VerificationContext: The created verification context.
         """
-        tmp_path = self.get_tmp_path() / f"{self.get_file_name(network.path)}" / f"image_{data_point.id}"
+        tmp_path = self.get_tmp_path() / f"{network.name}" / f"image_{data_point.id}"
         return VerificationContext(network, data_point, tmp_path, property_generator)
 
     def get_result_df(self) -> pd.DataFrame:

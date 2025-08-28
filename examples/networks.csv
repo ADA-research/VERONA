@@ -1,0 +1,4 @@
+name,type,network_path,architecture,weights
+mnist-net_256x2,onnx,mnist-net_256x2.onnx,,
+resnet18_pytorch,pytorch,,resnet18.py,resnet18_weights.pt
+vgg16_pytorch,pytorch,,vgg16.py,vgg16_weights.pth
