@@ -34,6 +34,94 @@ from ada_verona.robustness_experiment_box.verification_module.property_generator
 from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
+def build_transforms_from_args(args):
+    """
+    Build a list of transforms from command-line arguments.
+    
+    Args:
+        args: Command-line arguments containing transform specifications
+        
+    Returns:
+        list: List of torchvision transforms to apply sequentially
+    """
+    transforms_list = []
+    
+    # Handle deprecated --resize argument for backward compatibility
+    if hasattr(args, 'resize') and args.resize:
+        logging.warning("--resize is deprecated. Use --transforms Resize instead.")
+        transforms_list.append(transforms.Resize(args.resize))
+    
+    # Process --transforms argument
+    if hasattr(args, 'transforms') and args.transforms:
+        for transform_name in args.transforms:
+            transform_name = transform_name.lower()
+            
+            if transform_name == "resize":
+                # Resize requires dimensions, use default if not specified
+                if hasattr(args, 'resize') and args.resize:
+                    transforms_list.append(transforms.Resize(args.resize))
+                else:
+                    # Default resize for common datasets
+                    if hasattr(args, 'dataset') and args.dataset == "cifar10":
+                        transforms_list.append(transforms.Resize((32, 32)))
+                    else:
+                        transforms_list.append(transforms.Resize((28, 28)))
+                    logging.info(f"Applied default resize for {args.dataset}")
+            
+            elif transform_name == "totensor":
+                transforms_list.append(transforms.ToTensor())
+            
+            elif transform_name == "normalize":
+                # Apply normalization if mean/std are specified
+                if hasattr(args, 'normalize_mean') and hasattr(args, 'normalize_std'):
+                    if args.normalize_mean and args.normalize_std:
+                        transforms_list.append(transforms.Normalize(args.normalize_mean, args.normalize_std))
+                    else:
+                        logging.warning("--normalize specified but --normalize-mean or --normalize-std missing")
+                else:
+                    logging.warning("--normalize specified but normalization parameters not provided")
+            
+            elif transform_name == "randomhorizontalflip":
+                if hasattr(args, 'random_horizontal_flip') and args.random_horizontal_flip:
+                    transforms_list.append(transforms.RandomHorizontalFlip(args.random_horizontal_flip))
+                else:
+                    transforms_list.append(transforms.RandomHorizontalFlip(0.5))
+                    logging.info("Applied default RandomHorizontalFlip with p=0.5")
+            
+            elif transform_name == "randomrotation":
+                if hasattr(args, 'random_rotation') and args.random_rotation:
+                    transforms_list.append(transforms.RandomRotation(args.random_rotation))
+                else:
+                    transforms_list.append(transforms.RandomRotation(15))
+                    logging.info("Applied default RandomRotation with range=15")
+            
+            elif transform_name == "colorjitter":
+                if hasattr(args, 'color_jitter') and args.color_jitter:
+                    transforms_list.append(transforms.ColorJitter(*args.color_jitter))
+                else:
+                    transforms_list.append(transforms.ColorJitter(0.2, 0.2, 0.2, 0.1))
+                    logging.info("Applied default ColorJitter")
+            
+            elif transform_name == "grayscale":
+                transforms_list.append(transforms.Grayscale())
+            
+            elif transform_name == "centercrop":
+                if hasattr(args, 'center_crop') and args.center_crop:
+                    transforms_list.append(transforms.CenterCrop(args.center_crop))
+                else:
+                    logging.warning("--centercrop specified but size not provided")
+            
+            else:
+                logging.warning(f"Unknown transform: {transform_name}. Skipping.")
+    
+    # Always add ToTensor if not already present
+    if not any(isinstance(t, type(transforms.ToTensor())) for t in transforms_list):
+        transforms_list.append(transforms.ToTensor())
+        logging.info("Added default ToTensor transform")
+    
+    return transforms_list
+
+
 def _build_arg_parser() -> argparse.ArgumentParser:
     """Build argument parser for the CLI."""
     parser = argparse.ArgumentParser(
@@ -80,6 +168,47 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     dataset_group.add_argument(
         "--custom-labels", type=str,
         help="CSV file containing labels (for custom dataset)"
+    )
+    # Preprocessing options
+    dataset_group.add_argument(
+        "--train", type=str, choices=["True", "False"], default="False",
+        help="Use training split (True) or test split (False)"
+    )
+    dataset_group.add_argument(
+        "--download", type=str, choices=["True", "False"], default="True",
+        help="Download dataset if not present"
+    )
+    dataset_group.add_argument(
+        "--transforms", type=str, nargs="+", default=["ToTensor"],
+        help="List of transforms to apply sequentially (e.g., Resize ToTensor Normalize)"
+    )
+    dataset_group.add_argument(
+        "--resize", type=int, nargs=2, metavar=("WIDTH", "HEIGHT"),
+        help="Resize images to WIDTH x HEIGHT (e.g., --resize 28 28) [DEPRECATED: use --transforms Resize instead]"
+    )
+    dataset_group.add_argument(
+        "--normalize-mean", type=float, nargs="+", metavar="MEAN",
+        help="Mean values for normalization (e.g., --normalize-mean 0.5 0.5 0.5 for RGB)"
+    )
+    dataset_group.add_argument(
+        "--normalize-std", type=float, nargs="+", metavar="STD",
+        help="Standard deviation values for normalization (e.g., --normalize-std 0.5 0.5 0.5 for RGB)"
+    )
+    dataset_group.add_argument(
+        "--random-horizontal-flip", type=float, metavar="PROBABILITY",
+        help="Probability for random horizontal flip (e.g., --random-horizontal-flip 0.5)"
+    )
+    dataset_group.add_argument(
+        "--random-rotation", type=float, metavar="DEGREES",
+        help="Random rotation range in degrees (e.g., --random-rotation 15)"
+    )
+    dataset_group.add_argument(
+        "--color-jitter", type=float, nargs=4, metavar=("BRIGHTNESS", "CONTRAST", "SATURATION", "HUE"),
+        help="Color jitter parameters (e.g., --color-jitter 0.2 0.2 0.2 0.1)"
+    )
+    dataset_group.add_argument(
+        "--center-crop", type=int, nargs=2, metavar=("WIDTH", "HEIGHT"),
+        help="Center crop images to WIDTH x HEIGHT (e.g., --center-crop 224 224)"
     )
     
     # Verification options
@@ -133,6 +262,92 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     sample_group.add_argument(
         "--sample-correct", action="store_true",
         help="Sample only correctly predicted inputs"
+    )
+    
+    # Use PyTorch data command
+    pytorch_parser = subparsers.add_parser("use-pytorch-data", help="Create robustness distribution on PyTorch dataset")
+    
+    # PyTorch dataset options
+    pytorch_parser.add_argument(
+        "--dataset", type=str, choices=["mnist", "cifar10"], required=True,
+        help="PyTorch dataset to use"
+    )
+    pytorch_parser.add_argument(
+        "--name", type=str, default="pytorch_robustness_experiment",
+        help="Name of the experiment"
+    )
+    pytorch_parser.add_argument(
+        "--output", type=str, default="./experiment",
+        help="Output directory for experiment results"
+    )
+    pytorch_parser.add_argument(
+        "--networks", type=str, default="./experiment/networks",
+        help="Directory containing network files (.onnx)"
+    )
+    pytorch_parser.add_argument(
+        "--data-dir", type=str, default="./data",
+        help="Directory for dataset storage/loading"
+    )
+    pytorch_parser.add_argument(
+        "--train", type=str, choices=["True", "False"], default="False",
+        help="Use training split (True) or test split (False)"
+    )
+    pytorch_parser.add_argument(
+        "--download", type=str, choices=["True", "False"], default="True",
+        help="Download dataset if not present"
+    )
+    pytorch_parser.add_argument(
+        "--resize", type=int, nargs=2, metavar=("WIDTH", "HEIGHT"),
+        help="Resize images to WIDTH x HEIGHT (e.g., --resize 28 28) [DEPRECATED: use --transforms Resize instead]"
+    )
+    pytorch_parser.add_argument(
+        "--transforms", type=str, nargs="+", default=["ToTensor"],
+        help="List of transforms to apply sequentially (e.g., Resize ToTensor Normalize)"
+    )
+    pytorch_parser.add_argument(
+        "--normalize-mean", type=float, nargs="+", metavar="MEAN",
+        help="Mean values for normalization (e.g., --normalize-mean 0.5 0.5 0.5 for RGB)"
+    )
+    pytorch_parser.add_argument(
+        "--normalize-std", type=float, nargs="+", metavar="STD",
+        help="Standard deviation values for normalization (e.g., --normalize-std 0.5 0.5 0.5 for RGB)"
+    )
+    pytorch_parser.add_argument(
+        "--random-horizontal-flip", type=float, metavar="PROBABILITY",
+        help="Probability for random horizontal flip (e.g., --random-horizontal-flip 0.5)"
+    )
+    pytorch_parser.add_argument(
+        "--random-rotation", type=float, metavar="DEGREES",
+        help="Random rotation range in degrees (e.g., --random-rotation 15)"
+    )
+    pytorch_parser.add_argument(
+        "--color-jitter", type=float, nargs=4, metavar=("BRIGHTNESS", "CONTRAST", "SATURATION", "HUE"),
+        help="Color jitter parameters (e.g., --color-jitter 0.2 0.2 0.2 0.1)"
+    )
+    pytorch_parser.add_argument(
+        "--center-crop", type=int, nargs=2, metavar=("WIDTH", "HEIGHT"),
+        help="Center crop images to WIDTH x HEIGHT (e.g., --center-crop 224 224)"
+    )
+    pytorch_parser.add_argument(
+        "--verifier", type=str, choices=["pgd", "fgsm"], default="fgsm",
+        help="Verification method to use"
+    )
+    pytorch_parser.add_argument(
+        "--property", type=str, choices=["one2any", "one2one"],
+        default="one2any", help="Property type for verification"
+    )
+    pytorch_parser.add_argument(
+        "--epsilons", type=float, nargs="+", 
+        default=[0.001, 0.005, 0.05, 0.08],
+        help="List of epsilon values to search"
+    )
+    pytorch_parser.add_argument(
+        "--sample-correct", action="store_true",
+        help="Sample only correctly predicted inputs"
+    )
+    pytorch_parser.add_argument(
+        "--target-class", type=int, default=1,
+        help="Target class for one2one property (default: 1)"
     )
     
     # List command
@@ -246,15 +461,22 @@ def load_dataset(args):
     Returns:
         PytorchExperimentDataset: The loaded dataset
     """
+    # Parse boolean arguments
+    train_bool = args.train.lower() == "true" if hasattr(args, 'train') else False
+    download_bool = args.download.lower() == "true" if hasattr(args, 'download') else True
+    
+    # Build transforms
+    data_transforms = build_transforms_from_args(args)
+    
     if args.dataset == "mnist":
         torch_dataset = torchvision.datasets.MNIST(
-            root=args.data_dir, train=False, download=True, transform=transforms.ToTensor()
+            root=args.data_dir, train=train_bool, download=download_bool, transform=transforms.Compose(data_transforms)
         )
         return PytorchExperimentDataset(dataset=torch_dataset)
     
     elif args.dataset == "cifar10":
         torch_dataset = torchvision.datasets.CIFAR10(
-            root=args.data_dir, train=False, download=True, transform=transforms.ToTensor()
+            root=args.data_dir, train=train_bool, download=download_bool, transform=transforms.Compose(data_transforms)
         )
         return PytorchExperimentDataset(dataset=torch_dataset)
     
@@ -280,7 +502,7 @@ def load_dataset(args):
     # Default fallback
     logging.warning(f"Unknown dataset '{args.dataset}', falling back to MNIST.")
     torch_dataset = torchvision.datasets.MNIST(
-        root=args.data_dir, train=False, download=True, transform=transforms.ToTensor()
+        root=args.data_dir, train=train_bool, download=download_bool, transform=transforms.Compose(data_transforms)
     )
     return PytorchExperimentDataset(dataset=torch_dataset)
 
@@ -385,6 +607,175 @@ def run_experiment(args):
             epsilon_list=[str(x) for x in args.epsilons],
             sample_size=args.sample_size,
             sample_correct=args.sample_correct,
+            train=args.train,
+            download=args.download,
+            transforms=args.transforms,
+            normalize_mean=args.normalize_mean if hasattr(args, 'normalize_mean') else None,
+            normalize_std=args.normalize_std if hasattr(args, 'normalize_std') else None,
+            random_horizontal_flip=args.random_horizontal_flip if hasattr(args, 'random_horizontal_flip') else None,
+            random_rotation=args.random_rotation if hasattr(args, 'random_rotation') else None,
+            color_jitter=args.color_jitter if hasattr(args, 'color_jitter') else None,
+            center_crop=args.center_crop if hasattr(args, 'center_crop') else None,
+        )
+    )
+    
+    # Run experiment
+    logging.info("Starting robustness distribution computation...")
+    
+    network_list = experiment_repository.get_network_list()
+    failed_networks = []
+    
+    for network in network_list:
+        try:
+            logging.info(f"Processing network: {network.path.name}")
+            sampled_data = dataset_sampler.sample(network, dataset)
+            
+        except Exception as e:
+            logging.error(f"Failed to sample data for network: {network} with error: {e}")
+            failed_networks.append(network)
+            continue
+            
+        for data_point in sampled_data:
+            try:
+                verification_context = experiment_repository.create_verification_context(
+                    network, data_point, property_generator
+                )
+                
+                logging.info(f"Computing epsilon value for data point {data_point.id}")
+                epsilon_value_result = epsilon_value_estimator.compute_epsilon_value(verification_context)
+                
+                experiment_repository.save_result(epsilon_value_result)
+                logging.info(f"Epsilon result: {epsilon_value_result.epsilon}")
+                
+            except Exception as e:
+                logging.error(f"Error processing data point {data_point.id}: {e}")
+                continue
+    
+    # Save results and plots
+    experiment_repository.save_plots()
+    logging.info(f"Experiment completed. Failed networks: {failed_networks}")
+    logging.info(f"Results saved to {output_path}")
+
+
+def run_pytorch_experiment(args):
+    """
+    Run a PyTorch dataset robustness experiment based on command-line arguments.
+    
+    Args:
+        args: Command-line arguments
+    """
+    # Create output directory
+    output_path = Path(args.output)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    # Set up logging
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)s %(message)s",
+        level=logging.INFO,
+        handlers=[
+            logging.StreamHandler()
+        ]
+    )
+    
+    # Set random seed for reproducibility
+    torch.manual_seed(0)
+    
+    # Log experiment configuration
+    logging.info("=== ADA-VERONA PyTorch Dataset Robustness Experiment ===")
+    logging.info(f"Experiment name: {args.name}")
+    logging.info(f"Output directory: {args.output}")
+    logging.info(f"Network directory: {args.networks}")
+    logging.info(f"Dataset: {args.dataset}")
+    logging.info(f"Verifier: {args.verifier}")
+    logging.info(f"Property type: {args.property}")
+    logging.info(f"Epsilon values: {args.epsilons}")
+    logging.info(f"Train split: {args.train}")
+    logging.info(f"Download: {args.download}")
+    if args.resize:
+        logging.info(f"Resize: {args.resize}")
+    if hasattr(args, 'transforms') and args.transforms:
+        logging.info(f"Transforms: {args.transforms}")
+    if hasattr(args, 'normalize_mean') and args.normalize_mean:
+        logging.info(f"Normalize mean: {args.normalize_mean}")
+    if hasattr(args, 'normalize_std') and args.normalize_std:
+        logging.info(f"Normalize std: {args.normalize_std}")
+    
+    # Load dataset
+    dataset = load_dataset(args)
+    logging.info("Dataset loaded.")
+    
+    # Create experiment repository
+    experiment_repository = ExperimentRepository(
+        base_path=output_path,
+        network_folder=Path(args.networks)
+    )
+    
+    # Ensure networks directory exists and contains network files
+    networks_path = Path(args.networks)
+    if not networks_path.exists():
+        logging.info(f"Creating networks directory: {args.networks}")
+        networks_path.mkdir(parents=True, exist_ok=True)
+        logging.error(f"No network files found in {args.networks}. Please add .onnx network files to this directory.")
+        logging.info("Experiment setup is complete, but cannot run without network files.")
+        sys.exit(1)
+    
+    # Check if the networks directory contains any .onnx files
+    onnx_files = list(networks_path.glob("*.onnx"))
+    if not onnx_files:
+        logging.error(f"No .onnx network files found in {args.networks}.")
+        logging.info("Please add network files to continue with the experiment.")
+        sys.exit(1)
+    
+    # Create property generator
+    if args.property == "one2one":
+        property_generator = One2OnePropertyGenerator(target_class=args.target_class)
+    else:
+        property_generator = One2AnyPropertyGenerator()
+    
+    # Create verifier
+    if args.verifier == "pgd":
+        verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=10, step_size=0.01))
+    else:  # fgsm
+        verifier = AttackEstimationModule(attack=FGSMAttack())
+    
+    logging.info(f"Using verifier: {verifier.name}")
+    
+    # Create epsilon value estimator
+    epsilon_value_estimator = BinarySearchEpsilonValueEstimator(
+        epsilon_value_list=args.epsilons.copy(),
+        verifier=verifier
+    )
+    
+    # Create dataset sampler
+    dataset_sampler = PredictionsBasedSampler(
+        sample_correct_predictions=args.sample_correct
+    )
+    
+    # Initialize experiment
+    experiment_repository.initialize_new_experiment(args.name)
+    
+    # Save configuration
+    experiment_repository.save_configuration(
+        dict(
+            experiment_name=args.name,
+            experiment_repository_path=str(output_path),
+            network_folder=str(args.networks),
+            dataset=str(args.dataset),
+            verifier=args.verifier,
+            property_type=args.property,
+            epsilon_list=[str(x) for x in args.epsilons],
+            train=args.train,
+            download=args.download,
+            resize=args.resize,
+            sample_correct=args.sample_correct,
+            target_class=args.target_class if args.property == "one2one" else None,
+            transforms=args.transforms,
+            normalize_mean=args.normalize_mean if hasattr(args, 'normalize_mean') else None,
+            normalize_std=args.normalize_std if hasattr(args, 'normalize_std') else None,
+            random_horizontal_flip=args.random_horizontal_flip if hasattr(args, 'random_horizontal_flip') else None,
+            random_rotation=args.random_rotation if hasattr(args, 'random_rotation') else None,
+            color_jitter=args.color_jitter if hasattr(args, 'color_jitter') else None,
+            center_crop=args.center_crop if hasattr(args, 'center_crop') else None,
         )
     )
     
@@ -523,6 +914,8 @@ def main():
     try:
         if args.command == "run":
             run_experiment(args)
+        elif args.command == "use-pytorch-data":
+            run_pytorch_experiment(args)
         elif args.command == "list":
             list_components(args)
         else:
