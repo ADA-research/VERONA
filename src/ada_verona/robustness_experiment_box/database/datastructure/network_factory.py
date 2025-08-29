@@ -4,7 +4,7 @@ import pandas as pd
 
 from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
-from ada_verona.robustness_experiment_box.database.pytorch_network import PyTorchNetwork
+from ada_verona.robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
 
 
 class NetworkFactory:
@@ -16,7 +16,7 @@ class NetworkFactory:
     """
 
     @staticmethod
-    def create_network_from_csv_row(row: pd.Series, networks_dir: Path) -> BaseNetwork:
+    def create_network_from_csv_row(row: pd.Series, networks_dir: Path) -> Network:
         """
         Create a network from a CSV row.
 
@@ -36,7 +36,7 @@ class NetworkFactory:
             if "network_path" not in row:
                 raise ValueError("ONNX network requires 'network_path' field")
             network_path = networks_dir / row["network_path"]
-            return Network(path=network_path)
+            return ONNXNetwork(path=network_path)
         
         elif network_type == "pytorch":
             if "architecture" not in row or "weights" not in row:
@@ -49,7 +49,7 @@ class NetworkFactory:
             raise ValueError(f"Unsupported network type: {network_type}")
 
     @staticmethod
-    def create_networks_from_csv(csv_path: Path, networks_dir: Path) -> list[BaseNetwork]:
+    def create_networks_from_csv(csv_path: Path, networks_dir: Path) -> list[Network]:
         """
         Create a list of networks from a CSV file.
 
@@ -58,7 +58,7 @@ class NetworkFactory:
             networks_dir (Path): The base directory containing network files.
 
         Returns:
-            list[BaseNetwork]: List of created networks.
+            list[Network]: List of created networks.
 
         Raises:
             FileNotFoundError: If the CSV file doesn't exist.
@@ -90,20 +90,20 @@ class NetworkFactory:
         return networks
 
     @staticmethod
-    def create_networks_from_directory(networks_dir: Path) -> list[BaseNetwork]:
+    def create_networks_from_directory(networks_dir: Path) -> list[ONNXNetwork]:
         """
         Create networks from a directory (backward compatibility method).
         
-        This method scans the directory for ONNX files and creates Network objects.
+        This method scans the directory for ONNX files and creates ONNXNetwork objects.
 
         Args:
             networks_dir (Path): The directory containing network files.
 
         Returns:
-            list[BaseNetwork]: List of created networks.
+            list[Network]: List of created networks.
         """
         networks = []
         for file_path in networks_dir.iterdir():
             if file_path.is_file() and file_path.suffix.lower() == ".onnx":
-                networks.append(Network(path=file_path))
+                networks.append(ONNXNetwork(path=file_path))
         return networks

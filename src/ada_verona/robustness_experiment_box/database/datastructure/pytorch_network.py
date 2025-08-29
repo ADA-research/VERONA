@@ -4,11 +4,11 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
-from ada_verona.robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
 
 
-class PyTorchNetwork(BaseNetwork):
+class PyTorchNetwork(Network):
     """
     A class representing a PyTorch network with architecture and weights files.
 

@@ -128,13 +128,13 @@ If no `networks.csv` file is found, VERONA automatically falls back to the previ
 
 ### Network Interface
 
-All networks now implement the `BaseNetwork` interface:
+All networks now implement the abstract `Network` interface:
 
 ```python
-from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+from ada_verona.robustness_experiment_box.database.network import Network
 
 # Both ONNX and PyTorch networks implement the same interface
-network: BaseNetwork = experiment_repository.get_network_list()[0]
+network: Network = experiment_repository.get_network_list()[0]
 
 # Load PyTorch model (works for both types)
 pytorch_model = network.load_pytorch_model()
@@ -148,7 +148,7 @@ input_shape = network.get_input_shape()
 
 ### Experiment Repository
 
-The `ExperimentRepository.get_network_list()` method now returns a list of `BaseNetwork` objects instead of just `Network` objects.
+The `ExperimentRepository.get_network_list()` method now returns a list of `Network` objects instead of just `ONNXNetwork` objects.
 
 ## Benefits
 

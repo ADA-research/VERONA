@@ -10,7 +10,7 @@ from ada_verona.robustness_experiment_box.analysis.report_creator import ReportC
 from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
 from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from ada_verona.robustness_experiment_box.database.datastrcucture.network_factory import NetworkFactory
+from ada_verona.robustness_experiment_box.database.datastructure.network_factory import NetworkFactory
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 from ada_verona.robustness_experiment_box.verification_module.property_generator.property_generator import (
     PropertyGenerator,
@@ -114,7 +114,7 @@ class ExperimentRepository:
         with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
 
-    def get_network_list(self) -> list[BaseNetwork]:
+    def get_network_list(self) -> list[Network]:
         """
         Get the list of networks from the network folder.
         
@@ -122,7 +122,7 @@ class ExperimentRepository:
         falls back to scanning the directory for ONNX files (backward compatibility).
 
         Returns:
-            list[BaseNetwork]: The list of networks.
+            list[Network]: The list of networks.
         """
         networks_csv_path = self.network_folder / NETWORKS_CSV_NAME
         
@@ -175,13 +175,13 @@ class ExperimentRepository:
         return file.name.split(".")[0]
 
     def create_verification_context(
-        self, network: BaseNetwork, data_point: DataPoint, property_generator: PropertyGenerator
+        self, network: Network, data_point: DataPoint, property_generator: PropertyGenerator
     ) -> VerificationContext:
         """
         Create a verification context for the given network, data point, and property generator.
 
         Args:
-            network (BaseNetwork): The network to verify.
+            network (Network): The network to verify.
             data_point (DataPoint): The data point to verify.
             property_generator (PropertyGenerator): The property generator to use.
 

@@ -6,7 +6,7 @@ from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
 from robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -56,7 +56,7 @@ def epsilon_value_result(mock_verification_context):
 def network(tmp_path):
     onnx_file = tmp_path / "network.onnx"
     onnx_file.touch()
-    return Network(path=onnx_file)
+    return ONNXNetwork(path=onnx_file)
 
 
 @pytest.fixture
@@ -115,7 +115,9 @@ def verification_context(network, datapoint, tmp_path):
             return {}
         
         def to_dict(self):
-            return {}
+            return {'type': 'One2AnyPropertyGenerator', 
+        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator', 'number_classes': 2,
+        'data_lb':0, 'data_ub':1}
     
     property_generator = DummyPropertyGenerator()
     return VerificationContext(network, datapoint, tmp_path, property_generator)

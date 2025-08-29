@@ -26,9 +26,9 @@ def test_from_dict(tmp_path):
     network_path.touch()
     network_dict = {"network_path": str(network_path)}
 
-    network = Network.from_dict(network_dict)
+    network = ONNXNetwork.from_dict(network_dict)
 
-    assert isinstance(network, Network)
+    assert isinstance(network, ONNXNetwork)
     assert network.path == network_path
 
 
@@ -63,6 +63,6 @@ def test_load_pytorch_model(network, mock_graph):
     # Test the loading logic
     torch_model_wrapper = network.load_pytorch_model()
 
-    assert isinstance(torch_model_wrapper, TorchModelWrapper)
+    assert isinstance(torch_model_wrapper, TorchModelWrapper) #TODO: later because wrong module 
     assert torch_model_wrapper.torch_model is not None
     assert torch_model_wrapper.input_shape == [1, 3, 224, 224]

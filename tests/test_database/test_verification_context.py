@@ -21,7 +21,6 @@ def property_generator():
     return One2AnyPropertyGenerator()
 
 
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
@@ -35,14 +34,14 @@ def test_to_dict(verification_context, tmp_path):
     assert context_dict['save_epsilon_results'] is True
 
 
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_from_dict(tmp_path, verification_context):
     data = {
         'network': {'network_path': str(tmp_path / "network.onnx"), 'type': 'onnx'},
         'data_point': {'id': "1", 'label': 0, 'data': [0.1, 0.2, 0.3]}, 
         'tmp_path': str(tmp_path),
         'property_generator': verification_context.property_generator.to_dict(),
-        'save_epsilon_results': True
+        'save_epsilon_results': True,
+        
     }
 
     context = VerificationContext.from_dict(data)
@@ -54,8 +53,6 @@ def test_from_dict(tmp_path, verification_context):
     assert str(context.tmp_path) == str(tmp_path)
     assert context.save_epsilon_results is True
 
-
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_save_vnnlib_property(verification_context):
     vnnlib_property = VNNLibProperty(name="test_property", content="test_content")
     verification_context.save_vnnlib_property(vnnlib_property)
@@ -66,17 +63,15 @@ def test_save_vnnlib_property(verification_context):
     assert content == "test_content"
 
 
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_save_status_list(verification_context):
     epsilon_status_list = [EpsilonStatus(0.1, None), EpsilonStatus(0.2, None)]
     verification_context.save_status_list(epsilon_status_list)
-    save_path = Path(verification_context.tmp_path) / "epsilons_df.csv"
+    save_path = Path(verification_context.tmp_path) / "epsilon_results.csv"
     assert save_path.exists()
     df = pd.read_csv(save_path)
     assert len(df) == 2
 
 
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_save_result_per_epsilon(verification_context, experiment_repository):
     
     experiment_repository.initialize_new_experiment("test_experiment")
@@ -98,7 +93,6 @@ def test_save_result_per_epsilon(verification_context, experiment_repository):
     assert df.iloc[0]["epsilon_value"] == 0.1
     assert df.iloc[1]["epsilon_value"] == 0.2
 
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_delete_tmp_path(verification_context):
    
     tmp_file = verification_context.tmp_path / "tempfile.txt"
@@ -111,7 +105,6 @@ def test_delete_tmp_path(verification_context):
 
     assert not tmp_file.exists()
 
-@pytest.mark.parametrize("property_generator", [One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def test_get_dict_for_epsilon_result(verification_context, tmp_path):
     network_file = tmp_path / "network.onnx"
     network_file.touch()  # create the file

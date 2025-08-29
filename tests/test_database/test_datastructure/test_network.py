@@ -32,7 +32,7 @@ class ConcreteNetwork(Network):
 def test_base_network_cannot_instantiate():
     """Test that Network cannot be instantiated directly."""
     with pytest.raises(TypeError):
-        BaseNetwork()
+        Network()
 
 
 def test_concrete_network_instantiation():
@@ -63,11 +63,11 @@ def test_concrete_network_methods():
 
 
 def test_concrete_network_inheritance():
-    """Test that concrete implementation properly inherits from BaseNetwork."""
+    """Test that concrete implementation properly inherits from Network."""
     network = ConcreteNetwork("test_network")
     
-    assert isinstance(network, BaseNetwork)
-    assert issubclass(ConcreteNetwork, BaseNetwork)
+    assert isinstance(network, Network)
+    assert issubclass(ConcreteNetwork, Network)
 
 
 def test_concrete_network_abstract_methods():

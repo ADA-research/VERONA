@@ -19,7 +19,7 @@ class VerificationContext:
 
     def __init__(
         self,
-        network: BaseNetwork,
+        network: Network,
         data_point: DataPoint,
         tmp_path: Path,
         property_generator: PropertyGenerator,
@@ -131,7 +131,7 @@ class VerificationContext:
         }
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data: dict) -> "VerificationContext":
         """
         Create a VerificationContext from a dictionary.
 
@@ -144,11 +144,11 @@ class VerificationContext:
         # Recreate the network from its dictionary representation
         network_data = data["network"]
         if network_data.get("type") == "pytorch":
-            from ada_verona.robustness_experiment_box.database.pytorch_network import PyTorchNetwork
+            from ada_verona.robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
             network = PyTorchNetwork.from_dict(network_data)
         else:
-            from ada_verona.robustness_experiment_box.database.network import Network
-            network = Network.from_dict(network_data)
+            from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
+            network = ONNXNetwork.from_dict(network_data)
         
         data_point = DataPoint.from_dict(data["data_point"])
         tmp_path = Path(data["tmp_path"])

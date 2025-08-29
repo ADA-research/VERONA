@@ -65,7 +65,7 @@ def test_load_model_success(architecture_file, weights_file):
     
     model = network.load_model()
     
-    assert isinstance(model, torch.nn.Module)
+    assert isinstance(model, torch.nn.Module) 
     assert network.model is not None
     assert network.model is model
 
