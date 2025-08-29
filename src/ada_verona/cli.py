@@ -2,7 +2,7 @@
 Command-line interface for ada-verona.
 
 This module provides a command-line interface for running robustness experiments
-with ada-verona, including integration with auto-verify.
+with ada-verona, including minimal integration with auto-verify for formal verification.
 """
 
 import argparse
@@ -89,12 +89,8 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         default="pgd", help="Verification method to use"
     )
     verify_group.add_argument(
-        "--auto-verify-name", type=str,
-        help="Name of auto-verify verifier to use (requires auto-verify installed)"
-    )
-    verify_group.add_argument(
-        "--auto-verify-venv", type=str,
-        help="Name of auto-verify venv to use (requires auto-verify installed)"
+        "--auto-verify-verifier", type=str,
+        help="Name of auto-verify verifier to use (when --verifier=auto-verify)"
     )
     verify_group.add_argument(
         "--timeout", type=int, default=300,
@@ -139,15 +135,11 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     list_parser = subparsers.add_parser("list", help="List available components")
     list_parser.add_argument(
         "--verifiers", action="store_true",
-        help="List available verifiers"
+        help="List available verification methods"
     )
     list_parser.add_argument(
         "--auto-verify", action="store_true",
-        help="List available auto-verify verifiers"
-    )
-    list_parser.add_argument(
-        "--auto-verify-venvs", action="store_true",
-        help="List available auto-verify virtual environments"
+        help="List auto-verify integration status"
     )
     
     return parser
@@ -174,59 +166,32 @@ def create_verifier(args) -> VerificationModule:
         return AttackEstimationModule(attack=FGSMAttack())
     elif args.verifier == "auto-verify":
         if not ada_verona.HAS_AUTO_VERIFY:
-            logging.error("Auto-verify not installed. Please install auto-verify first.")
+            logging.error("Auto-verify not available. Please install auto-verify to use formal verification.")
             sys.exit(1)
             
-        # Check if a specific verifier name was provided
-        if not args.auto_verify_name and not args.auto_verify_venv:
-            logging.error("Either --auto-verify-name or --auto-verify-venv must be specified when using auto-verify.")
+        if not args.auto_verify_verifier:
+            logging.error("--auto-verify-verifier must be specified when using auto-verify.")
+            logging.info("Available auto-verify verifiers:")
+            if ada_verona.AUTO_VERIFY_VERIFIERS:
+                for verifier in sorted(ada_verona.AUTO_VERIFY_VERIFIERS):
+                    logging.info(f"  • {verifier}")
+            else:
+                logging.info("  No verifiers found. Install with: auto-verify install <verifier>")
             sys.exit(1)
             
-        # If venv name is specified, try to find the corresponding verifier
-        if args.auto_verify_venv:
-            # Import auto-verify to access venv information
-            try:
-                from autoverify.cli.install.venv_installers.venv_install import VENV_VERIFIER_DIR
-                
-                # Check if the specified venv exists
-                venv_path = VENV_VERIFIER_DIR / args.auto_verify_venv
-                if not venv_path.exists():
-                    logging.error(f"Auto-verify venv '{args.auto_verify_venv}' not found.")
-                    logging.info("Available venvs:")
-                    
-                    if VENV_VERIFIER_DIR.exists():
-                        venvs = [d.name for d in VENV_VERIFIER_DIR.iterdir() if d.is_dir()]
-                        for venv in sorted(venvs):
-                            logging.info(f"  • {venv}")
-                    else:
-                        logging.info("  No venvs found.")
-                    
-                    sys.exit(1)
-                
-                # Use the venv name as the verifier name
-                verifier_name = args.auto_verify_venv
-                
-            except ImportError:
-                logging.error("Failed to import autoverify. Please ensure it's installed correctly.")
-                sys.exit(1)
-        else:
-            # Use the specified verifier name
-            verifier_name = args.auto_verify_name
-            
-            # Check if the verifier is available
-            if verifier_name not in ada_verona.AUTO_VERIFY_VERIFIERS:
-                logging.error(f"Auto-verify verifier '{verifier_name}' not found.")
-                logging.info(f"Available verifiers: {ada_verona.AUTO_VERIFY_VERIFIERS}")
-                sys.exit(1)
+        if args.auto_verify_verifier not in ada_verona.AUTO_VERIFY_VERIFIERS:
+            logging.error(f"Auto-verify verifier '{args.auto_verify_verifier}' not found.")
+            logging.info(f"Available verifiers: {', '.join(ada_verona.AUTO_VERIFY_VERIFIERS)}")
+            sys.exit(1)
         
-        # Create the verifier
+        # Create the auto-verify verifier
         verifier = ada_verona.create_auto_verify_verifier(
-            verifier_name=verifier_name,
+            verifier_name=args.auto_verify_verifier,
             timeout=args.timeout
         )
         
         if verifier is None:
-            logging.error(f"Failed to create auto-verify verifier '{verifier_name}'.")
+            logging.error(f"Failed to create auto-verify verifier '{args.auto_verify_verifier}'.")
             sys.exit(1)
             
         return verifier
@@ -263,7 +228,6 @@ def load_dataset(args):
             logging.error("--custom-images and --custom-labels must be provided for custom dataset.")
             sys.exit(1)
             
-        # Use the provided custom images and labels directly
         custom_images_path = Path(args.custom_images)
         custom_labels_path = Path(args.custom_labels)
         
@@ -316,12 +280,8 @@ def run_experiment(args):
     logging.info(f"Dataset: {args.dataset}")
     logging.info(f"Verifier: {args.verifier}")
     if args.verifier == "auto-verify":
-        if args.auto_verify_venv:
-            logging.info(f"Auto-verify venv: {args.auto_verify_venv}")
-        else:
-            logging.info(f"Auto-verify verifier: {args.auto_verify_name}")
+        logging.info(f"Auto-verify verifier: {args.auto_verify_verifier}")
     logging.info(f"Epsilon values: {args.epsilons}")
-    
     
     # Load dataset
     dataset = load_dataset(args)
@@ -366,9 +326,6 @@ def run_experiment(args):
     dataset_sampler = PredictionsBasedSampler(
         sample_correct_predictions=args.sample_correct
     )
-    
-    # Note: PredictionsBasedSampler doesn't support number_of_samples parameter
-    # The sample size will be determined by the correct/incorrect predictions
     
     # Initialize experiment
     experiment_repository.initialize_new_experiment(args.name)
@@ -443,8 +400,8 @@ def list_components(args):
             print("  • auto-verify - [NOT AVAILABLE] Install auto-verify to enable")
             
     if args.auto_verify:
-        print("\nAuto-verify status:")
-        print(f"  Installed: {ada_verona.HAS_AUTO_VERIFY}")
+        print("\nAuto-verify integration status:")
+        print(f"  Available: {ada_verona.HAS_AUTO_VERIFY}")
         
         if ada_verona.HAS_AUTO_VERIFY:
             print("\nAvailable auto-verify verifiers:")
@@ -453,62 +410,19 @@ def list_components(args):
                     print(f"  • {verifier}")
             else:
                 print("  No verifiers found. Install verifiers with: auto-verify install <verifier>")
+            print("\nNote: Auto-verify is managed separately via the auto-verify CLI.")
         else:
-            print("  Auto-verify not installed. Install with: pip install auto-verify")
-            
-    if args.auto_verify_venvs:
-        print("\nAuto-verify virtual environments:")
-        try:
-            from autoverify.cli.install.venv_installers.venv_install import VENV_VERIFIER_DIR
-            
-            if VENV_VERIFIER_DIR.exists():
-                venvs = [d.name for d in VENV_VERIFIER_DIR.iterdir() if d.is_dir()]
-                if venvs:
-                    for venv in sorted(venvs):
-                        print(f"  • {venv}")
-                        
-                        # Try to get more details about the venv
-                        tool_dir = VENV_VERIFIER_DIR / venv / "tool"
-                        if tool_dir.exists():
-                            try:
-                                import subprocess
-
-                                from autoverify.util.env import cwd
-                                with cwd(tool_dir):
-                                    result = subprocess.run(
-                                        ["git", "rev-parse", "--short", "HEAD"],
-                                        capture_output=True,
-                                        text=True,
-                                        check=True
-                                    )
-                                    commit = result.stdout.strip()
-                                    
-                                    result = subprocess.run(
-                                        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                                        capture_output=True,
-                                        text=True,
-                                        check=True
-                                    )
-                                    branch = result.stdout.strip()
-                                    
-                                    print(f"    - Branch: {branch}")
-                                    print(f"    - Commit: {commit}")
-                            except Exception:
-                                pass
-                else:
-                    print("  No virtual environments found.")
-            else:
-                print("  Virtual environment directory not found.")
-                
-        except ImportError:
-            print("  Auto-verify not installed. Install with: pip install auto-verify")
+            print("  Auto-verify not available. Install with: pip install auto-verify")ls
     
     # If no specific component was requested, show general info
-    if not (args.verifiers or args.auto_verify or args.auto_verify_venvs):
+    if not (args.verifiers or args.auto_verify):
         print("\nADA-VERONA Components:")
         print("  • Verification methods: use --verifiers to list")
-        print("  • Auto-verify status: use --auto-verify to check")
-        print("  • Auto-verify environments: use --auto-verify-venvs to list")
+        print("  • Auto-verify integration: use --auto-verify to check")
+        print("\nFor auto-verify management, use the auto-verify CLI directly:")
+        print("  • auto-verify install <verifier>")
+        print("  • auto-verify list")
+        print("  • auto-verify --help")
 
 
 def main():

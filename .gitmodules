@@ -1,0 +1,4 @@
+[submodule "ada-auto-verify"]
+	path = ada-auto-verify
+	url = git@github.com:henba1/ada-auto-verify.git
+	branch = main
