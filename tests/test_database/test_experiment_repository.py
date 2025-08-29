@@ -9,9 +9,9 @@ import yaml
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.pytorch_network import PyTorchNetwork
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
+from robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
 from robustness_experiment_box.database.verification_context import VerificationContext
 
 

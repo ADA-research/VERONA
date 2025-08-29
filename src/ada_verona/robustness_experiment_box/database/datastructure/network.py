@@ -4,7 +4,7 @@ import numpy as np
 import torch
 
 
-class BaseNetwork(ABC):
+class Network(ABC):
     """
     Abstract base class for networks that can be either ONNX or PyTorch.
 
@@ -43,7 +43,7 @@ class BaseNetwork(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: dict) -> "BaseNetwork":
+    def from_dict(cls, data: dict) -> "Network":
         """
         Create a network from a dictionary.
 

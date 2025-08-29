@@ -2,11 +2,11 @@ from unittest.mock import Mock
 
 import pytest
 
-from robustness_experiment_box.database.base_network import BaseNetwork
+from robustness_experiment_box.database.datastructure.network import Network
 
 
-class ConcreteNetwork(BaseNetwork):
-    """Concrete implementation of BaseNetwork for testing."""
+class ConcreteNetwork(Network):
+    """Concrete implementation of the abstract Network for testing."""
     
     def __init__(self, name: str):
         self._name = name
@@ -30,7 +30,7 @@ class ConcreteNetwork(BaseNetwork):
 
 
 def test_base_network_cannot_instantiate():
-    """Test that BaseNetwork cannot be instantiated directly."""
+    """Test that Network cannot be instantiated directly."""
     with pytest.raises(TypeError):
         BaseNetwork()
 

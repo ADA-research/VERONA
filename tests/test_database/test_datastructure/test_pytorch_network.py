@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from robustness_experiment_box.database.pytorch_network import PyTorchNetwork
+from robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
 
 
 @pytest.fixture

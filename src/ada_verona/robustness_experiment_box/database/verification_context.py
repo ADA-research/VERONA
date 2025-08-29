@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
 from ada_verona.robustness_experiment_box.database.epsilon_status import EpsilonStatus
 from ada_verona.robustness_experiment_box.database.vnnlib_property import VNNLibProperty

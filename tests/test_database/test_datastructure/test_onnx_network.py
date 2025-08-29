@@ -1,7 +1,7 @@
 import onnx
 
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
 
 
 def test_network_initialization(network):

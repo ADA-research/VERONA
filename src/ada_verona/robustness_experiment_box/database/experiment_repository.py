@@ -7,10 +7,10 @@ import pandas as pd
 import yaml
 
 from ada_verona.robustness_experiment_box.analysis.report_creator import ReportCreator
-from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
 from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from ada_verona.robustness_experiment_box.database.network_factory import NetworkFactory
+from ada_verona.robustness_experiment_box.database.datastrcucture.network_factory import NetworkFactory
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 from ada_verona.robustness_experiment_box.verification_module.property_generator.property_generator import (
     PropertyGenerator,

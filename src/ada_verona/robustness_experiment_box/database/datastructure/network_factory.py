@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
 from ada_verona.robustness_experiment_box.database.pytorch_network import PyTorchNetwork
 
 

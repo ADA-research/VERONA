@@ -2,9 +2,9 @@
 import pandas as pd
 import pytest
 
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.network_factory import NetworkFactory
-from robustness_experiment_box.database.pytorch_network import PyTorchNetwork
+from robustness_experiment_box.database.datastructure.network import Network
+from robustness_experiment_box.database.datastructure.network_factory import NetworkFactory
+from robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
 
 
 @pytest.fixture

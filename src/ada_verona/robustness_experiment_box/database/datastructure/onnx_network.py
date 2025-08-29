@@ -5,11 +5,11 @@ import onnx
 import torch
 from onnx2torch import convert
 
-from ada_verona.robustness_experiment_box.database.base_network import BaseNetwork
+from ada_verona.robustness_experiment_box.database.datastructurebase_network import Network
 from ada_verona.robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
 
 
-class Network(BaseNetwork):
+class ONNXNetwork(Network):
     """
     Data class representing an ONNX network with its path.
 
