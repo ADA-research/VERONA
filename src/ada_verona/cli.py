@@ -2,7 +2,7 @@
 Command-line interface for ada-verona.
 
 This module provides a command-line interface for running robustness experiments
-with ada-verona, including minimal integration with auto-verify for formal verification.
+with ada-verona, including integration with the auto-verify plugin for formal verification.
 """
 
 import argparse
@@ -412,7 +412,7 @@ def list_components(args):
                 print("  No verifiers found. Install verifiers with: auto-verify install <verifier>")
             print("\nNote: Auto-verify is managed separately via the auto-verify CLI.")
         else:
-            print("  Auto-verify not available. Install with: pip install auto-verify")ls
+            print("  Auto-verify not available. Install with: pip install auto-verify")
     
     # If no specific component was requested, show general info
     if not (args.verifiers or args.auto_verify):
