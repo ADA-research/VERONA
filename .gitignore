@@ -58,6 +58,17 @@ tests/test_experiment/*
 experiment/*
 demo_plugin_system.py
 
+# Experiment directories
+**/experiment/
+**/data/
+**/networks/
+**/images/
+**/labels.csv
+**/*.npy
+**/*.onnx
+**/*.pth
+**/*.pt
+
 #Src specific
 src/ada_verona/data/*
 src/ada_verona/tests/test_experiment/*
