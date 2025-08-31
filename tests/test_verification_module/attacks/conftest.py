@@ -2,9 +2,9 @@ import pytest
 import torch
 from torch import nn
 
-from robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
-from robustness_experiment_box.verification_module.attacks.fgsm_attack import FGSMAttack
-from robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
+from ada_verona.robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
+from ada_verona.robustness_experiment_box.verification_module.attacks.fgsm_attack import FGSMAttack
+from ada_verona.robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
 
 
 @pytest.fixture

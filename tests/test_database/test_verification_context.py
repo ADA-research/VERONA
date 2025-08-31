@@ -4,13 +4,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+from ada_verona.robustness_experiment_box.database.epsilon_status import EpsilonStatus
+from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+from ada_verona.robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+from ada_verona.robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
     One2OnePropertyGenerator,
 )
 

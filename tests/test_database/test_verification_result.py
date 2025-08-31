@@ -1,4 +1,4 @@
-from robustness_experiment_box.database.verification_result import VerificationResult
+from ada_verona.robustness_experiment_box.database.verification_result import VerificationResult
 
 
 def test_verification_result_values():

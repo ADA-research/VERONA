@@ -1,4 +1,4 @@
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 
 
 def test_epsilon_value_result_initialization(mock_verification_context):

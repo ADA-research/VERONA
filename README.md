@@ -243,14 +243,14 @@ For more information about the installation of auto-verify, please refer to the 
 
 ### Possible Extension: Custom Verifiers
 
-Custom verifiers can be implemented by using the [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py) interface.
+Custom verifiers can be implemented by using the [`VerificationModule`](./ada_verona/robustness_experiment_box/verification_module/verification_module.py) interface.
 
 ## How to Add Your Own Verifier
 
 You can easily add your own verifier by following these steps:
 
 1. **Implement the `VerificationModule` interface:**
-   - Create a new class that inherits from [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py).
+   - Create a new class that inherits from [`VerificationModule`](./ada_verona/robustness_experiment_box/verification_module/verification_module.py).
    - Implement the `verify(self, verification_context: VerificationContext, epsilon: float)` method. This method should return either a string (e.g., "SAT", "UNSAT", "ERR") or a `CompleteVerificationData` object.
 
    Example:
@@ -265,7 +265,7 @@ You can easily add your own verifier by following these steps:
    ```
 
 2. **(Optional) If your verifier wraps an external tool:**
-   - Implement the `Verifier` interface in [`verification_runner.py`](./src/ada_verona/robustness_experiment_box/verification_module/verification_runner.py).
+   - Implement the `Verifier` interface in [`verification_runner.py`](./ada_verona/robustness_experiment_box/verification_module/verification_runner.py).
    - Then, use the `GenericVerifierModule` to wrap your `Verifier` implementation, which will handle property file management and result parsing for you.
 
    Example:
@@ -299,7 +299,7 @@ Currently the package implements the following adversarial attack methods:
 
 ### Possible Extension: Custom Attacks
 
-Custom attacks can be implemented by using the [`Attack`](./src/ada_verona/robustness_experiment_box/verification_module/attacks/attack.py) interface.
+Custom attacks can be implemented by using the [`Attack`](./ada_verona/robustness_experiment_box/verification_module/attacks/attack.py) interface.
 
 ## Datasets
 

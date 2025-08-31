@@ -3,9 +3,12 @@ from pathlib import Path
 from result import Ok
 from torch import Tensor, load
 
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import CompleteVerificationData, VerificationResult
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.robustness_experiment_box.database.verification_result import (
+    CompleteVerificationData,
+    VerificationResult,
+)
+from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
 class TestVerificationModule(VerificationModule):

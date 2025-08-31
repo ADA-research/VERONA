@@ -1,6 +1,6 @@
 import pytest
 
-from robustness_experiment_box.database.verification_result import CompleteVerificationData
+from ada_verona.robustness_experiment_box.database.verification_result import CompleteVerificationData
 
 
 def test_attack_estimation_module_initialization(attack_estimation_module, attack):
