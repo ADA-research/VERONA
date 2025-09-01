@@ -133,9 +133,17 @@ When using auto-verify verifiers, you can specify either the verifier name or th
 
 ```bash
 # Using verifier name
-ada-verona run --networks <path> --verifier auto-verify --auto-verify-name nnenum
+ada-verona run --networks <path> --verifier auto-verify --auto-verify-verifier nnenum
 ```
 
+### Using PyTorch Datasets
+
+For experiments using PyTorch datasets, use the `use-pytorch-data` command:
+
+```bash
+ada-verona use-pytorch-data --dataset mnist --networks <path> [options]
+```
+This command supports advanced data preprocessing options including transforms, normalization, and data augmentation for research experiments requiring custom data pipelines.
 
 
 ## Setting up the Experiment Directory
@@ -167,6 +175,10 @@ You have two main options for organizing your experiments:
 
 
 ### Command-Line Usage
+You can access the help and examples for the command-line interface by using the `--help` flag.
+```bash
+ada-verona --help
+```
 
 Basic usage with default paths (expects networks in `./experiment/networks/`):
 ```bash
@@ -192,6 +204,11 @@ ada-verona run --networks ./models --name formal_verification --verifier auto-ve
 Customizing dataset and sampling:
 ```bash
 ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct
+```
+
+PyTorch dataset with custom preprocessing:
+```bash
+ada-verona use-pytorch-data --dataset mnist --networks ./models --transforms Resize ToTensor Normalize --normalize-mean 0.5 --normalize-std 0.5
 ```
 
 ## Verification
