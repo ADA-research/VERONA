@@ -34,6 +34,51 @@ from ada_verona.robustness_experiment_box.verification_module.property_generator
 from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 
+def boolean_arg_type(value: str) -> str:
+    """
+    Custom argument type for boolean arguments.
+    
+    Args:
+        value (str): String value to validate
+        
+    Returns:
+        str: The validated string value
+        
+    Raises:
+        argparse.ArgumentTypeError: If the value is not a valid boolean representation
+    """
+    if value.lower() in ("true", "false", "1", "0"):
+        return value
+    else:
+        raise argparse.ArgumentTypeError(
+            f"'{value}' is not a valid boolean value. Use True/False or 1/0."
+        )
+
+
+def parse_boolean_arg(value: str) -> bool:
+    """
+    Parse a string boolean argument to a boolean value.
+    
+    Args:
+        value (str): String representation of boolean ("True"/"False" or "1"/"0")
+        
+    Returns:
+        bool: The parsed boolean value
+        
+    Raises:
+        ValueError: If the value cannot be parsed as a boolean
+    """
+    # Handle case-insensitive comparison
+    value_lower = value.lower()
+    if value_lower in ("true", "1"):
+        return True
+    elif value_lower in ("false", "0"):
+        return False
+    else:
+        # This should not happen if boolean_arg_type is used, but provide helpful error
+        raise ValueError(f"Cannot parse '{value}' as boolean. Use True/False or 1/0.")
+
+
 def build_transforms_from_args(args):
     """
     Build a list of transforms from command-line arguments.
@@ -181,15 +226,15 @@ For command-specific help, use: ada-verona <command> --help
     )
     dataset_group.add_argument(
         "--custom-labels", type=str,
-        help="CSV file containing labels (for custom dataset)"
+        help="CSV file containing custom labels (overrides default dataset labels)"
     )
     # Preprocessing options
     dataset_group.add_argument(
-        "--train", type=str, choices=["True", "False"], default="False",
+        "--train", type=boolean_arg_type, default="False",
         help="Use training split (True) or test split (False)"
     )
     dataset_group.add_argument(
-        "--download", type=str, choices=["True", "False"], default="True",
+        "--download", type=boolean_arg_type, default="True",
         help="Download dataset if not present"
     )
     dataset_group.add_argument(
@@ -254,6 +299,7 @@ For command-specific help, use: ada-verona <command> --help
         "--pgd-step-size", type=float, default=0.01,
         help="Step size for PGD attack"
     )
+
     
     # Epsilon search options
     epsilon_group = run_parser.add_argument_group("Epsilon search options")
@@ -266,12 +312,19 @@ For command-specific help, use: ada-verona <command> --help
     # Sample options
     sample_group = run_parser.add_argument_group("Sampling options")
     sample_group.add_argument(
-        "--sample-size", type=int, default=10,
-        help="Number of samples per network"
+        "--sample-size", type=int, default=None,
+        help="Number of samples per network (None = use all available samples)"
     )
     sample_group.add_argument(
-        "--sample-correct", action="store_true",
-        help="Sample only correctly predicted inputs"
+        "--sample-correct", type=boolean_arg_type, default="True",
+        help="Sample only correctly predicted inputs (True/False or 1/0, default: True)"
+    )
+    
+    # Reproducibility options
+    reproducibility_group = run_parser.add_argument_group("Reproducibility options")
+    reproducibility_group.add_argument(
+        "--seed", type=int, default=42,
+        help="Random seed for reproducibility (default: 42)"
     )
     
     # Use PyTorch data command
@@ -299,12 +352,16 @@ For command-specific help, use: ada-verona <command> --help
         help="Directory for dataset storage/loading"
     )
     pytorch_parser.add_argument(
-        "--train", type=str, choices=["True", "False"], default="False",
+        "--train", type=boolean_arg_type, default="False",
         help="Use training split (True) or test split (False)"
     )
     pytorch_parser.add_argument(
-        "--download", type=str, choices=["True", "False"], default="True",
+        "--download", type=boolean_arg_type, default="True",
         help="Download dataset if not present"
+    )
+    pytorch_parser.add_argument(
+        "--custom-labels", type=str,
+        help="CSV file containing custom labels (overrides default dataset labels)"
     )
     pytorch_parser.add_argument(
         "--resize", type=int, nargs=2, metavar=("WIDTH", "HEIGHT"),
@@ -343,6 +400,15 @@ For command-specific help, use: ada-verona <command> --help
         help="Verification method to use"
     )
     pytorch_parser.add_argument(
+        "--pgd-iterations", type=int, default=10,
+        help="Number of iterations for PGD attack"
+    )
+    pytorch_parser.add_argument(
+        "--pgd-step-size", type=float, default=0.01,
+        help="Step size for PGD attack"
+    )
+
+    pytorch_parser.add_argument(
         "--property", type=str, choices=["one2any", "one2one"],
         default="one2any", help="Property type for verification"
     )
@@ -352,12 +418,18 @@ For command-specific help, use: ada-verona <command> --help
         help="List of epsilon values to search"
     )
     pytorch_parser.add_argument(
-        "--sample-correct", action="store_true",
-        help="Sample only correctly predicted inputs"
+        "--sample-correct", type=boolean_arg_type, default="True",
+        help="Sample only correctly predicted inputs (True/False or 1/0, default: True)"
     )
     pytorch_parser.add_argument(
         "--target-class", type=int, default=1,
         help="Target class for one2one property (default: 1)"
+    )
+    
+    # Reproducibility options
+    pytorch_parser.add_argument(
+        "--seed", type=int, default=42,
+        help="Random seed for reproducibility (default: 42)"
     )
     
     # Help command
@@ -454,13 +526,37 @@ def load_dataset(args):
         torch_dataset = torchvision.datasets.MNIST(
             root=args.data_dir, train=train_bool, download=download_bool, transform=transforms.Compose(data_transforms)
         )
-        return PytorchExperimentDataset(dataset=torch_dataset)
+        dataset = PytorchExperimentDataset(dataset=torch_dataset)
+        
+        # Apply custom labels if provided
+        if args.custom_labels:
+            custom_labels_path = Path(args.custom_labels)
+            if not custom_labels_path.exists() or not custom_labels_path.is_file():
+                logging.error(f"Custom labels file {custom_labels_path} does not exist or is not a file.")
+                sys.exit(1)
+            logging.info(f"Using custom labels from: {custom_labels_path}")
+            # Note: PytorchExperimentDataset doesn't support custom labels, so we log a warning
+            logging.warning("Custom labels not supported for PyTorch datasets. Labels from original dataset will be used.")
+        
+        return dataset
     
     elif args.dataset == "cifar10":
         torch_dataset = torchvision.datasets.CIFAR10(
             root=args.data_dir, train=train_bool, download=download_bool, transform=transforms.Compose(data_transforms)
         )
-        return PytorchExperimentDataset(dataset=torch_dataset)
+        dataset = PytorchExperimentDataset(dataset=torch_dataset)
+        
+        # Apply custom labels if provided
+        if args.custom_labels:
+            custom_labels_path = Path(args.custom_labels)
+            if not custom_labels_path.exists() or not custom_labels_path.is_file():
+                logging.error(f"Custom labels file {custom_labels_path} does not exist or is not a file.")
+                sys.exit(1)
+            logging.info(f"Using custom labels from: {custom_labels_path}")
+            # Note: PytorchExperimentDataset doesn't support custom labels, so we log a warning
+            logging.warning("Custom labels not supported for PyTorch datasets. Labels from original dataset will be used.")
+        
+        return dataset
     
     elif args.dataset == "custom":
         if not args.custom_images or not args.custom_labels:
@@ -509,7 +605,8 @@ def run_experiment(args):
     )
     
     # Set random seed for reproducibility
-    torch.manual_seed(0)
+    torch.manual_seed(args.seed)
+    logging.info(f"Random seed set to: {args.seed}")
     
     # Log experiment configuration
     logging.info("=== ADA-VERONA Robustness Experiment ===")
@@ -518,9 +615,13 @@ def run_experiment(args):
     logging.info(f"Network directory: {args.networks}")
     logging.info(f"Dataset: {args.dataset}")
     logging.info(f"Verifier: {args.verifier}")
-    if args.verifier == "auto-verify":
+    if args.verifier == "pgd":
+        logging.info(f"PGD iterations: {args.pgd_iterations}")
+        logging.info(f"PGD step size: {args.pgd_step_size}")
+    elif args.verifier == "auto-verify":
         logging.info(f"Auto-verify verifier: {args.auto_verify_verifier}")
     logging.info(f"Epsilon values: {args.epsilons}")
+    logging.info(f"Sample size: {args.sample_size}")
     
     # Load dataset
     dataset = load_dataset(args)
@@ -562,8 +663,17 @@ def run_experiment(args):
     )
     
     # Create dataset sampler
+    try:
+        sample_correct_bool = parse_boolean_arg(args.sample_correct)
+        logging.info(f"Sample correct predictions: {sample_correct_bool}")
+    except ValueError as e:
+        logging.error(f"Invalid --sample-correct value: {e}")
+        sys.exit(1)
+        
     dataset_sampler = PredictionsBasedSampler(
-        sample_correct_predictions=args.sample_correct
+        sample_correct_predictions=sample_correct_bool,
+        sample_size=args.sample_size,
+        seed=args.seed
     )
     
     # Initialize experiment
@@ -580,7 +690,10 @@ def run_experiment(args):
             property_type=args.property,
             epsilon_list=[str(x) for x in args.epsilons],
             sample_size=args.sample_size,
-            sample_correct=args.sample_correct,
+            sample_correct=sample_correct_bool,
+            pgd_iterations=args.pgd_iterations,
+            pgd_step_size=args.pgd_step_size,
+            seed=args.seed,
             train=args.train,
             download=args.download,
             transforms=args.transforms,
@@ -652,7 +765,8 @@ def run_pytorch_experiment(args):
     )
     
     # Set random seed for reproducibility
-    torch.manual_seed(0)
+    torch.manual_seed(args.seed)
+    logging.info(f"Random seed set to: {args.seed}")
     
     # Log experiment configuration
     logging.info("=== ADA-VERONA PyTorch Dataset Robustness Experiment ===")
@@ -661,8 +775,12 @@ def run_pytorch_experiment(args):
     logging.info(f"Network directory: {args.networks}")
     logging.info(f"Dataset: {args.dataset}")
     logging.info(f"Verifier: {args.verifier}")
+    if args.verifier == "pgd":
+        logging.info(f"PGD iterations: {args.pgd_iterations}")
+        logging.info(f"PGD step size: {args.pgd_step_size}")
     logging.info(f"Property type: {args.property}")
     logging.info(f"Epsilon values: {args.epsilons}")
+    logging.info(f"Sample size: {args.sample_size}")
     logging.info(f"Train split: {args.train}")
     logging.info(f"Download: {args.download}")
     if args.resize:
@@ -708,7 +826,10 @@ def run_pytorch_experiment(args):
     
     # Create verifier
     if args.verifier == "pgd":
-        verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=10, step_size=0.01))
+        verifier = AttackEstimationModule(attack=PGDAttack(
+            number_iterations=args.pgd_iterations,
+            step_size=args.pgd_step_size
+        ))
     else:  # fgsm
         verifier = AttackEstimationModule(attack=FGSMAttack())
     
@@ -721,8 +842,17 @@ def run_pytorch_experiment(args):
     )
     
     # Create dataset sampler
+    try:
+        sample_correct_bool = parse_boolean_arg(args.sample_correct)
+        logging.info(f"Sample correct predictions: {sample_correct_bool}")
+    except ValueError as e:
+        logging.error(f"Invalid --sample-correct value: {e}")
+        sys.exit(1)
+        
     dataset_sampler = PredictionsBasedSampler(
-        sample_correct_predictions=args.sample_correct
+        sample_correct_predictions=sample_correct_bool,
+        sample_size=args.sample_size,
+        seed=args.seed
     )
     
     # Initialize experiment
@@ -738,10 +868,14 @@ def run_pytorch_experiment(args):
             verifier=args.verifier,
             property_type=args.property,
             epsilon_list=[str(x) for x in args.epsilons],
+            sample_size=args.sample_size,
+            pgd_iterations=args.pgd_iterations,
+            pgd_step_size=args.pgd_step_size,
+            seed=args.seed,
             train=args.train,
             download=args.download,
             resize=args.resize,
-            sample_correct=args.sample_correct,
+            sample_correct=sample_correct_bool,
             target_class=args.target_class if args.property == "one2one" else None,
             transforms=args.transforms,
             normalize_mean=args.normalize_mean if hasattr(args, 'normalize_mean') else None,
@@ -882,7 +1016,7 @@ For the 'run' command, you can customize dataset behavior:
 • --train {True,False}           Use training split (default: False)
 • --download {True,False}        Download dataset if not present (default: True)
 • --custom-images <path>          Custom image directory (for custom dataset)
-• --custom-labels <path>          Custom labels CSV file (for custom dataset)
+• --custom-labels <path>          Custom labels CSV file (overrides default dataset labels)
 
 DATA PREPROCESSING OPTIONS
 -------------------------
@@ -933,6 +1067,8 @@ Attack-specific options (for pgd):
 • --pgd-iterations <number>       Number of PGD iterations (default: 10)
 • --pgd-step-size <value>         PGD step size (default: 0.01)
 
+Note: PGD parameters are available in both 'run' and 'use-pytorch-data' commands.
+
 EXPERIMENT CONFIGURATION
 -----------------------
 
@@ -940,8 +1076,13 @@ EXPERIMENT CONFIGURATION
 • --output <path>                 Output directory for results
 • --networks <path>               Directory with network files (.onnx)
 • --epsilons <values>             List of epsilon values to search
-• --sample-size <number>          Number of samples per network
-• --sample-correct                 Sample only correctly predicted inputs
+• --sample-size <number>          Number of samples per network (None = use all available)
+• --sample-correct {True,False,1,0} Sample only correctly predicted inputs (default: True)
+
+REPRODUCIBILITY
+---------------
+
+• --seed <number>                 Random seed for reproducibility (default: 42)
 
 AUTO-VERIFY INTEGRATION
 ----------------------
@@ -994,7 +1135,34 @@ ada-verona run --networks ./models --name formal_verification \
 
 Customizing dataset and sampling:
 ```bash
-ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct
+ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct True
+ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct False
+ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct 1
+ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct 0
+```
+
+Using custom labels:
+```bash
+ada-verona run --networks ./models --dataset mnist --custom-labels ./my_labels.csv
+ada-verona use-pytorch-data --dataset cifar10 --networks ./models --custom-labels ./custom_labels.csv
+```
+
+Reproducible experiments:
+```bash
+ada-verona run --networks ./models --seed 123 --sample-size 5
+```
+
+Sampling options examples:
+```bash
+# Sample only correctly predicted inputs (default behavior)
+ada-verona run --networks ./models --sample-correct True
+
+# Sample only incorrectly predicted inputs
+ada-verona run --networks ./models --sample-correct False
+
+# Using numeric values
+ada-verona run --networks ./models --sample-correct 1  # Same as True
+ada-verona run --networks ./models --sample-correct 0  # Same as False
 ```
 
 PyTorch dataset experiment with transforms:

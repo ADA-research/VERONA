@@ -17,7 +17,7 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=loggin
 experiment_name = "auto_verify_verinet_test"
 timeout = 10
 experiment_repository_path = Path("../experiment")
-network_folder = Path("../experiment/data/networks")
+network_folder = Path("../experiment/networks")
 image_folder = Path("../experiment/data/images")
 image_label_file = Path("../experiment/data/image_labels.csv")
 epsilon_list = [0.001, 0.005]
