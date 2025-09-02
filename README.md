@@ -182,7 +182,7 @@ ada-verona --help
 Example command using the example_experiment folder:
 
 ```bash
-ada-verona run   --networks ./experiment/networks   --dataset custom   --custom-images ./experiment/data/images   --custom-labels ./experiment/data/image_labels.csv   --name auto_verify_pgd_example_experiment  --output ./experiment   --verifier pgd   --epsilons 0.001 0.005   --sample-correct True
+ada-verona run   --networks ./example_experiment/networks   --dataset custom   --custom-images ./example_experiment/data/images   --custom-labels ./example_experiment/data/image_labels.csv   --name auto_verify_pgd_example_experiment  --output ./example_experiment/output   --verifier pgd   --epsilons 0.001 0.005   --sample-correct True
 
 ```
 Basic usage with default paths (expects networks in `./experiment/networks/`):

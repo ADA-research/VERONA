@@ -59,6 +59,10 @@ tests/test_experiment/*
 experiment/*
 demo_plugin_system.py
 
+# Allow example_experiment directory
+!example_experiment/
+!example_experiment/**
+
 # Experiment directories
 **/experiment/
 **/data/
@@ -69,6 +73,7 @@ demo_plugin_system.py
 **/*.onnx
 **/*.pth
 **/*.pt
+
 
 #Src specific
 ada_verona/data/*
