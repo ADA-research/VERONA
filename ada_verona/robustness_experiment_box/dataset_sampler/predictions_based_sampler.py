@@ -4,7 +4,7 @@ import numpy as np
 import onnxruntime as rt
 
 from ada_verona.robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
 
 

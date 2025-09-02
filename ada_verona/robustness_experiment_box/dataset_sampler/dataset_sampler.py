@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from ada_verona.robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 
 
 class DatasetSampler(ABC):
