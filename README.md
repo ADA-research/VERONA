@@ -2,7 +2,7 @@
 
 The ada-verona package simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 The entire package is class-based, which means that extending the existing configurations is accessible and easy. 
-With one script it is possible to run an entire experiment with various networks, images and perturbation magnitudes (epsilons). 
+With one script or directly using the CLI, it is possible to run an entire experiment with various networks, data preprocessing options, images and perturbation magnitudes (epsilons). 
 
 The package can be used to create robustness distributions [Bosman, Berger, Hoos and van Rijn, 2025](https://jair.org/index.php/jair/article/view/18403), as well as empirically measuring robustness of networks using adversarial attacks and verify networks with formal verification tools using the [auto-verify](https://github.com/ADA-research/auto-verify) plugin that currently supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab).
 
@@ -87,14 +87,14 @@ ada-verona list
 
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts:
 - **Main Guide:**
-  - The primary resource for learning how to use ada-verona is the Jupyter notebook found in the [`notebooks`](./notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
+  - The primary resource for learning how to use ada-verona is the Jupyter notebook in the [`notebooks`](./notebooks/) folder as well as the `--help` command in the CLI and the [`scripts`](./ada_verona/scripts/) folder. The tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
 
 - **Quick-Start Example Scripts:**
-  - The [`scripts`](./scripts/) folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
-    - Running VERONA with a custom dataset and ab-crown ([`create_robustness_distribution_from_test_dataset.py`](./scripts/create_robustness_distribution_from_test_dataset.py)).
-    - Loading a PyTorch dataset and running VERONA with one-to-any or one-to-one verification ([`create_robustness_dist_on_pytorch_dataset.py`](./scripts/create_robustness_dist_on_pytorch_dataset.py)).
-    - Distributing jobs across multiple nodes using SLURM for large-scale experiments ([`multiple_jobs`](./scripts/multiple_jobs/) folder), including distributing tasks over CPU and GPU for different verifiers in the same experiment.
-    - Using auto-verify integration ([`create_robustness_dist_with_auto_verify.py`](./scripts/create_robustness_dist_with_auto_verify.py)).
+  - The [`scripts`](./ada_verona/scripts/) folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
+    - Running VERONA with a custom dataset and ab-crown ([`create_robustness_distribution_from_test_dataset.py`](./ada_verona/scripts/create_robustness_distribution_from_test_dataset.py)).
+    - Loading a PyTorch dataset and running VERONA with one-to-any or one-to-one verification ([`create_robustness_dist_on_pytorch_dataset.py`](./ada_verona/scripts/create_robustness_dist_on_pytorch_dataset.py)).
+    - Distributing jobs across multiple nodes using SLURM for large-scale experiments ([`multiple_jobs`](./ada_verona/scripts/multiple_jobs/) folder), including distributing tasks over CPU and GPU for different verifiers in the same experiment.
+    - Using auto-verify integration ([`create_robustness_dist_with_auto_verify.py`](./ada_verona/scripts/create_robustness_dist_with_auto_verify.py)).
 
 The notebook is your main entry point for learning and understanding the package, while the scripts serve as practical templates and quick-start resources for your own experiments.
 
@@ -179,7 +179,12 @@ You can access the help and examples for the command-line interface by using the
 ```bash
 ada-verona --help
 ```
+Example command using the example_experiment folder:
 
+```bash
+ada-verona run   --networks ./experiment/networks   --dataset custom   --custom-images ./experiment/data/images   --custom-labels ./experiment/data/image_labels.csv   --name auto_verify_pgd_example_experiment  --output ./experiment   --verifier pgd   --epsilons 0.001 0.005   --sample-correct True
+
+```
 Basic usage with default paths (expects networks in `./experiment/networks/`):
 ```bash
 ada-verona run --name PGDattack --dataset mnist --verifier pgd --epsilons 0.05 --sample-correct
@@ -320,7 +325,7 @@ Custom attacks can be implemented by using the [`Attack`](./ada_verona/robustnes
 
 ## Datasets
 
-The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for executing the package on MNIST or a custom dataset can be found in the [`scripts`](./scripts/) folder.
+The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for executing the package on MNIST or a custom dataset can be found in the [`scripts`](./ada_verona/scripts/) folder.
 
 ## Related Papers and Citation
 

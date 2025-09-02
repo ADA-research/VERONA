@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from ada_verona.robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 
 

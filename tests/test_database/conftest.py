@@ -5,8 +5,8 @@ import torch
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
 from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from ada_verona.robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from ada_verona.robustness_experiment_box.database.network import Network
-from ada_verona.robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
+from ada_verona.robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -20,6 +20,7 @@ class MockVerificationContext:
     
     def to_dict(self):
         return {"mock_key": "mock_value"}
+
 
 @pytest.fixture
 def mock_verification_context():
@@ -55,7 +56,8 @@ def epsilon_value_result(mock_verification_context):
 def network(tmp_path):
     onnx_file = tmp_path / "network.onnx"
     onnx_file.touch()
-    return Network(path=onnx_file)
+    return ONNXNetwork(path=onnx_file)
+
 
 @pytest.fixture
 def mock_graph():
@@ -79,6 +81,7 @@ def mock_graph():
     )
     return graph
 
+
 class MockTorchModel(torch.nn.Module):
     """
     A mock PyTorch model for testing purposes.
@@ -86,7 +89,6 @@ class MockTorchModel(torch.nn.Module):
 
     def forward(self, x):
         return torch.sum(x).unsqueeze(0)
-
 
 
 @pytest.fixture
@@ -107,5 +109,15 @@ def datapoint():
 
 
 @pytest.fixture
-def verification_context(network, datapoint, tmp_path, property_generator):
+def verification_context(network, datapoint, tmp_path):
+    class DummyPropertyGenerator:
+        def get_dict_for_epsilon_result(self):
+            return {}
+        
+        def to_dict(self):
+            return {'type': 'One2AnyPropertyGenerator', 
+        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator', 'number_classes': 2,
+        'data_lb':0, 'data_ub':1}
+    
+    property_generator = DummyPropertyGenerator()
     return VerificationContext(network, datapoint, tmp_path, property_generator)

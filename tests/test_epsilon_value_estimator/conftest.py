@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
-from ada_verona.robustness_experiment_box.database.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 from ada_verona.robustness_experiment_box.database.verification_result import CompleteVerificationData
 from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
