@@ -3,10 +3,10 @@ import pytest
 import torch
 
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
-from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from ada_verona.robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
 from ada_verona.robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
+from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -115,9 +115,13 @@ def verification_context(network, datapoint, tmp_path):
             return {}
         
         def to_dict(self):
-            return {'type': 'One2AnyPropertyGenerator', 
-        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator', 'number_classes': 2,
-        'data_lb':0, 'data_ub':1}
+            return {
+                'type': 'One2AnyPropertyGenerator',
+                'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator',
+                'number_classes': 2,
+                'data_lb': 0,
+                'data_ub': 1
+            }
     
     property_generator = DummyPropertyGenerator()
     return VerificationContext(network, datapoint, tmp_path, property_generator)

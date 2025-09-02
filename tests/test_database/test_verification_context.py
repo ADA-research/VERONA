@@ -10,9 +10,6 @@ from ada_verona.robustness_experiment_box.database.vnnlib_property import VNNLib
 from ada_verona.robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-from ada_verona.robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
-    One2OnePropertyGenerator,
-)
 
 
 @pytest.fixture

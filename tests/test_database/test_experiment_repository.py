@@ -7,11 +7,11 @@ import torch
 import yaml
 
 from ada_verona.robustness_experiment_box.database.dataset.data_point import DataPoint
-from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from ada_verona.robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
 from ada_verona.robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
 from ada_verona.robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
+from ada_verona.robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.robustness_experiment_box.database.experiment_repository import ExperimentRepository
 from ada_verona.robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -391,7 +391,9 @@ def test_create_verification_context(experiment_repository, tmp_path):
         network, data_point, property_generator
     )
 
-    # assert isinstance(verification_context, VerificationContext)#TODO: this throws an error because there is a difference in which module is loaded. should be fixed before publishing, cant fix now. 
+    # assert isinstance(verification_context, VerificationContext)
+    # TODO: this throws an error because there is a difference in which module is loaded.
+    # should be fixed before publishing
     assert verification_context.network == network
     assert verification_context.data_point == data_point
     assert verification_context.property_generator == property_generator
@@ -414,7 +416,9 @@ def test_create_verification_context_with_pytorch_network(experiment_repository,
     )
     
 
-    # assert isinstance(verification_context, VerificationContext) #TODO: this throws an error because there is a difference in which module is loaded. should be fixed before publishing, cant fix now. 
+    # assert isinstance(verification_context, VerificationContext)
+    # TODO: this throws an error because there is a difference in which module is loaded.
+    # should be fixed before publishing, cant fix now. 
     assert verification_context.network == pytorch_network
     assert verification_context.data_point == data_point
     assert verification_context.property_generator == property_generator

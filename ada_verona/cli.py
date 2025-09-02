@@ -536,7 +536,10 @@ def load_dataset(args):
                 sys.exit(1)
             logging.info(f"Using custom labels from: {custom_labels_path}")
             # Note: PytorchExperimentDataset doesn't support custom labels, so we log a warning
-            logging.warning("Custom labels not supported for PyTorch datasets. Labels from original dataset will be used.")
+            logging.warning(
+                "Custom labels not supported for PyTorch datasets. "
+                "Labels from original dataset will be used."
+            )
         
         return dataset
     
@@ -554,7 +557,10 @@ def load_dataset(args):
                 sys.exit(1)
             logging.info(f"Using custom labels from: {custom_labels_path}")
             # Note: PytorchExperimentDataset doesn't support custom labels, so we log a warning
-            logging.warning("Custom labels not supported for PyTorch datasets. Labels from original dataset will be used.")
+            logging.warning(
+                "Custom labels not supported for PyTorch datasets. "
+                "Labels from original dataset will be used."
+            )
         
         return dataset
     

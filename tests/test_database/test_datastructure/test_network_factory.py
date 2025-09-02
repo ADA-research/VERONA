@@ -1,9 +1,12 @@
 
+import re
+
 import pandas as pd
 import pytest
-import re
+
 from ada_verona.robustness_experiment_box.database.datastructure.network import Network
 from ada_verona.robustness_experiment_box.database.datastructure.network_factory import NetworkFactory
+from ada_verona.robustness_experiment_box.database.datastructure.onnx_network import ONNXNetwork
 from ada_verona.robustness_experiment_box.database.datastructure.pytorch_network import PyTorchNetwork
 
 
@@ -190,8 +193,6 @@ def test_create_networks_from_csv_empty_file(networks_dir):
     """Test error when CSV file is empty."""
     csv_file = networks_dir / "networks.csv"
     csv_file.write_text("")  # Empty file
-    with pytest.raises(ValueError) as excinfo:
-        NetworkFactory.create_networks_from_csv(csv_file, networks_dir)
     with pytest.raises(ValueError, match="Networks CSV file is empty"):
         NetworkFactory.create_networks_from_csv(csv_file, networks_dir)
 
