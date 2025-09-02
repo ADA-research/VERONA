@@ -115,7 +115,7 @@ env_strategy = "venv"  # or "conda" or "auto"
 
 # Runtime preferences
 prefer_gpu = true
-default_timeout = 600
+default_timeout = 300
 
 # Advanced options
 allow_conda_fallback = true
@@ -373,5 +373,3 @@ The plugin architecture enables future integrations:
 - **Custom Verifiers**: User-defined verification methods
 
 ---
-
-**Ready to start? Run the example script and explore the integration!** 

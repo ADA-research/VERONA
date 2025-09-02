@@ -5,12 +5,13 @@ import onnx
 import torch
 from onnx2torch import convert
 
-from ada_verona.robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from ada_verona.robustness_experiment_box.database.datastructure.network import Network
+from ada_verona.robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
 
 
-class Network:
+class ONNXNetwork(Network):
     """
-    Data class representing a network with its path.
+    Data class representing an ONNX network with its path.
 
     Attributes:
         path (Path): The path to the network file.
@@ -28,6 +29,16 @@ class Network:
         self.path = path
         self.onnx_model = None
         self.torch_model_wrapper = None
+
+    @property
+    def name(self) -> str:
+        """
+        Get the name of the network.
+
+        Returns:
+            str: The name of the network.
+        """
+        return self.path.stem
 
     def load_onnx_model(self) -> onnx.ModelProto:
         """
@@ -79,7 +90,7 @@ class Network:
         Returns:
             dict: The dictionary representation of the Network.
         """
-        return {"network_path": str(self.path)}
+        return {"network_path": str(self.path), "type": "onnx"}
 
     @classmethod
     def from_dict(cls, data: dict):
