@@ -41,14 +41,6 @@ conda create -n verona python=3.10
 conda activate verona
 ```
 
-**Install ada-verona:**
-Then in the activated environment, you can install ada-verona as follows:
-```bash
-# Default installation (includes GPU support and AutoAttack) using uv for faster installation (recommended)
-uv pip install ada-verona
-```
-For more information about installation options (CPU-only, GPU, development version) and about HPC cluster setup, please refer to the [documentation](https://deepwiki.com/ADA-research/VERONA) of ada-verona.
-
 ### Local installation for e.g. development purposes
 
 If you want to install ada-verona locally using git:
@@ -59,35 +51,10 @@ cd VERONA
 uv pip install -e .
 ```
 
-### Install auto-verify
-As auto-verify is an important plugin for ada-verona that provides the formal verification capabilities, you should install it in the same environment as ada-verona.
-
-```bash
-uv pip install auto-verify
-```
-For more information about auto-verify, please refer to the [documentation](https://ada-research.github.io/auto-verify/) of auto-verify.
-
-
-## Getting Started: Guide and Example Scripts
-First, check whether you have installed ada-verona and auto-verify correctly:
-
-```python
-import ada_verona
-print(f"ada-verona available: {ada_verona.__version__}")
-print(f"auto-verify available: {ada_verona.HAS_AUTO_VERIFY}")
-print(f"PyAutoAttack available: {ada_verona.HAS_AUTOATTACK}")
-```
-### Listing Available Verifiers 
-
-You can list available verifier environments with:
-
-```bash
-ada-verona list
-```
 
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts:
 - **Main Guide:**
-  - The primary resource for learning how to use ada-verona is the Jupyter notebook found in the [`notebooks`](./notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
+  - The primary resource for learning how to use VERONA is the Jupyter notebook found in the [`notebooks`](./notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
 
 - **Quick-Start Example Scripts:**
   - The [`scripts`](./scripts/) folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
@@ -97,45 +64,6 @@ To help you get up and running with ada-verona, we provide a tutorial notebook a
     - Using auto-verify integration ([`create_robustness_dist_with_auto_verify.py`](./scripts/create_robustness_dist_with_auto_verify.py)).
 
 The notebook is your main entry point for learning and understanding the package, while the scripts serve as practical templates and quick-start resources for your own experiments.
-
-## Command-Line Interface
-
-ada-verona provides a command-line interface (CLI) for running robustness experiments without writing Python code. The CLI allows you to:
-
-- Run robustness experiments with various networks, datasets, and verification methods using either adversarial attacks or formal verification tools if auto-verify is installed
-- Access specific data preprocessing and sampling options
-- List available components (verifiers, auto-verify environments)
-
-### Running Experiments
-
-The basic command to run a robustness experiment is:
-
-```bash
-ada-verona run --networks <path-to-networks> [options]
-```
-
-Key options include:
-
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--name` | Experiment name | `robustness_experiment` |
-| `--networks` | Directory with network files (.onnx) | (required) |
-| `--dataset` | Dataset to use (mnist, cifar10) | `mnist` |
-| `--verifier` | Verification method (pgd, fgsm, auto-verify) | `pgd` |
-| `--property` | Property type (one2any, one2one) | `one2any` |
-| `--epsilons` | List of epsilon values to search | `[0.001, 0.005, 0.01, 0.05]` |
-| `--sample-size` | Number of samples per network | `10` |
-| `--sample-correct` | Sample only correctly predicted inputs | `false` |
-
-### Using Auto-Verify Verifiers
-
-When using auto-verify verifiers, you can specify either the verifier name or the virtual environment name:
-
-```bash
-# Using verifier name
-ada-verona run --networks <path> --verifier auto-verify --auto-verify-name nnenum
-```
-
 
 
 ## Setting up the Experiment Directory
@@ -166,33 +94,6 @@ You have two main options for organizing your experiments:
 2. **Custom Paths**: Specify custom paths for networks, data, and output using command-line arguments which is illustrated below. 
 
 
-### Command-Line Usage
-
-Basic usage with default paths (expects networks in `./experiment/networks/`):
-```bash
-ada-verona run --name PGDattack --dataset mnist --verifier pgd --epsilons 0.05 --sample-correct
-```
-
-Specifying custom paths:
-```bash
-ada-verona run --name my_experiment --networks /path/to/models --output /path/to/results --data-dir /path/to/data
-```
-#### Other command line examples
-
-Basic experiment with PGD attack (assumes existing experiment folder and networks in experiment/networks/):
-```bash
-ada-verona run --networks --name pgd_experiment --verifier pgd --epsilons 0.001 0.005 0.01
-```
-
-Using auto-verify with a specific virtual environment:
-```bash
-ada-verona run --networks ./models --name formal_verification --verifier auto-verify --verifier-name abcrown --timeout 600
-```
-
-Customizing dataset and sampling:
-```bash
-ada-verona run --networks ./models --dataset cifar10 --sample-size 20 --sample-correct
-```
 
 ## Verification
 
@@ -203,29 +104,6 @@ Ada-verona features a plugin architecture that allows integration with [auto-ver
 1. **Independence**: Ada-verona works perfectly without auto-verify, using attack-based verification methods for empirical upper bounds.
 2. **Automatic Detection**: When auto-verify is installed in the same environment, its verifiers become automatically available
 3. **Interface**: The same API works regardless of which verification backend is used
-
-#### Using the Plugin System
-
-To use formal verification tools from auto-verify:
-
-```python
-import ada_verona
-
-# Check if auto-verify is available
-print(f"Auto-verify available: {ada_verona.HAS_AUTO_VERIFY}")
-print(f"Available verifiers: {ada_verona.AUTO_VERIFY_VERIFIERS}")
-
-# Create a verifier if auto-verify is available
-if ada_verona.HAS_AUTO_VERIFY and "nnenum" in ada_verona.AUTO_VERIFY_VERIFIERS:
-    verifier = ada_verona.create_auto_verify_verifier("nnenum", timeout=300)
-    print(f"Using formal verification: {verifier.name}")
-else:
-    # Fallback to attack-based verification
-    from ada_verona.robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
-    from ada_verona.robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
-    verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=10, step_size=0.01))
-    print(f"Using attack-based verification: {verifier.name}")
-```
 
 ### Verifier Installation
 Verifiers can be installed using the `auto-verify` command.
@@ -249,7 +127,7 @@ Custom verifiers can be implemented by using the [`VerificationModule`](./src/ad
 
 You can easily add your own verifier by following these steps:
 
-1. **Implement the `VerificationModule` interface:**
+1. **Implement new verifiers using the `VerificationModule` class:**
    - Create a new class that inherits from [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py).
    - Implement the `verify(self, verification_context: VerificationContext, epsilon: float)` method. This method should return either a string (e.g., "SAT", "UNSAT", "ERR") or a `CompleteVerificationData` object.
 
