@@ -33,6 +33,13 @@ from ada_verona.robustness_experiment_box.verification_module.property_generator
 )
 from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
 
+# Default logging levels
+logging.getLogger("matplotlib").setLevel(logging.WARNING)
+logging.getLogger("onnx2torch").setLevel(logging.WARNING)
+logging.getLogger("onnx").setLevel(logging.WARNING)
+logging.getLogger("torch").setLevel(logging.WARNING)
+logging.getLogger("torchvision").setLevel(logging.WARNING)
+
 
 def boolean_arg_type(value: str) -> str:
     """
