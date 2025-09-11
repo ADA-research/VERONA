@@ -49,7 +49,9 @@ class PyTorchNetwork(Network):
         Returns:
             torch.nn.Module: The loaded PyTorch model.
         """
+
         if self.model is None:
+
             # Load the model architecture
             spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
             if spec is None or spec.loader is None:
