@@ -18,7 +18,11 @@ def test_network_name_property(network):
 def test_to_dict(network):
     network_dict = network.to_dict()
     print(network_dict)
-    assert network_dict == {"network_path": str(network.path), 'type':'ONNXNetwork', 'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'}
+    assert network_dict == {
+        "network_path": str(network.path), 
+        'type':'ONNXNetwork', 
+        'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'
+        }
 
 
 def test_from_dict(tmp_path):
