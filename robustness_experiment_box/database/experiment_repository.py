@@ -15,7 +15,7 @@ from robustness_experiment_box.verification_module.property_generator.property_g
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
 PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"
-
+DEFAULT_NETWORKS_CSV_NAME = "networks.csv"
 
 class ExperimentRepository:
     """
@@ -118,12 +118,59 @@ class ExperimentRepository:
             list[Network]: The list of networks.
         """
         
+        networks_csv_path = self.network_folder / DEFAULT_NETWORKS_CSV_NAME
+        
+        #check whether networks_csv name exists
+        if networks_csv_path.exists():
+            try:
+                return self.load_from_csv()
+            
+            except Exception as e:
+                # Log the error but continue with directory scanning for backward compatibility
+                print(f"Warning: Could not load networks from CSV: {e}")
+                print("Falling back to directory scanning for ONNX files.")
+        
         network_path_list = [file for file in self.network_folder.iterdir()]
         network_list = []
         for x in network_path_list:
             network_list.append(Network.from_file(x))
         return network_list
 
+    def load_networks_from_csv(self) -> list[Network]:
+        networks_csv_path = self.network_folder / DEFAULT_NETWORKS_CSV_NAME
+        
+        try:
+            df = pd.read_csv(networks_csv_path)
+        except pd.errors.EmptyDataError:
+            raise ValueError(f"Networks CSV file is empty: {networks_csv_path}") from None
+        except pd.errors.ParserError as e:
+            raise ValueError(f"Error parsing networks CSV file: {e}") from e
+
+        required_columns = ["name"]
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            raise ValueError(f"Missing required columns in networks CSV: {missing_columns}")
+
+        network_list = []
+        for _, row in df.iterrows():
+            try:
+                network = self.load_network_from_csv_row(row)
+                network_list.append(network)
+            except Exception as e:
+                raise ValueError(f"Error creating network from row {row.to_dict()}: {e}") from e
+
+        return network_list
+    
+    def load_network_from_csv_row(self, row: pd.Series) -> Network:
+     
+        architecture_path = self.network_folder / row['architecture'] if row.contains("architecture") else None
+        weights_path = row['weights']
+        
+        return Network.from_file(dict(architecture_path=architecture_path, weights_path= weights_path))
+        
+
+
+    
     def save_results(self, results: list[EpsilonValueResult]) -> None:
         """
         Save the list of epsilon value results to a CSV file.
