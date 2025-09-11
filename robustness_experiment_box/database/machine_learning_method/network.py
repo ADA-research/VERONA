@@ -59,7 +59,6 @@ class Network(ABC):
         module_name = data.pop("module", None)  # Get module info
         if not class_name or not module_name:
             raise ValueError("Missing 'class' or 'module' key in dictionary")
-
         try:
             module = importlib.import_module(module_name)  # Dynamically import module
             subclass = getattr(module, class_name)  # Get class from module
@@ -91,8 +90,9 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-
+        print("and this")
         if file.get('weights_path').suffix == ".onnx":
+            print("does this happen?")
             module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
             subclass = module.ONNXNetwork  
             return subclass.from_file(file.get('weights_path'))
@@ -102,6 +102,6 @@ class Network(ABC):
             subclass = module.PyTorchNetwork
             return subclass.from_file(file.get('architecture_path'), file.get('weights_path'))
         else:
-            raise NotImplementedError(f"Only .onnx files are supported at the moment, got: {file.suffix}")
+            raise NotImplementedError(f"Only .onnx and pytorch files are supported at the moment, got: {file.suffix}")
         
         

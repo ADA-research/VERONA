@@ -133,7 +133,7 @@ class ExperimentRepository:
         network_path_list = [file for file in self.network_folder.iterdir()]
         network_list = []
         for x in network_path_list:
-            network_list.append(Network.from_file(x))
+            network_list.append(Network.from_file(dict(weights_path =x)))
         return network_list
 
     def load_networks_from_csv(self) -> list[Network]:
@@ -164,7 +164,7 @@ class ExperimentRepository:
                 network_list.append(network)
             except Exception as e:
                 raise ValueError(f"Error creating network from row {row.to_dict()}: {e}") from e
-
+      
         return network_list
     
     def load_network_from_csv_row(self, row: pd.Series) -> Network:
@@ -174,11 +174,20 @@ class ExperimentRepository:
             Returns:
                 Loaded Network
         """
-     
-        architecture_path = self.network_folder / row['architecture'] if row.contains("architecture") else None
+        if "weights" not in row:
+            raise ValueError("All network types require 'weights' field")
+        architecture_path = (
+            self.network_folder / row["architecture"] 
+            if "architecture" in row and pd.notna(row["architecture"]) 
+            else None
+        )
         weights_path = row['weights']
-        
-        return Network.from_file(dict(architecture_path=architecture_path, weights_path= weights_path))
+        arch = Path(architecture_path) if architecture_path is not None else None
+        weights = Path(weights_path) if weights_path is not None else None
+        return Network.from_file(dict(
+            architecture_path=arch,
+            weights_path=weights
+        ))
         
 
 

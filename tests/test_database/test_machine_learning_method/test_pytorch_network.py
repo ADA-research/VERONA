@@ -6,50 +6,6 @@ import torch
 from robustness_experiment_box.database.machine_learning_method.pytorch_network import PyTorchNetwork
 
 
-@pytest.fixture
-def architecture_file(tmp_path):
-    """Create a temporary architecture file."""
-    arch_file = tmp_path / "test_model.py"
-    arch_file.write_text("""
-import torch.nn as nn
-
-class TestModel(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.fc = nn.Linear(10, 2)
-    
-    def forward(self, x):
-        return self.fc(x)
-
-test_model = TestModel()
-""")
-
-    return arch_file
-
-@pytest.fixture
-def weights_file(tmp_path, architecture_file):
-    """Create a temporary weights file."""
-    weights_file = tmp_path / "test_weights.pt"
-
-    # Import TestModel from the generated architecture file
-    import importlib.util
-
-    spec = importlib.util.spec_from_file_location("test_model", architecture_file)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    model = module.TestModel()
-    torch.save(model.state_dict(), weights_file)
-
-    return weights_file
-
-
-@pytest.fixture
-def pytorch_network(architecture_file, weights_file):
-    """Create a PyTorchNetwork instance."""
-    return PyTorchNetwork(architecture_path=architecture_file, weights_path=weights_file)
-
-
 def test_pytorch_network_initialization(architecture_file, weights_file):
     """Test PyTorchNetwork initialization."""
     network = PyTorchNetwork(architecture_path=architecture_file, weights_path=weights_file)

@@ -17,7 +17,6 @@ def test_network_name_property(network):
 
 def test_to_dict(network):
     network_dict = network.to_dict()
-    print(network_dict)
     assert network_dict == {
         "network_path": str(network.path), 
         'type':'ONNXNetwork', 
@@ -28,7 +27,7 @@ def test_to_dict(network):
 def test_from_dict(tmp_path):
     network_path = tmp_path / "mock_model.onnx"
     network_path.touch()
-    network_dict = {"network_path": str(network_path)}
+    network_dict = {"network_path": network_path}
 
     network = ONNXNetwork.from_dict(network_dict)
 
