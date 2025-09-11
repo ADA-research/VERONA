@@ -4,7 +4,7 @@ from result import Ok
 from torch import load
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
@@ -16,7 +16,7 @@ from robustness_experiment_box.verification_module.test_verification_module impo
 
 @pytest.fixture
 def network():
-    return Network("./tests/test_experiment/data/networks/mnist-net_256x2.onnx")
+    return ONNXNetwork("./tests/test_experiment/data/networks/mnist-net_256x2.onnx")
 
 
 @pytest.fixture

@@ -9,7 +9,7 @@ import yaml
 from robustness_experiment_box.analysis.report_creator import ReportCreator
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.machine_learning_method.network import Network
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
@@ -117,8 +117,11 @@ class ExperimentRepository:
         Returns:
             list[Network]: The list of networks.
         """
+        
         network_path_list = [file for file in self.network_folder.iterdir()]
-        network_list = [Network(x) for x in network_path_list]
+        network_list = []
+        for x in network_path_list:
+            network_list.append(Network.from_file(x))
         return network_list
 
     def save_results(self, results: list[EpsilonValueResult]) -> None:

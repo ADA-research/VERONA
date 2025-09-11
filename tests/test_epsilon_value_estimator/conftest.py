@@ -4,7 +4,7 @@ import pytest
 from autoverify.verifier.verification_result import CompleteVerificationData
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.verification_module import VerificationModule
 
@@ -16,7 +16,7 @@ def data_point():
 
 @pytest.fixture
 def network():
-    return Network(Path("test_network.onnx"))
+    return ONNXNetwork(Path("test_network.onnx"))
 
 
 @pytest.fixture
