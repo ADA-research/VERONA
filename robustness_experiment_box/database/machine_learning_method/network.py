@@ -82,12 +82,26 @@ class Network(ABC):
     
 
     @classmethod
-    def from_file(cls, file:Path):
+    def from_file(cls, file:dict[Path]):
+        """Create network from file
+        Args: 
+            file (dict[Path]): contains the paths to the relevant weights (for ONNX) 
+            and additionally to the architecture file for PyTorch networks.
+        
+        Returns: 
+            Created network from the correct class OR error. 
+        """
 
-        if file.suffix == ".onnx":
+        if file.get('weights_path').suffix == ".onnx":
             module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
-            subclass = module.ONNXNetwork  # Get class from module
+            subclass = module.ONNXNetwork  
+            return subclass.from_file(file.get('weights_path'))
+        elif file.get('weights_path').suffix == ".pt":
+            module = importlib.import_module(
+                "robustness_experiment_box.database.machine_learning_method.pytorch_network") 
+            subclass = module.PyTorchNetwork
+            return subclass.from_file(file.get('architecture_path'), file.get('weights_path'))
         else:
             raise NotImplementedError(f"Only .onnx files are supported at the moment, got: {file.suffix}")
         
-        return subclass.from_file(file)
+        

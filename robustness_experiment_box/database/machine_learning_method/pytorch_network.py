@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from ada_verona.robustness_experiment_box.database.datastructure.network import Network
-from ada_verona.robustness_experiment_box.database.datastructure.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_method.network import Network
+from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
 
 
 class PyTorchNetwork(Network):
@@ -126,11 +126,12 @@ class PyTorchNetwork(Network):
         Returns:
             dict: The dictionary representation of the PyTorchNetwork.
         """
-        return {
-            "architecture_path": str(self.architecture_path),
-            "weights_path": str(self.weights_path),
-            "type": "pytorch"
-        }
+        return dict(
+            architecture_path=str(self.architecture_path),
+            weights_path=str(self.weights_path),
+            type=self.__class__.__name__,
+            module=self.__class__.__module__,
+        )
 
     @classmethod
     def from_dict(cls, data: dict) -> "PyTorchNetwork":
@@ -147,3 +148,16 @@ class PyTorchNetwork(Network):
             architecture_path=Path(data["architecture_path"]),
             weights_path=Path(data["weights_path"])
         )
+        
+    @classmethod
+    def from_file(cls, architecture_path:Path, weights_path:Path)-> "PyTorchNetwork":
+        """
+        Create a PyTorchNetwork from a dictionary.
+
+        Args:
+            file (Path): Path at which the network is stored. 
+
+        Returns:
+            PyTorchNetwork: The created ONNXNetwork.
+        """
+        return cls(architecture_path=architecture_path, weights_path=weights_path)
