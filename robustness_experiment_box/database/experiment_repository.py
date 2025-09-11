@@ -112,7 +112,7 @@ class ExperimentRepository:
 
     def get_network_list(self) -> list[Network]:
         """
-        Get the list of networks from the network folder.
+        Get the list of networks from the network folder or network CSV
 
         Returns:
             list[Network]: The list of networks.
@@ -137,6 +137,12 @@ class ExperimentRepository:
         return network_list
 
     def load_networks_from_csv(self) -> list[Network]:
+        """
+        load the networks from the csv if it exists
+
+        Returns: 
+            list of networks to use for experiments. Can be a mix of types.
+        """
         networks_csv_path = self.network_folder / DEFAULT_NETWORKS_CSV_NAME
         
         try:
@@ -162,6 +168,12 @@ class ExperimentRepository:
         return network_list
     
     def load_network_from_csv_row(self, row: pd.Series) -> Network:
+        """
+            Load information from a single row and instantiate the Network via the abstract class. 
+            
+            Returns:
+                Loaded Network
+        """
      
         architecture_path = self.network_folder / row['architecture'] if row.contains("architecture") else None
         weights_path = row['weights']
