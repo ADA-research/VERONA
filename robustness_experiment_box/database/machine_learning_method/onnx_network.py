@@ -97,7 +97,7 @@ class ONNXNetwork(Network):
                     )
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data: dict)-> "ONNXNetwork":
         """
         Create a Network from a dictionary.
 
@@ -110,7 +110,7 @@ class ONNXNetwork(Network):
         return cls(path=Path(data["network_path"]))
     
     @classmethod
-    def from_file(cls, file:Path):
+    def from_file(cls, file:Path)-> "ONNXNetwork":
         """
         Create a ONNXNetwork from a dictionary.
 
