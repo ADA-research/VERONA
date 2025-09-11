@@ -10,9 +10,6 @@ from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
-    One2OnePropertyGenerator,
-)
 
 
 @pytest.fixture
@@ -25,7 +22,11 @@ def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
 
-    assert context_dict['network'] == {'network_path': str(tmp_path / "network.onnx"), 'type':'ONNXNetwork', 'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'}
+    assert context_dict['network'] == {
+                        'network_path': str(tmp_path / "network.onnx"), 
+                        'type':'ONNXNetwork',
+                        'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'
+                        }  
     assert context_dict['data_point']['id'] == "1"
     assert context_dict['data_point']['label'] == 0
     assert np.allclose(context_dict['data_point']["data"],[0.1, 0.2, 0.3], atol = 1e-5)
