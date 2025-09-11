@@ -107,7 +107,7 @@ class ONNXNetwork(Network):
         Returns:
             Network: The created Network.
         """
-        return cls(path=Path(data["network_path"]))
+        return cls(path=Path(data["weights_path"]))
     
     @classmethod
     def from_file(cls, file:Path)-> "ONNXNetwork":
