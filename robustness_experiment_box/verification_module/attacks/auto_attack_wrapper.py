@@ -1,14 +1,14 @@
-from autoattack import AutoAttack
+from pyautoattack import AutoAttack
 from torch import Tensor
 from torch.nn.modules import Module
 
-from robustness_experiment_box.verification_module.attacks.attack import Attack
+from ada_verona.robustness_experiment_box.verification_module.attacks.attack import Attack
 
 
 class AutoAttackWrapper(Attack):
     """
     A wrapper for the AutoAttack adversarial attack.
-    install in pip using: pip install git+https://github.com/fra31/auto-attack
+    install in pip using: pip install pyautoattack
 
     Args:
         Attack (class): The base class for attacks.
@@ -51,4 +51,12 @@ class AutoAttackWrapper(Attack):
 
         # auto attack requires NCHW input format
         perturbed_data = adversary.run_standard_evaluation(data, target)
-        return perturbed_data.to(self.device)
+        
+        # Handle the case where perturbed_data is a tuple (for pyautoattack: The first element is the perturbed image 
+        # and second element is the model's prediction after the attack)
+        if isinstance(perturbed_data, tuple):
+            # Return the first element of the tuple (the perturbed images)
+            return perturbed_data[0].to(self.device)
+        else:
+            # Original behavior for backward compatibility
+            return perturbed_data.to(self.device)
