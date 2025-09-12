@@ -8,8 +8,6 @@ through verification and adversarial testing.
 __version__ = "1.0.0"
 __author__ = "ADA Research Group"
 
-# Import main components for easy access
-# Make key classes available at package level for easier imports
 import contextlib
 
 from .robustness_experiment_box import (
@@ -22,9 +20,28 @@ from .robustness_experiment_box import (
 )
 
 with contextlib.suppress(ImportError):
-    # These will be imported if available
+    from .robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
+    from .robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
+    from .robustness_experiment_box.database.experiment_repository import ExperimentRepository
+    from .robustness_experiment_box.database.network import Network
+    from .robustness_experiment_box.database.verification_context import VerificationContext
     from .robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
+    from .robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
+    from .robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
+        BinarySearchEpsilonValueEstimator,
+    )
     from .robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+    from .robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
+    from .robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
+    from .robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
+    from .robustness_experiment_box.verification_module.auto_verify_module import (
+        AutoVerifyModule,
+        parse_counter_example,
+        parse_counter_example_label,
+    )
+    from .robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+        One2AnyPropertyGenerator,
+    )
     from .robustness_experiment_box.verification_module.verification_module import VerificationModule
 
 # Check for autoattack availability
@@ -34,34 +51,6 @@ try:
 except ImportError:
     HAS_AUTOATTACK = False
     
-# Check for auto-verify availability and load plugin
-try:
-    from .robustness_experiment_box.verification_module.plugins.auto_verify_plugin import (
-        create_auto_verify_verifier,
-        detect_auto_verify,
-        get_auto_verify_plugin,
-        list_auto_verify_verifiers,
-    )
-    HAS_AUTO_VERIFY = detect_auto_verify()
-    
-    if HAS_AUTO_VERIFY:
-        # Initialize the plugin to discover verifiers
-        _plugin = get_auto_verify_plugin()
-        AUTO_VERIFY_VERIFIERS = _plugin.get_available_verifiers()
-    else:
-        AUTO_VERIFY_VERIFIERS = []
-        
-except ImportError:
-    HAS_AUTO_VERIFY = False
-    AUTO_VERIFY_VERIFIERS = []
-    
-    def list_auto_verify_verifiers():
-        return []
-    
-    def create_auto_verify_verifier(*args, **kwargs):
-        return None
-    
-# Warn if autoattack is not available
 if not HAS_AUTOATTACK:
     import warnings
     warnings.warn(
@@ -70,24 +59,12 @@ if not HAS_AUTOATTACK:
         stacklevel=2
     )
 
-# Log auto-verify status
-if HAS_AUTO_VERIFY:
-    import logging
-    logger = logging.getLogger(__name__)
-    logger.info(f"Auto-verify detected! Available verifiers: {AUTO_VERIFY_VERIFIERS}")
-else:
-    import warnings
-    warnings.warn(
-        "Auto-verify not found. Verification features will be limited to attacks. "
-        "To enable: install auto-verify in the same environment",
-        stacklevel=2
-    )
+
 
 __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
-    "HAS_AUTO_VERIFY", 
     "AUTO_VERIFY_VERIFIERS",
     "analysis",
     "database",
@@ -95,9 +72,27 @@ __all__ = [
     "epsilon_value_estimator",
     "util",
     "verification_module",
+    
     "DatasetSampler",
     "EpsilonValueEstimator",
     "VerificationModule",
+   
+    "ExperimentRepository",
+    "Network",
+    "VerificationContext",
+
+    "PredictionsBasedSampler",
+    "PytorchExperimentDataset",
+    "ImageFileDataset",
+    "BinarySearchEpsilonValueEstimator",
+    "AttackEstimationModule",
+    "PGDAttack",
+    "AutoAttackWrapper",
+    "AutoVerifyModule",
+    "parse_counter_example",
+    "parse_counter_example_label",
+
+    "One2AnyPropertyGenerator",
     "list_auto_verify_verifiers",
     "create_auto_verify_verifier",
 ]
