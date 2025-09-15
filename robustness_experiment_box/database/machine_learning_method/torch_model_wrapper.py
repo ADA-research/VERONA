@@ -1,5 +1,6 @@
 import torch
 
+
 class TorchModelWrapper(torch.nn.Module):
     """
     A wrapper class for a PyTorch model to reshape the input before passing it to the model.
