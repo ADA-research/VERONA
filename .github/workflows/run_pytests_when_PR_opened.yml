@@ -30,7 +30,7 @@ jobs:
   
       - name: Install pip dependencies
         run: |
-          conda run -n verona pip install -r requirements.txt  # Install pip packages
+          conda run -n verona pip install -r requirements.txt --index-url https://pypi.org/simple/ --trusted-host pypi.org  # Install pip packages
   
       - name: Install local package
         run: |
