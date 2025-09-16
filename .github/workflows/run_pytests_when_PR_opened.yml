@@ -30,25 +30,20 @@ jobs:
   
       - name: Install pip dependencies
         run: |
-          conda run -n verona pip install -r requirements.txt --index-url https://pypi.org/simple/ --trusted-host pypi.org  # Install pip packages
+          conda run -n verona pip install -r requirements.txt --index-url https://pypi.org/simple/ --trusted-host pypi.org
   
       - name: Install local package
         run: |
-          conda run -n verona pip install -e .  # Install your local package in editable mode
+          conda run -n verona pip install -e .
           
       - name: Install pytest
         run: |
-          conda run -n verona pip install pytest  # Installs pytest explicitly
-      - name : Install autoattack
-        run: |
-          conda run -n verona pip install git+https://github.com/fra31/auto-attack #autoattack is an optional package
-      - name : Install pytest mock
+          conda run -n verona pip install pytest
+          
+      - name: Install pytest mock
         run: |
           conda run -n verona pip install pytest-mock
   
       - name: Run pytest
         run: |
-          conda run -n verona python -m pytest tests/ --verbose 
-  
-  
-        
+          conda run -n verona python -m pytest tests/ --verbose
