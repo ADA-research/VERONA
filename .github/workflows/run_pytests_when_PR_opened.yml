@@ -28,21 +28,21 @@ jobs:
           python-version: "3.10"  
           auto-activate-base: false
   
-      - name: Install pip dependencies
+      - name: Install uv
         run: |
-          conda run -n verona pip install -r requirements.txt --index-url https://pypi.org/simple/ --trusted-host pypi.org
+          conda run -n verona pip install uv
+  
+      - name: Install dependencies with uv
+        run: |
+          conda run -n verona uv pip install -r requirements.txt
   
       - name: Install local package
         run: |
-          conda run -n verona pip install -e .
+          conda run -n verona uv pip install -e .
           
-      - name: Install pytest
+      - name: Install pytest and pytest-mock
         run: |
-          conda run -n verona pip install pytest
-          
-      - name: Install pytest mock
-        run: |
-          conda run -n verona pip install pytest-mock
+          conda run -n verona uv pip install pytest pytest-mock
   
       - name: Run pytest
         run: |
