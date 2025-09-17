@@ -7,8 +7,8 @@ import numpy as np
 from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Err, Ok
 
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from ada_verona.database.verification_context import VerificationContext
+from ada_verona.verification_module.verification_module import VerificationModule
 
 logger = logging.getLogger(__name__)
 

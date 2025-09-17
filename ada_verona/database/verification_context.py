@@ -2,11 +2,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.epsilon_status import EpsilonStatus
+from ada_verona.database.network import Network
+from ada_verona.database.vnnlib_property import VNNLibProperty
+from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
 
 class VerificationContext:

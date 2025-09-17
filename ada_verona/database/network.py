@@ -5,7 +5,7 @@ import onnx
 import torch
 from onnx2torch import convert
 
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from ada_verona.database.torch_model_wrapper import TorchModelWrapper
 
 
 class Network:
