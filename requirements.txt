@@ -40,7 +40,7 @@ six==1.16.0
 smac==2.0.2
 sortedcontainers==2.4.0
 swig==4.1.1.post1
-sympy==1.12
+sympy==1.13.1
 tblib==3.0.0
 threadpoolctl==3.4.0
 toolz==0.12.1
@@ -52,8 +52,8 @@ urllib3==2.2.1
 xdg-base-dirs==6.0.0
 zict==3.0.0
 zipp==3.18.1
-torch==2.3.1                          
-torchaudio==2.3.1
-torchvision==0.18.1
+torch==2.6.0                          
+torchaudio
+torchvision
 seaborn==0.13.2
 onnx2torch==1.5.14
