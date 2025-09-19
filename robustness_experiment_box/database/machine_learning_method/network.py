@@ -90,7 +90,7 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-        print("and this")
+
         if file.get('weights_path').suffix == ".onnx":
             print("does this happen?")
             module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
@@ -103,5 +103,3 @@ class Network(ABC):
             return subclass.from_file(file.get('architecture_path'), file.get('weights_path'))
         else:
             raise NotImplementedError(f"Only .onnx and pytorch files are supported at the moment, got: {file.suffix}")
-        
-        
