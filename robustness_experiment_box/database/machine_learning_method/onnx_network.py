@@ -112,7 +112,7 @@ class ONNXNetwork(Network):
     @classmethod
     def from_file(cls, file:Path):
         """
-        Create a ONNXNetwork from a dictionary.
+        Create an ONNXNetwork from a dictionary.
 
         Args:
             file (Path): Path at which the network is stored. 
