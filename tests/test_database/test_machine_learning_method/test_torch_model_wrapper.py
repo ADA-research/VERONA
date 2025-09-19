@@ -1,5 +1,6 @@
-import torch
 import numpy as np
+import torch
+
 from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
 
 
