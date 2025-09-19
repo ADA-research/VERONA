@@ -5,12 +5,13 @@ import onnx
 import torch
 from onnx2torch import convert
 
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_method.network import Network
+from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
 
 
-class Network:
+class ONNXNetwork(Network):
     """
-    Data class representing a network with its path.
+    Data class representing an ONNX network with its path.
 
     Attributes:
         path (Path): The path to the network file.
@@ -28,6 +29,16 @@ class Network:
         self.path = path
         self.onnx_model = None
         self.torch_model_wrapper = None
+
+    @property
+    def name(self) -> str:
+        """
+        Get the name of the network.
+
+        Returns:
+            str: The name of the network.
+        """
+        return self.path.stem
 
     def load_onnx_model(self) -> onnx.ModelProto:
         """
@@ -79,7 +90,11 @@ class Network:
         Returns:
             dict: The dictionary representation of the Network.
         """
-        return {"network_path": str(self.path)}
+        
+        return dict(network_path =  str(self.path), 
+                type=self.__class__.__name__,
+                module=self.__class__.__module__,
+                    )
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -93,3 +108,16 @@ class Network:
             Network: The created Network.
         """
         return cls(path=Path(data["network_path"]))
+    
+    @classmethod
+    def from_file(cls, file:Path):
+        """
+        Create an ONNXNetwork from a dictionary.
+
+        Args:
+            file (Path): Path at which the network is stored. 
+
+        Returns:
+            ONNXNetwork: The created ONNXNetwork.
+        """
+        return cls(path = file)
