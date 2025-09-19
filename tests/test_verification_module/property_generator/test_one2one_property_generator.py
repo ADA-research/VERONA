@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+from ada_verona.database.vnnlib_property import VNNLibProperty
+from ada_verona.verification_module.property_generator.one2one_property_generator import (
     One2OnePropertyGenerator,
 )
 

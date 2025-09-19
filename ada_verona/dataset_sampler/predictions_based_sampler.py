@@ -1,9 +1,9 @@
 import numpy as np
 import onnxruntime as rt
 
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
+from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
+from ada_verona.database.network import Network
+from ada_verona.dataset_sampler.dataset_sampler import DatasetSampler
 
 
 class PredictionsBasedSampler(DatasetSampler):

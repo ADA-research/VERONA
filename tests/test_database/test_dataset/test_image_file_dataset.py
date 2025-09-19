@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 import torch
 
-from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
+from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from robustness_experiment_box.database.verification_result import VerificationResult
+from ada_verona.database.verification_result import VerificationResult
 
 
 @dataclass

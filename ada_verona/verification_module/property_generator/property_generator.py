@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+from ada_verona.database.vnnlib_property import VNNLibProperty
 
 
 class PropertyGenerator(ABC):

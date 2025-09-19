@@ -4,11 +4,11 @@ from pathlib import Path
 
 from autoverify.verifier import AbCrown
 
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
+from ada_verona.database.experiment_repository import ExperimentRepository
+from ada_verona.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule
+from ada_verona.verification_module.auto_verify_module import AutoVerifyModule
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 

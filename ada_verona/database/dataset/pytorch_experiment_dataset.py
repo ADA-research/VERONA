@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 from typing_extensions import Self
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
+from ada_verona.database.dataset.data_point import DataPoint
 
 
 class PytorchExperimentDataset:
