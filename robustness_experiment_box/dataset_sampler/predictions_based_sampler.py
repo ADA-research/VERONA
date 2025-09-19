@@ -2,7 +2,7 @@ import numpy as np
 import onnxruntime as rt
 
 from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.machine_learning_method.network import Network
 from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
 
 

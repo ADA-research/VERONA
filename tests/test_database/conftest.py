@@ -5,8 +5,8 @@ import torch
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
 from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
 from robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -55,7 +55,7 @@ def epsilon_value_result(mock_verification_context):
 def network(tmp_path):
     onnx_file = tmp_path / "network.onnx"
     onnx_file.touch()
-    return Network(path=onnx_file)
+    return ONNXNetwork(path=onnx_file)
 
 @pytest.fixture
 def mock_graph():
