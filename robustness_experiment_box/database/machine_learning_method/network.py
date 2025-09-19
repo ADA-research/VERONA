@@ -104,4 +104,3 @@ class Network(ABC):
         else:
             raise NotImplementedError(f"Only .onnx and pytorch files are supported at the moment, got: {file.suffix}")
         
-        
