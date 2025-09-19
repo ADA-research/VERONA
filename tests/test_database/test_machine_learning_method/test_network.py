@@ -1,11 +1,8 @@
 from unittest.mock import Mock
 
-import onnx
 import pytest
 
 from robustness_experiment_box.database.machine_learning_method.network import Network
-from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
 
 
 class ConcreteNetwork(Network):

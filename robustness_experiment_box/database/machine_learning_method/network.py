@@ -1,8 +1,10 @@
-from abc import ABC, abstractmethod
 import importlib
+from abc import ABC, abstractmethod
+from pathlib import Path
+
 import numpy as np
 import torch
-from pathlib import Path
+
 
 class Network(ABC):
     """
@@ -83,8 +85,8 @@ class Network(ABC):
     def from_file(cls, file:Path):
 
         if file.suffix == ".onnx":
-            module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")  # Dynamically import module
-            subclass = getattr(module, "ONNXNetwork")  # Get class from module
+            module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
+            subclass = module.ONNXNetwork  # Get class from module
         else:
             raise NotImplementedError(f"Only .onnx files are supported at the moment, got: {file.suffix}")
         
