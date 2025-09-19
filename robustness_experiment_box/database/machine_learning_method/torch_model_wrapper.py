@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 
 class TorchModelWrapper(torch.nn.Module):
@@ -27,15 +28,18 @@ class TorchModelWrapper(torch.nn.Module):
         Returns:
             torch.Tensor: The output tensor from the wrapped PyTorch model.
         """
-        # Convert input_shape to tuple for PyTorch reshape
-        if hasattr(self.input_shape, 'tolist'):
-            # Handle numpy arrays
-            shape_tuple = tuple(self.input_shape.tolist())
-        else:
-            # Handle tuples and other iterables
-            shape_tuple = tuple(self.input_shape)
         
-        x = x.reshape(shape_tuple)
-        x = self.torch_model(x)
+        if isinstance(x, np.ndarray):
+        # ensure correct dtype/device if needed
+            x = torch.from_numpy(x).to(
+                dtype=torch.float32,
+                device=next(self.torch_model.parameters()).device
+            )
+            x = x.reshape(*self.input_shape)  # tuple unpacking
 
+        else:
+        # Assume it's already a torch.Tensor
+            x = x.reshape(*self.input_shape)
+
+        x = self.torch_model(x)
         return x

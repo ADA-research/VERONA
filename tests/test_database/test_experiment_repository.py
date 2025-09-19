@@ -7,10 +7,8 @@ import yaml
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.machine_learning_method.pytorch_network import PyTorchNetwork
-
 from robustness_experiment_box.database.verification_context import VerificationContext
-
+from robustness_experiment_box.database.machine_learning_method.pytorch_network import PyTorchNetwork
 
 @pytest.fixture
 def networks_dir(tmp_path):
