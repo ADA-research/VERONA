@@ -42,6 +42,32 @@ class PyTorchNetwork(Network):
         """
         return self.weights_path.stem
 
+
+
+    def _find_model(self,mod) -> torch.nn.Module | None:
+        # Directly defined model instance
+        model_instance = next(
+            (getattr(mod, name) for name in dir(mod)
+            if isinstance(getattr(mod, name), torch.nn.Module)),
+            None
+        )
+        if model_instance:
+            return model_instance
+
+        # Callable that returns a model
+        for name in dir(mod):
+            if name.startswith("_"):
+                continue
+            attr = getattr(mod, name)
+            if callable(attr):
+                try:
+                    candidate = attr()
+                    if isinstance(candidate, torch.nn.Module):
+                        return candidate
+                except Exception:
+                    continue
+        return None
+    
     def load_model(self) -> torch.nn.Module:
         """
         Load the PyTorch model from the architecture and weights files.
@@ -50,46 +76,28 @@ class PyTorchNetwork(Network):
             torch.nn.Module: The loaded PyTorch model.
         """
 
-        if self.model is None:
+        if self.model is not None:
+            return self.model
 
-            # Load the model architecture
-            spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
-            if spec is None or spec.loader is None:
-                raise ImportError(f"Could not load model architecture from {self.architecture_path}")
-            
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            
-            # Look for a model instance in the module
-            model = None
-            for attr_name in dir(module):
-                attr = getattr(module, attr_name)
-                if isinstance(attr, torch.nn.Module):
-                    model = attr
-                    break
-            
-            if model is None:
-                # Try to find a function that creates the model
-                for attr_name in dir(module):
-                    attr = getattr(module, attr_name)
-                    if callable(attr) and not attr_name.startswith('_'):
-                        try:
-                            model = attr()
-                            if isinstance(model, torch.nn.Module):
-                                break
-                        except Exception:
-                            continue
-            
-            if model is None:
-                raise ValueError(f"No PyTorch model found in {self.architecture_path}")
-            
-            # Load the weights
-            if self.weights_path.exists():
-                state_dict = torch.load(self.weights_path, map_location='cpu')
-                model.load_state_dict(state_dict)
-            
-            self.model = model
-        
+        #load the model architecture module
+        spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
+        if not spec or not spec.loader:
+            raise ImportError(f"Could not load model architecture from {self.architecture_path}")
+
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        #helper to locate a torch.nn.Module instance or builder
+        model = self._find_model(module)
+        if model is None:
+            raise ValueError(f"No PyTorch model found in {self.architecture_path}")
+
+        #load the weights if available
+        if self.weights_path.exists():
+            state_dict = torch.load(self.weights_path, map_location="cpu")
+            model.load_state_dict(state_dict)
+
+        self.model = model
         return self.model
 
     def get_input_shape(self) -> np.ndarray:
