@@ -110,62 +110,74 @@ class ExperimentRepository:
         with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
 
-    def get_network_list(self) -> list[Network]:
+    def get_network_list(self, csv_name:str = None) -> list[Network]:
         """
-        Get the list of networks from the network folder or network CSV
+        Return a list of networks either from a CSV (preferred) or by scanning
+        the network folder for ONNX files if CSV loading fails.
+
+        Args:
+            csv_name: Optional custom CSV filename.
 
         Returns:
             list[Network]: The list of networks.
         """
-        
-        networks_csv_path = self.network_folder / DEFAULT_NETWORKS_CSV_NAME
-        
-        #check whether networks_csv name exists
-        if networks_csv_path.exists():
+        csv_path = self.network_folder / (csv_name or DEFAULT_NETWORKS_CSV_NAME)
+
+        def try_load_csv(path):
             try:
-                return self.load_from_csv()
-            
+                return self.load_networks_from_csv(path)
             except Exception as e:
-                # Log the error but continue with directory scanning for backward compatibility
-                print(f"Warning: Could not load networks from CSV: {e}")
+                print(f"Warning: Could not load networks from CSV '{path}': {e}")
                 print("Falling back to directory scanning for ONNX files.")
-        
-        network_path_list = [file for file in self.network_folder.iterdir()]
-        network_list = []
-        for x in network_path_list:
-            network_list.append(Network.from_file(dict(weights_path =x)))
-        return network_list
+                return None
+            
+        if csv_name:
+            networks = try_load_csv(csv_path)
+            if networks is not None:
+                return networks
+            # fall through to folder scan if it failed
 
-    def load_networks_from_csv(self) -> list[Network]:
-        """
-        load the networks from the csv if it exists
+        if not csv_name and csv_path.exists():
+            networks = try_load_csv(csv_path)
+            if networks is not None:
+                return networks
 
-        Returns: 
-            list of networks to use for experiments. Can be a mix of types.
+        return [Network.from_file({"weights_path": p}) for p in self.network_folder.iterdir()]
+
+    def load_networks_from_csv(self, network_csv_path:str) -> list[Network]:
         """
-        networks_csv_path = self.network_folder / DEFAULT_NETWORKS_CSV_NAME
-        
+        Load networks from a CSV file.
+
+        Args:
+            network_csv_path: Path to the CSV file.
+
+        Returns:
+            List of Network objects to use for experiments.
+        """
         try:
-            df = pd.read_csv(networks_csv_path)
-        except pd.errors.EmptyDataError:
-            raise ValueError(f"Networks CSV file is empty: {networks_csv_path}") from None
-        except pd.errors.ParserError as e:
-            raise ValueError(f"Error parsing networks CSV file: {e}") from e
+            df = pd.read_csv(network_csv_path)
+        except (pd.errors.EmptyDataError, pd.errors.ParserError) as e:
+            msg = (
+                f"Networks CSV file is empty: {network_csv_path}"
+                if isinstance(e, pd.errors.EmptyDataError)
+                else f"Error parsing networks CSV file: {e}"
+            )
+            raise ValueError(msg) from None
 
-        required_columns = ["name"]
-        missing_columns = [col for col in required_columns if col not in df.columns]
-        if missing_columns:
-            raise ValueError(f"Missing required columns in networks CSV: {missing_columns}")
+        missing = [c for c in ("name",) if c not in df.columns]
+        if missing:
+            raise ValueError(f"Missing required columns in networks CSV: {missing}")
 
-        network_list = []
+        networks = []
         for _, row in df.iterrows():
             try:
-                network = self.load_network_from_csv_row(row)
-                network_list.append(network)
+                networks.append(self.load_network_from_csv_row(row))
             except Exception as e:
-                raise ValueError(f"Error creating network from row {row.to_dict()}: {e}") from e
-      
-        return network_list
+                raise ValueError(
+                    f"Error creating network from row {row.to_dict()}: {e}"
+                ) from e
+
+        return networks
     
     def load_network_from_csv_row(self, row: pd.Series) -> Network:
         """
@@ -189,8 +201,6 @@ class ExperimentRepository:
             weights_path=weights
         ))
         
-
-
     
     def save_results(self, results: list[EpsilonValueResult]) -> None:
         """
