@@ -110,7 +110,7 @@ class ExperimentRepository:
         with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
 
-    def get_network_list(self, csv_name:str = None) -> list[Network]:
+    def get_network_list(self, csv_name: str = None) -> list[Network]:
         """
         Return a list of networks either from a CSV (preferred) or by scanning
         the network folder for ONNX files if CSV loading fails.
@@ -144,7 +144,7 @@ class ExperimentRepository:
 
         return [Network.from_file({"weights_path": p}) for p in self.network_folder.iterdir()]
 
-    def load_networks_from_csv(self, network_csv_path:str) -> list[Network]:
+    def load_networks_from_csv(self, network_csv_path: str) -> list[Network]:
         """
         Load networks from a CSV file.
 

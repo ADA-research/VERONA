@@ -90,13 +90,12 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-        print("and this")
-        if file.get('weights_path').suffix == ".onnx":
-            print("does this happen?")
+
+        if file.get('network_type').suffix == "onnx":
             module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
             subclass = module.ONNXNetwork  
             return subclass.from_file(file.get('weights_path'))
-        elif file.get('weights_path').suffix == ".pt":
+        elif file.get('network_type').suffix == "pytorch":
             module = importlib.import_module(
                 "robustness_experiment_box.database.machine_learning_method.pytorch_network") 
             subclass = module.PyTorchNetwork
