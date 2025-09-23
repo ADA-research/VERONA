@@ -87,7 +87,7 @@ class PyTorchNetwork(Network):
 
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        print("the module", module)
+        
         # Helper to locate a torch.nn.Module instance or builder
         model = self._find_model(module)
         if model is None:
