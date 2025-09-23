@@ -1,8 +1,9 @@
 from pathlib import Path
 
+import numpy as np
 import pytest
 import torch
-import numpy as np
+
 from robustness_experiment_box.database.machine_learning_model.pytorch_network import PyTorchNetwork
 
 
