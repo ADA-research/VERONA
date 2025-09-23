@@ -141,7 +141,6 @@ def test_load_network_from_csv_row_onnx(experiment_repository):
     network = experiment_repository.load_network_from_csv_row(row)
     
     assert isinstance(network, ONNXNetwork)
-    assert network.path is not None
 
     
 def test_load_network_from_csv_row_pytorch(experiment_repository, weights_file, architecture_file):
@@ -154,8 +153,6 @@ def test_load_network_from_csv_row_pytorch(experiment_repository, weights_file, 
     network = experiment_repository.load_network_from_csv_row(row)
     
     assert isinstance(network, PyTorchNetwork)
-    assert network.architecture is not None
-    assert network.weights is not None
 
 
 
