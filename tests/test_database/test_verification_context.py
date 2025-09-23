@@ -25,7 +25,7 @@ def test_to_dict(verification_context, tmp_path):
     assert context_dict['network'] == {
                         'network_path': str(tmp_path / "network.onnx"), 
                         'type':'ONNXNetwork',
-                        'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'
+                        'module': 'robustness_experiment_box.database.machine_learning_model.onnx_network'
                         }  
     assert context_dict['data_point']['id'] == "1"
     assert context_dict['data_point']['label'] == 0
@@ -40,7 +40,7 @@ def test_from_dict(tmp_path, verification_context):
         'network': {
             'network_path': tmp_path / "network.onnx",
             'type':'ONNXNetwork', 
-            'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'},
+            'module': 'robustness_experiment_box.database.machine_learning_model.onnx_network'},
         'data_point': {'id': "1", 'label': 0, 'data': [0.1, 0.2, 0.3]}, 
         'tmp_path': str(tmp_path),
         'property_generator': verification_context.property_generator.to_dict(),

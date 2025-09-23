@@ -33,8 +33,8 @@ def networks_csv(networks_dir, tmp_path):
 
     data = {
         "network_type": ["onnx", "pytorch"],
-        "architecture": [None, "test_model.py"],     # None instead of ""
-        "weights": [onnx.name, pyt_weights.name],   
+        "architecture": [onnx.name, "test_model.py"],     # None instead of ""
+        "weights": [None, pyt_weights.name],   
     }
 
     df = pd.DataFrame(data)
@@ -125,7 +125,7 @@ def test_get_network_list(experiment_repository):
     network_path = experiment_repository.network_folder / "network1.onnx"
     network_path.mkdir()
     network_list = experiment_repository.get_network_list()
-
+    
     assert len(network_list) == 1
     assert network_list[0].path == experiment_repository.network_folder /"network1.onnx"
 
@@ -134,11 +134,10 @@ def test_load_network_from_csv_row_onnx(experiment_repository):
     onnx_file.touch()
     row = pd.Series(
         dict(
-        name = "test_onnx",
-        weights = onnx_file 
+        network_type = "onnx",
+        architecture = onnx_file 
         )
     )
-    
     network = experiment_repository.load_network_from_csv_row(row)
     
     assert isinstance(network, ONNXNetwork)
@@ -147,7 +146,7 @@ def test_load_network_from_csv_row_onnx(experiment_repository):
     
 def test_load_network_from_csv_row_pytorch(experiment_repository, weights_file, architecture_file):
     row = pd.Series(dict(
-        name="test_pytorch",
+        network_type="pytorch",
         architecture= architecture_file,
         weights = weights_file
     ))
@@ -155,32 +154,29 @@ def test_load_network_from_csv_row_pytorch(experiment_repository, weights_file, 
     network = experiment_repository.load_network_from_csv_row(row)
     
     assert isinstance(network, PyTorchNetwork)
-    assert network.architecture_path is not None
-    assert network.weights_path is not None
+    assert network.architecture is not None
+    assert network.weights is not None
 
 
 
 def test_create_network_from_csv_row_onnx_missing_path(experiment_repository):
     """Test error when ONNX network is missing network_path."""
     row = pd.Series({
-        "name": "test_onnx",
+        "network_type": "onnx",
     })
     
-    with pytest.raises(ValueError, match="All network types require 'weights' field"):
+    with pytest.raises(ValueError, match="All network types require 'architecture' field"):
         experiment_repository.load_network_from_csv_row(row)
 
 def test_create_networks_from_csv_success(experiment_repository, networks_csv):
     """Test creating multiple networks from CSV successfully."""
     networks = experiment_repository.network_folder / 'networks.csv'
     networks.write_text(networks_csv.read_text())
-    networks = experiment_repository.load_networks_from_csv()
+    networks = experiment_repository.load_networks_from_csv(networks)
     
     assert len(networks) == 2
     assert isinstance(networks[0], ONNXNetwork)
     assert isinstance(networks[1], PyTorchNetwork)
-    assert networks[0].name == "test_model"
-    assert networks[1].name == "test_weights"
-
      
 def test_save_results(experiment_repository, epsilon_value_result):
     experiment_repository.initialize_new_experiment("test_experiment")

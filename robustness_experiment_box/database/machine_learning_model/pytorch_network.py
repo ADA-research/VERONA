@@ -13,21 +13,21 @@ class PyTorchNetwork(Network):
 
     Attributes:
         architecture_path (Path): Path to the .py file containing the model architecture.
-        weights_path (Path): Path to the .pt/.pth file containing the model weights.
+        weights (Path): Path to the .pt/.pth file containing the model weights.
         model (torch.nn.Module, optional): The loaded PyTorch model. Defaults to None.
         torch_model_wrapper (TorchModelWrapper, optional): The PyTorch model wrapper. Defaults to None.
     """
 
-    def __init__(self, architecture_path: Path, weights_path: Path) -> None:
+    def __init__(self, architecture: Path, weights: Path) -> None:
         """
         Initialize the PyTorchNetwork with architecture and weights paths.
 
         Args:
             architecture_path (Path): Path to the .py file containing the model architecture.
-            weights_path (Path): Path to the .pt/.pth file containing the model weights.
+            weights (Path): Path to the .pt/.pth file containing the model weights.
         """
-        self.architecture_path = architecture_path
-        self.weights_path = weights_path
+        self.architecture = architecture
+        self.weights = weights
         self.model = None
         self.torch_model_wrapper = None
         self.input_shape = None
@@ -40,7 +40,7 @@ class PyTorchNetwork(Network):
         Returns:
             str: The name of the network.
         """
-        return self.weights_path.stem
+        return self.weights.stem
 
 
 
@@ -80,9 +80,9 @@ class PyTorchNetwork(Network):
             return self.model
 
         #load the model architecture module
-        spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
+        spec = importlib.util.spec_from_file_location("model_module", self.architecture)
         if not spec or not spec.loader:
-            raise ImportError(f"Could not load model architecture from {self.architecture_path}")
+            raise ImportError(f"Could not load model architecture from {self.architecture}")
 
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -90,11 +90,11 @@ class PyTorchNetwork(Network):
         #helper to locate a torch.nn.Module instance or builder
         model = self._find_model(module)
         if model is None:
-            raise ValueError(f"No PyTorch model found in {self.architecture_path}")
+            raise ValueError(f"No PyTorch model found in {self.architecture}")
 
         #load the weights if available
-        if self.weights_path.exists():
-            state_dict = torch.load(self.weights_path, map_location="cpu")
+        if self.weights.exists():
+            state_dict = torch.load(self.weights, map_location="cpu")
             model.load_state_dict(state_dict)
 
         self.model = model
@@ -114,7 +114,7 @@ class PyTorchNetwork(Network):
                 self.load_model()
 
             # load the same module you already import for the model
-            spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
+            spec = importlib.util.spec_from_file_location("model_module", self.architecture)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
@@ -156,8 +156,8 @@ class PyTorchNetwork(Network):
             dict: The dictionary representation of the PyTorchNetwork.
         """
         return dict(
-            architecture_path=str(self.architecture_path),
-            weights_path=str(self.weights_path),
+            architecture=str(self.architecture),
+            weights=str(self.weights),
             type=self.__class__.__name__,
             module=self.__class__.__module__,
         )
@@ -174,12 +174,12 @@ class PyTorchNetwork(Network):
             PyTorchNetwork: The created PyTorchNetwork.
         """
         return cls(
-            architecture_path=Path(data["architecture_path"]),
-            weights_path=Path(data["weights_path"])
+            architecture=Path(data["architecture"]),
+            weights=Path(data["weights"])
         )
         
     @classmethod
-    def from_file(cls, architecture_path:Path, weights_path:Path)-> "PyTorchNetwork":
+    def from_file(cls, architecture:Path, weights:Path)-> "PyTorchNetwork":
         """
         Create a PyTorchNetwork from a dictionary.
 
@@ -189,8 +189,8 @@ class PyTorchNetwork(Network):
         Returns:
             PyTorchNetwork: The created ONNXNetwork.
         """
-        #TODO: what if weights_path is none, is that an issue?
+        #TODO: what if weights is none, is that an issue?
    
         
-        return cls(architecture_path=architecture_path, weights_path=weights_path)
+        return cls(architecture=architecture, weights=weights)
       

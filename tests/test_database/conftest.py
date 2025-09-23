@@ -120,7 +120,7 @@ def architecture_file(tmp_path):
     arch_file = tmp_path / "test_model.py"
     arch_file.write_text("""
 import torch.nn as nn
-
+EXPECTED_INPUT_SHAPE = [0,2]
 class TestModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -155,4 +155,4 @@ def weights_file(tmp_path, architecture_file):
 @pytest.fixture
 def pytorch_network(architecture_file, weights_file):
     """Create a PyTorchNetwork instance."""
-    return PyTorchNetwork(architecture_path=architecture_file, weights_path=weights_file)
+    return PyTorchNetwork(architecture=architecture_file, weights=weights_file)

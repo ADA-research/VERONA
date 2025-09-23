@@ -93,12 +93,13 @@ class Network(ABC):
         if file.get('network_type') == "onnx":
             module = importlib.import_module("robustness_experiment_box.database.machine_learning_model.onnx_network")
             subclass = module.ONNXNetwork  
-            return subclass.from_file(file.get('weights_path'))
+            return subclass.from_file(file.get('architecture'))
         elif file.get('network_type')== "pytorch":
             module = importlib.import_module(
                 "robustness_experiment_box.database.machine_learning_model.pytorch_network") 
             subclass = module.PyTorchNetwork
-            return subclass.from_file(file.get('architecture_path'), file.get('weights_path'))
+            return subclass.from_file(file.get('architecture'), file.get('weights'))
         else:
-            raise NotImplementedError(f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
+            raise NotImplementedError(
+                f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
         

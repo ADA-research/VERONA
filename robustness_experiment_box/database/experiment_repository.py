@@ -130,19 +130,20 @@ class ExperimentRepository:
                 print(f"Warning: Could not load networks from CSV '{path}': {e}")
                 print("Falling back to directory scanning for ONNX files.")
                 return None
-            
+        print("get here?")
         if csv_name:
             networks = try_load_csv(csv_path)
             if networks is not None:
                 return networks
-            # fall through to folder scan if it failed
 
         if not csv_name and csv_path.exists():
             networks = try_load_csv(csv_path)
             if networks is not None:
                 return networks
-
-        return [Network.from_file({"weights_path": p}) for p in self.network_folder.iterdir()]
+        print(self.network_folder.iterdir())
+        return [Network.from_file({"architecture": p, "network_type": "onnx"}) 
+                for p in self.network_folder.iterdir() 
+                if p.suffix == ".onnx"]
 
     def load_networks_from_csv(self, network_csv_path: str) -> list[Network]:
         """
@@ -186,21 +187,21 @@ class ExperimentRepository:
             Returns:
                 Loaded Network
         """
-        architecture_path = (
-            self.network_folder / row["architecture"] 
-            if "architecture" in row and pd.notna(row["architecture"]) 
-            else None
-        )
+        architecture = row.get("architecture", None)
+        if architecture is None or pd.isna(architecture) or str(architecture).strip() == "":
+            raise ValueError("All network types require 'architecture' field")
        
-        arch = Path(architecture_path)
-        weights_path = row['weights']
-        weights = None if pd.isna(weights_path) or str(weights_path).strip() == "" else Path(weights_path)
-        return Network.from_file(dict(
-            architecture_path=arch,
-            weights_path=weights,
-            network_type = row['network_type']
-            
-        ))
+        arch = Path(architecture)
+        args = {
+            "architecture": arch,
+            "network_type": row["network_type"],
+        }
+
+        if "weights" in row and pd.notna(row["weights"]) and str(row["weights"]).strip():
+            args["weights"] = Path(row["weights"])
+        
+
+        return Network.from_file(args)
         
     
     def save_results(self, results: list[EpsilonValueResult]) -> None:
