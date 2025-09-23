@@ -130,7 +130,7 @@ class ExperimentRepository:
                 print(f"Warning: Could not load networks from CSV '{path}': {e}")
                 print("Falling back to directory scanning for ONNX files.")
                 return None
-        print("get here?")
+
         if csv_name:
             networks = try_load_csv(csv_path)
             if networks is not None:

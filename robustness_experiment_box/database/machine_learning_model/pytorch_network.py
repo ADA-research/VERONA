@@ -3,6 +3,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+
 from robustness_experiment_box.database.machine_learning_model.network import Network
 from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
@@ -79,23 +80,30 @@ class PyTorchNetwork(Network):
         if self.model is not None:
             return self.model
 
-        #load the model architecture module
-        spec = importlib.util.spec_from_file_location("model_module", self.architecture)
+        # Load the model architecture module
+        spec = importlib.util.spec_from_file_location("torch.nn.module", self.architecture)
         if not spec or not spec.loader:
             raise ImportError(f"Could not load model architecture from {self.architecture}")
 
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-
-        #helper to locate a torch.nn.Module instance or builder
+        print("the module", module)
+        # Helper to locate a torch.nn.Module instance or builder
         model = self._find_model(module)
         if model is None:
             raise ValueError(f"No PyTorch model found in {self.architecture}")
 
-        #load the weights if available
-        if self.weights.exists():
-            state_dict = torch.load(self.weights, map_location="cpu")
-            model.load_state_dict(state_dict)
+        # Load the weights if available
+        if self.weights and self.weights.exists():
+            checkpoint = torch.load(self.weights, map_location="cpu")
+            # extract state_dict if checkpoint contains extra info
+            if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
+                state_dict = checkpoint["state_dict"]
+            else:
+                state_dict = checkpoint
+
+            # load state dict into model
+            model.load_state_dict(state_dict, strict=False)  # strict=False to tolerate extra/missing keys
 
         self.model = model
         return self.model
