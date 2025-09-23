@@ -3,7 +3,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-
 from robustness_experiment_box.database.machine_learning_method.network import Network
 from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
 
@@ -31,6 +30,7 @@ class PyTorchNetwork(Network):
         self.weights_path = weights_path
         self.model = None
         self.torch_model_wrapper = None
+        self.input_shape = None
 
     @property
     def name(self) -> str:
@@ -106,11 +106,30 @@ class PyTorchNetwork(Network):
         This is a placeholder - PyTorch models don't have fixed input shapes like ONNX models.
 
         Returns:
-            np.ndarray: A default input shape [1, 3, 224, 224] for image models.
+            np.ndarray: the input_shape
         """
-        # Default shape for common image models
-        # This could be made configurable or extracted from the model if needed
-        return np.array([1, 3, 224, 224])
+
+        if self.input_shape is None:
+            if self.model is None:
+                self.load_model()
+
+            # load the same module you already import for the model
+            spec = importlib.util.spec_from_file_location("model_module", self.architecture_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            # look for a conventionally named attribute or function
+            if hasattr(module, "EXPECTED_INPUT_SHAPE"):
+                self.input_shape = np.array(module.EXPECTED_INPUT_SHAPE, dtype=int)
+            elif hasattr(module, "get_input_shape"):
+                self.input_shape = np.array(module.get_input_shape(), dtype=int)
+            else:
+                raise RuntimeError(
+                    "Model architecture does not expose an input shape. "
+                    "Add an EXPECTED_INPUT_SHAPE variable or get_input_shape() function to the architecture file."
+                )
+
+        return self.input_shape
 
     def load_pytorch_model(self) -> torch.nn.Module:
         """
@@ -170,4 +189,8 @@ class PyTorchNetwork(Network):
         Returns:
             PyTorchNetwork: The created ONNXNetwork.
         """
+        #TODO: what if weights_path is none, is that an issue?
+   
+        
         return cls(architecture_path=architecture_path, weights_path=weights_path)
+      

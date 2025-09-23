@@ -186,19 +186,19 @@ class ExperimentRepository:
             Returns:
                 Loaded Network
         """
-        if "weights" not in row:
-            raise ValueError("All network types require 'weights' field")
         architecture_path = (
             self.network_folder / row["architecture"] 
             if "architecture" in row and pd.notna(row["architecture"]) 
             else None
         )
         weights_path = row['weights']
-        arch = Path(architecture_path) if architecture_path is not None else None
-        weights = Path(weights_path) if weights_path is not None else None
+        arch = Path(architecture_path)
+        weights = Path(weights_path)
         return Network.from_file(dict(
             architecture_path=arch,
-            weights_path=weights
+            weights_path=weights,
+            network_type = row['network_type']
+            
         ))
         
     
