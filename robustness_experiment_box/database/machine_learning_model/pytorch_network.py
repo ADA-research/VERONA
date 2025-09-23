@@ -3,8 +3,8 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from robustness_experiment_box.database.machine_learning_method.network import Network
-from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_model.network import Network
+from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
 
 class PyTorchNetwork(Network):

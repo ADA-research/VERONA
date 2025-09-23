@@ -5,8 +5,8 @@ import onnx
 import torch
 from onnx2torch import convert
 
-from robustness_experiment_box.database.machine_learning_method.network import Network
-from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_model.network import Network
+from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
 
 class ONNXNetwork(Network):

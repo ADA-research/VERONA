@@ -90,16 +90,15 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-
-        if file.get('network_type').suffix == "onnx":
-            module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
+        if file.get('network_type') == "onnx":
+            module = importlib.import_module("robustness_experiment_box.database.machine_learning_model.onnx_network")
             subclass = module.ONNXNetwork  
             return subclass.from_file(file.get('weights_path'))
-        elif file.get('network_type').suffix == "pytorch":
+        elif file.get('network_type')== "pytorch":
             module = importlib.import_module(
-                "robustness_experiment_box.database.machine_learning_method.pytorch_network") 
+                "robustness_experiment_box.database.machine_learning_model.pytorch_network") 
             subclass = module.PyTorchNetwork
             return subclass.from_file(file.get('architecture_path'), file.get('weights_path'))
         else:
-            raise NotImplementedError(f"Only .onnx and pytorch files are supported at the moment, got: {file.suffix}")
+            raise NotImplementedError(f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
         

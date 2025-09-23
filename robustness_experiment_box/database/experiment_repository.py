@@ -9,7 +9,7 @@ import yaml
 from robustness_experiment_box.analysis.report_creator import ReportCreator
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.machine_learning_method.network import Network
+from robustness_experiment_box.database.machine_learning_model.network import Network
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
@@ -164,7 +164,7 @@ class ExperimentRepository:
             )
             raise ValueError(msg) from None
 
-        missing = [c for c in ("name",) if c not in df.columns]
+        missing = [c for c in ("architecture",) if c not in df.columns]
         if missing:
             raise ValueError(f"Missing required columns in networks CSV: {missing}")
 
@@ -191,9 +191,10 @@ class ExperimentRepository:
             if "architecture" in row and pd.notna(row["architecture"]) 
             else None
         )
-        weights_path = row['weights']
+       
         arch = Path(architecture_path)
-        weights = Path(weights_path)
+        weights_path = row['weights']
+        weights = None if pd.isna(weights_path) or str(weights_path).strip() == "" else Path(weights_path)
         return Network.from_file(dict(
             architecture_path=arch,
             weights_path=weights,
