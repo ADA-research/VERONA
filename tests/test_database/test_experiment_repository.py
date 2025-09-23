@@ -6,8 +6,8 @@ import torch
 import yaml
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.machine_learning_method.pytorch_network import PyTorchNetwork
+from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.machine_learning_model.pytorch_network import PyTorchNetwork
 from robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -32,9 +32,9 @@ def networks_csv(networks_dir, tmp_path):
     pyt_weights.touch()
 
     data = {
-        "name": ["test_onnx", "test_pytorch"],
+        "network_type": ["onnx", "pytorch"],
         "architecture": [None, "test_model.py"],     # None instead of ""
-        "weights": [onnx.name, pyt_weights.name],    # just filenames
+        "weights": [onnx.name, pyt_weights.name],   
     }
 
     df = pd.DataFrame(data)

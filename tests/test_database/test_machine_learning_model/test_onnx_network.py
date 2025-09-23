@@ -1,7 +1,7 @@
 import onnx
 
-from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
 
 def test_network_initialization(network):
@@ -20,7 +20,7 @@ def test_to_dict(network):
     assert network_dict == {
         "network_path": str(network.path), 
         'type':'ONNXNetwork', 
-        'module': 'robustness_experiment_box.database.machine_learning_method.onnx_network'
+        'module': 'robustness_experiment_box.database.machine_learning_model.onnx_network'
         }
 
 

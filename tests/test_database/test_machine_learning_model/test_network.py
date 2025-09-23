@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from robustness_experiment_box.database.machine_learning_method.network import Network
+from robustness_experiment_box.database.machine_learning_model.network import Network
 
 
 class ConcreteNetwork(Network):

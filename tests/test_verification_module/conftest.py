@@ -4,7 +4,7 @@ from result import Ok
 from torch import load
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
 from robustness_experiment_box.verification_module.auto_verify_module import AutoVerifyModule

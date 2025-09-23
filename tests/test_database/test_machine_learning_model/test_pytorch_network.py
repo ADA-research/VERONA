@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from robustness_experiment_box.database.machine_learning_method.pytorch_network import PyTorchNetwork
+from robustness_experiment_box.database.machine_learning_model.pytorch_network import PyTorchNetwork
 
 
 def test_pytorch_network_initialization(architecture_file, weights_file):

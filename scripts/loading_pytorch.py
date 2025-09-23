@@ -5,3 +5,5 @@ experiment_repo = ExperimentRepository(base_path=Path('/home/abosman/dev/test_lo
 networks = experiment_repo.get_network_list(csv_name = 'networks.csv')
 
 
+pytorch = networks[1]
+print(pytorch.get_input_shape())
