@@ -21,6 +21,8 @@ Create a networks.csv file in your /networks/ directory with the following struc
 
 ``vgg16_pytorch,pytorch,,vgg16.py,vgg16_weights.pth``
 
+An example is provided at /tests/test_experiment/networks/networks.csv
+
 
 ## Required Fields
 network_type: Either "onnx" or "pytorch"
