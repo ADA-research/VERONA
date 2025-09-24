@@ -81,7 +81,7 @@ class RandomizedSmoothingEstimator(EpsilonValueEstimator):
             verification_context=verification_context,
             epsilon=probabilistic_result.certified_radius,
             smallest_sat_value=probabilistic_result.certified_radius,
-            time=probabilistic_result.verification_time,
+            time=probabilistic_result.certification_time,
             verifier=self.smoothing_module.name
         )
 
@@ -89,7 +89,7 @@ class RandomizedSmoothingEstimator(EpsilonValueEstimator):
             f"Randomized smoothing result: predicted_class={probabilistic_result.predicted_class}, "
             f"certified_radius={probabilistic_result.certified_radius:.4f}, "
             f"confidence={probabilistic_result.confidence:.4f}, "
-            f"time={probabilistic_result.verification_time:.2f}s"
+            f"time={probabilistic_result.certification_time:.2f}s"
         )
 
         return epsilon_value_result

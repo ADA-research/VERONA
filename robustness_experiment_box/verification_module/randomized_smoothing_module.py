@@ -33,8 +33,10 @@ class RandomizedSmoothingModule(VerificationModule):
     guarantees about the robustness of neural network predictions. It supports both
     standard randomized smoothing and diffusion denoised smoothing variants.
 
+    The base classifier is loaded from the verification context's network, following
+    VERONA's architecture where ExperimentRepository manages networks.
+
     Args:
-        base_classifier: The neural network classifier to smooth
         num_classes: Number of output classes
         sigma: Standard deviation of Gaussian noise for smoothing
         diffusion_model: Optional diffusion model for denoising (Carlini et al. approach)
@@ -43,13 +45,11 @@ class RandomizedSmoothingModule(VerificationModule):
 
     def __init__(
         self,
-        base_classifier: torch.nn.Module,
         num_classes: int,
         sigma: float,
         diffusion_model: torch.nn.Module | None = None,
         diffusion_timestep: int | None = None
     ):
-        self.base_classifier = base_classifier
         self.num_classes = num_classes
         self.sigma = sigma
         self.diffusion_model = diffusion_model
@@ -143,7 +143,9 @@ class RandomizedSmoothingModule(VerificationModule):
         Returns:
             ProbabilisticCertificationResult with certification
         """
-        self.base_classifier.eval()
+        # Load the base classifier from the verification context's network
+        base_classifier = verification_context.network.load_pytorch_model()
+        base_classifier.eval()
 
         if self.diffusion_model is not None:
             self.diffusion_model.eval()
@@ -151,11 +153,11 @@ class RandomizedSmoothingModule(VerificationModule):
         start_time = time.time()
 
         # Step 1: Get initial prediction with n0 samples
-        counts_selection = self._sample_noise(verification_context, n0, batch_size)
+        counts_selection = self._sample_noise(verification_context, n0, batch_size, base_classifier)
         predicted_class = int(counts_selection.argmax())
 
         # Step 2: Estimate pA with n samples
-        counts_estimation = self._sample_noise(verification_context, n, batch_size)
+        counts_estimation = self._sample_noise(verification_context, n, batch_size, base_classifier)
         nA = counts_estimation[predicted_class]
 
         # Step 3: Compute lower confidence bound on pA
@@ -182,7 +184,8 @@ class RandomizedSmoothingModule(VerificationModule):
         self,
         verification_context: VerificationContext,
         num_samples: int,
-        batch_size: int
+        batch_size: int,
+        base_classifier: torch.nn.Module
     ) -> np.ndarray:
         """
         Sample the base classifier's prediction under noisy corruptions.
@@ -191,6 +194,7 @@ class RandomizedSmoothingModule(VerificationModule):
             verification_context: The verification context
             num_samples: Number of samples to collect
             batch_size: Batch size for processing
+            base_classifier: The PyTorch model to use for predictions
 
         Returns:
             Array of class counts for the num_samples predictions
@@ -213,10 +217,10 @@ class RandomizedSmoothingModule(VerificationModule):
                     x_noisy = x_batch + noise
                     # Apply diffusion denoising step
                     x_denoised = self._apply_diffusion_denoising(x_noisy, self.diffusion_timestep)
-                    predictions = self.base_classifier(x_denoised).argmax(1)
+                    predictions = base_classifier(x_denoised).argmax(1)
                 else:
                     # Standard randomized smoothing
-                    predictions = self.base_classifier(x_batch + noise).argmax(1)
+                    predictions = base_classifier(x_batch + noise).argmax(1)
 
                 counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
 

@@ -10,7 +10,6 @@ Usage:
 import logging
 from pathlib import Path
 
-import torch
 import torchvision
 import torchvision.transforms as transforms
 
@@ -52,23 +51,11 @@ def main():
     )
     experiment_dataset = PytorchExperimentDataset(dataset)
 
-    # For demonstration, we'll use a simple placeholder classifier
-    # In practice, this would be your trained model
-    class SimpleClassifier(torch.nn.Module):
-        def __init__(self):
-            super().__init__()
-            self.fc = torch.nn.Linear(784, 10)
-
-        def forward(self, x):
-            x = x.view(x.size(0), -1)  # Flatten
-            return self.fc(x)
-
-    base_classifier = SimpleClassifier()
+    # Number of classes for MNIST
     num_classes = 10
 
     # Create randomized smoothing module (replaces formal verifier)
     smoothing_module = RandomizedSmoothingModule(
-        base_classifier=base_classifier,
         num_classes=num_classes,
         sigma=sigma
     )
@@ -86,7 +73,7 @@ def main():
     experiment_repository = ExperimentRepository(
         base_path=experiment_repository_path,
         network_folder=network_folder
-    )
+    )     
 
     # Initialize experiment (same as existing scripts)
     experiment_repository.initialize_new_experiment(experiment_name)
