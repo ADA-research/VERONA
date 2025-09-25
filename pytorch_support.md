@@ -15,11 +15,11 @@ Create a networks.csv file in your /networks/ directory with the following struc
 
 ``name,network_type,architecture,weights``
 
-``mnist-net_256x2,onnx,mnist-net_256x2.onnx,,``
+``mnist-net_256x2,onnx,mnist-net_256x2.onnx,``
 
-``resnet18_pytorch,pytorch,,resnet18.py,resnet18_weights.pt``
+``resnet18_pytorch,pytorch,resnet18.py,resnet18_weights.pt``
 
-``vgg16_pytorch,pytorch,,vgg16.py,vgg16_weights.pth``
+``vgg16_pytorch,pytorch,vgg16.py,vgg16_weights.pth``
 
 An example is provided at /tests/test_experiment/networks/networks.csv
 
