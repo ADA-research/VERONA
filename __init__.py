@@ -23,7 +23,7 @@ with contextlib.suppress(ImportError):
     from .robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
     from .robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
     from .robustness_experiment_box.database.experiment_repository import ExperimentRepository
-    from .robustness_experiment_box.database.network import Network
+    from .robustness_experiment_box.database.machine_learning_model.network import Network
     from .robustness_experiment_box.database.verification_context import VerificationContext
     from .robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
     from .robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
@@ -65,7 +65,6 @@ __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
-    "AUTO_VERIFY_VERIFIERS",
     "analysis",
     "database",
     "dataset_sampler",
