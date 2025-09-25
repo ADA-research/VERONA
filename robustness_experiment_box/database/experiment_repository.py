@@ -160,7 +160,7 @@ class ExperimentRepository:
             )
             raise ValueError(msg) from None
         
-        missing = [c for c in ("architecture", "network_type") if c not in df.columns]
+        missing = [c for c in ["architecture", "network_type"] if c not in df.columns]
         if missing:
             raise ValueError(f"Missing required columns in networks CSV: {missing}")
 

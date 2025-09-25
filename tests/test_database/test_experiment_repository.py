@@ -30,11 +30,13 @@ def networks_csv(networks_dir, tmp_path):
     onnx.touch()
     pyt_weights = tmp_path / "test_weights.pt"
     pyt_weights.touch()
+    pyt_arch = tmp_path / "test_model.py"
+    pyt_arch.touch()
 
     data = {
         "network_type": ["onnx", "pytorch"],
-        "architecture": [onnx.name, "test_model.py"],     # None instead of ""
-        "weights": [None, pyt_weights.name],   
+        "architecture": [str(onnx), str(pyt_arch)],
+        "weights": [None, str(pyt_weights)],   
     }
 
     df = pd.DataFrame(data)
@@ -123,7 +125,7 @@ def test_get_network_list(experiment_repository):
     experiment_name = "test_experiment"
     experiment_repository.initialize_new_experiment(experiment_name)
     network_path = experiment_repository.network_folder / "network1.onnx"
-    network_path.mkdir()
+    network_path.touch()
     network_list = experiment_repository.get_network_list()
     
     assert len(network_list) == 1
@@ -167,9 +169,8 @@ def test_create_network_from_csv_row_onnx_missing_path(experiment_repository):
 
 def test_create_networks_from_csv_success(experiment_repository, networks_csv):
     """Test creating multiple networks from CSV successfully."""
-    networks = experiment_repository.network_folder / 'networks.csv'
-    networks.write_text(networks_csv.read_text())
-    networks = experiment_repository.load_networks_from_csv(networks)
+    
+    networks = experiment_repository.load_networks_from_csv(networks_csv)
     
     assert len(networks) == 2
     assert isinstance(networks[0], ONNXNetwork)
