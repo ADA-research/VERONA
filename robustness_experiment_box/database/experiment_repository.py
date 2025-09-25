@@ -9,13 +9,13 @@ import yaml
 from robustness_experiment_box.analysis.report_creator import ReportCreator
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.machine_learning_model.network import Network
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
 PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"
-
+DEFAULT_NETWORKS_CSV_NAME = "networks.csv"
 
 class ExperimentRepository:
     """
@@ -110,17 +110,95 @@ class ExperimentRepository:
         with open(self.get_act_experiment_path() / "configuration.json", "w") as outfile:
             json.dump(data, outfile)
 
-    def get_network_list(self) -> list[Network]:
+    def get_network_list(self, csv_name: str = None) -> list[Network]:
         """
-        Get the list of networks from the network folder.
+        Return a list of networks either from a CSV (preferred) or by scanning
+        the network folder for ONNX files if CSV loading fails.
+
+        Args:
+            csv_name: Optional custom CSV filename.
 
         Returns:
             list[Network]: The list of networks.
         """
-        network_path_list = [file for file in self.network_folder.iterdir()]
-        network_list = [Network(x) for x in network_path_list]
-        return network_list
+        csv_path = self.network_folder / (csv_name or DEFAULT_NETWORKS_CSV_NAME)
 
+        def try_load_csv(path):
+            try:
+                return self.load_networks_from_csv(path)
+            except Exception as e:
+                print(f"Warning: Could not load networks from CSV '{path}': {e}")
+                print("Falling back to directory scanning for ONNX files.")
+                return None
+
+        if csv_path.exists():
+            networks = try_load_csv(csv_path)
+            if networks is not None:
+                return networks
+
+        return [Network.from_file({"architecture": p, "network_type": "onnx"}) 
+                for p in self.network_folder.iterdir() 
+                if p.suffix == ".onnx"]
+
+    def load_networks_from_csv(self, network_csv_path: str) -> list[Network]:
+        """
+        Load networks from a CSV file.
+
+        Args:
+            network_csv_path: Path to the CSV file.
+
+        Returns:
+            List of Network objects to use for experiments.
+        """
+        try:
+            df = pd.read_csv(network_csv_path)
+        except (pd.errors.EmptyDataError, pd.errors.ParserError) as e:
+            msg = (
+                f"Networks CSV file is empty: {network_csv_path}"
+                if isinstance(e, pd.errors.EmptyDataError)
+                else f"Error parsing networks CSV file: {e}"
+            )
+            raise ValueError(msg) from None
+        
+        missing = [c for c in ["architecture", "network_type"] if c not in df.columns]
+        if missing:
+            raise ValueError(f"Missing required columns in networks CSV: {missing}")
+
+        networks = []
+        for _, row in df.iterrows():
+            try:
+                networks.append(self.load_network_from_csv_row(row))
+            except Exception as e:
+                raise ValueError(
+                    f"Error creating network from row {row.to_dict()}: {e}"
+                ) from e
+
+        return networks
+    
+    def load_network_from_csv_row(self, row: pd.Series) -> Network:
+        """
+            Load information from a single row and instantiate the Network via the abstract class. 
+            
+            Returns:
+                Loaded Network
+        """
+        architecture = row.get("architecture", None)
+        if architecture is None or pd.isna(architecture) or str(architecture).strip() == "":
+            raise ValueError("All network types require 'architecture' field")
+       
+        arch = Path(architecture)
+        args = {
+            "architecture": arch,
+            "network_type": row["network_type"],
+        }
+
+        if "weights" in row and pd.notna(row["weights"]) and str(row["weights"]).strip():
+            args["weights"] = Path(row["weights"])
+        
+
+        return Network.from_file(args)
+        
+    
     def save_results(self, results: list[EpsilonValueResult]) -> None:
         """
         Save the list of epsilon value results to a CSV file.

@@ -1,7 +1,7 @@
 import onnx
 
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
 
 def test_network_initialization(network):
@@ -10,20 +10,28 @@ def test_network_initialization(network):
     assert network.torch_model_wrapper is None
 
 
+def test_network_name_property(network):
+    """Test the name property returns the path stem."""
+    assert network.name == "network"
+
+
 def test_to_dict(network):
     network_dict = network.to_dict()
-
-    assert network_dict == {"network_path": str(network.path)}
+    assert network_dict == {
+        "network_path": str(network.path), 
+        'type':'ONNXNetwork', 
+        'module': 'robustness_experiment_box.database.machine_learning_model.onnx_network'
+        }
 
 
 def test_from_dict(tmp_path):
     network_path = tmp_path / "mock_model.onnx"
     network_path.touch()
-    network_dict = {"network_path": str(network_path)}
+    network_dict = {"network_path": network_path}
 
-    network = Network.from_dict(network_dict)
+    network = ONNXNetwork.from_dict(network_dict)
 
-    assert isinstance(network, Network)
+    assert isinstance(network, ONNXNetwork)
     assert network.path == network_path
 
 
@@ -58,6 +66,6 @@ def test_load_pytorch_model(network, mock_graph):
     # Test the loading logic
     torch_model_wrapper = network.load_pytorch_model()
 
-    assert isinstance(torch_model_wrapper, TorchModelWrapper)
+    assert isinstance(torch_model_wrapper, TorchModelWrapper) 
     assert torch_model_wrapper.torch_model is not None
     assert torch_model_wrapper.input_shape == [1, 3, 224, 224]
