@@ -17,6 +17,8 @@ Create a networks.csv file in your /networks/ directory with the following struc
 
 An example is provided at /tests/test_experiment/networks/networks.csv
 
+An example is provided at /tests/test_experiment/networks/networks.csv
+
 
 ## Required Fields
 network_type: Either "onnx" or "pytorch"
