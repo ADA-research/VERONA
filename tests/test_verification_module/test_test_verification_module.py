@@ -5,7 +5,7 @@ from result import Ok
 from torch import tensor
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
+from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
 from robustness_experiment_box.database.verification_context import VerificationContext
 from robustness_experiment_box.database.verification_result import VerificationResult
 from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (

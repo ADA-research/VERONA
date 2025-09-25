@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
 
 def test_torch_model_wrapper_initialization(torch_model_wrapper, mock_torch_model):

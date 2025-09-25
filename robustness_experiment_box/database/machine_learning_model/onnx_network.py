@@ -5,8 +5,8 @@ import onnx
 import torch
 from onnx2torch import convert
 
-from robustness_experiment_box.database.machine_learning_method.network import Network
-from robustness_experiment_box.database.machine_learning_method.torch_model_wrapper import TorchModelWrapper
+from robustness_experiment_box.database.machine_learning_model.network import Network
+from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 
 
 class ONNXNetwork(Network):
@@ -97,7 +97,7 @@ class ONNXNetwork(Network):
                     )
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data: dict)-> "ONNXNetwork":
         """
         Create a Network from a dictionary.
 
@@ -107,12 +107,12 @@ class ONNXNetwork(Network):
         Returns:
             Network: The created Network.
         """
-        return cls(path=Path(data["network_path"]))
+        return cls(path = data['network_path'])
     
     @classmethod
-    def from_file(cls, file:Path):
+    def from_file(cls, file:Path)-> "ONNXNetwork":
         """
-        Create an ONNXNetwork from a dictionary.
+        Create a ONNXNetwork from a dictionary.
 
         Args:
             file (Path): Path at which the network is stored. 
@@ -120,4 +120,8 @@ class ONNXNetwork(Network):
         Returns:
             ONNXNetwork: The created ONNXNetwork.
         """
+
+        if not file.is_file():
+            raise FileNotFoundError(f"File not found: {file}")
+
         return cls(path = file)

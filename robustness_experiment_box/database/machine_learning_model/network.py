@@ -59,7 +59,6 @@ class Network(ABC):
         module_name = data.pop("module", None)  # Get module info
         if not class_name or not module_name:
             raise ValueError("Missing 'class' or 'module' key in dictionary")
-
         try:
             module = importlib.import_module(module_name)  # Dynamically import module
             subclass = getattr(module, class_name)  # Get class from module
@@ -82,12 +81,25 @@ class Network(ABC):
     
 
     @classmethod
-    def from_file(cls, file:Path):
-
-        if file.suffix == ".onnx":
-            module = importlib.import_module("robustness_experiment_box.database.machine_learning_method.onnx_network")
-            subclass = module.ONNXNetwork  # Get class from module
-        else:
-            raise NotImplementedError(f"Only .onnx files are supported at the moment, got: {file.suffix}")
+    def from_file(cls, file:dict[Path]):
+        """Create network from file
+        Args: 
+            file (dict[Path]): contains the paths to the relevant weights (for ONNX) 
+            and additionally to the architecture file for PyTorch networks.
         
-        return subclass.from_file(file)
+        Returns: 
+            Created network from the correct class OR error. 
+        """
+        if file.get('network_type') == "onnx":
+            module = importlib.import_module("robustness_experiment_box.database.machine_learning_model.onnx_network")
+            subclass = module.ONNXNetwork  
+            return subclass.from_file(file.get('architecture'))
+        elif file.get('network_type')== "pytorch":
+            module = importlib.import_module(
+                "robustness_experiment_box.database.machine_learning_model.pytorch_network") 
+            subclass = module.PyTorchNetwork
+            return subclass.from_file(file.get('architecture'), file.get('weights'))
+        else:
+            raise NotImplementedError(
+                f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
+        

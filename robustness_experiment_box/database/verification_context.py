@@ -4,7 +4,7 @@ import pandas as pd
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.machine_learning_method.network import Network
+from robustness_experiment_box.database.machine_learning_model.network import Network
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
