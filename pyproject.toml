@@ -1,5 +1,5 @@
 [project]
-name = "robustness_experiment_box"
+name = "ada_verona"
 version = "0.0.1"
 authors = [
   { name="Aaron Berger", email="aaron.berger@rwth-aachen.de" },
