@@ -5,9 +5,43 @@ import pytest
 import torch
 import yaml
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
+from ada_verona.database.verification_context import VerificationContext
+
+
+@pytest.fixture
+def networks_dir(tmp_path):
+    """Create a temporary networks directory."""
+    networks_dir = tmp_path / "networks"
+    networks_dir.mkdir()
+    return networks_dir
+
+
+
+@pytest.fixture
+def networks_csv(networks_dir, tmp_path):
+    """Create a temporary networks CSV file."""
+    csv_file = networks_dir / "networks.csv"
+
+    # create dummy files
+    onnx = tmp_path / "test_model.onnx"
+    onnx.touch()
+    pyt_weights = tmp_path / "test_weights.pt"
+    pyt_weights.touch()
+    pyt_arch = tmp_path / "test_model.py"
+    pyt_arch.touch()
+
+    data = {
+        "network_type": ["onnx", "pytorch"],
+        "architecture": [str(onnx), str(pyt_arch)],
+        "weights": [None, str(pyt_weights)],   
+    }
+
+    df = pd.DataFrame(data)
+    df.to_csv(csv_file, index=False)
+    return csv_file
 
 
 def test_get_act_experiment_path(experiment_repository):
@@ -91,13 +125,57 @@ def test_get_network_list(experiment_repository):
     experiment_name = "test_experiment"
     experiment_repository.initialize_new_experiment(experiment_name)
     network_path = experiment_repository.network_folder / "network1.onnx"
-    network_path.mkdir()
+    network_path.touch()
     network_list = experiment_repository.get_network_list()
-
+    
     assert len(network_list) == 1
     assert network_list[0].path == experiment_repository.network_folder /"network1.onnx"
 
+def test_load_network_from_csv_row_onnx(experiment_repository): 
+    onnx_file = experiment_repository.network_folder / "network.onnx"
+    onnx_file.touch()
+    row = pd.Series(
+        dict(
+        network_type = "onnx",
+        architecture = onnx_file 
+        )
+    )
+    network = experiment_repository.load_network_from_csv_row(row)
+    
+    assert isinstance(network, ONNXNetwork)
 
+    
+def test_load_network_from_csv_row_pytorch(experiment_repository, weights_file, architecture_file):
+    row = pd.Series(dict(
+        network_type="pytorch",
+        architecture= architecture_file,
+        weights = weights_file
+    ))
+    
+    network = experiment_repository.load_network_from_csv_row(row)
+    
+    assert isinstance(network, PyTorchNetwork)
+
+
+
+def test_create_network_from_csv_row_onnx_missing_path(experiment_repository):
+    """Test error when ONNX network is missing network_path."""
+    row = pd.Series({
+        "network_type": "onnx",
+    })
+    
+    with pytest.raises(ValueError, match="All network types require 'architecture' field"):
+        experiment_repository.load_network_from_csv_row(row)
+
+def test_create_networks_from_csv_success(experiment_repository, networks_csv):
+    """Test creating multiple networks from CSV successfully."""
+    
+    networks = experiment_repository.load_networks_from_csv(networks_csv)
+    
+    assert len(networks) == 2
+    assert isinstance(networks[0], ONNXNetwork)
+    assert isinstance(networks[1], PyTorchNetwork)
+     
 def test_save_results(experiment_repository, epsilon_value_result):
     experiment_repository.initialize_new_experiment("test_experiment")
     result_path = experiment_repository.get_results_path() / "result_df.csv"
