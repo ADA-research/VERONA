@@ -2,13 +2,13 @@ import onnx
 import pytest
 import torch
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.machine_learning_model.pytorch_network import PyTorchNetwork
-from robustness_experiment_box.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
-from robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.database.experiment_repository import ExperimentRepository
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
+from ada_verona.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
+from ada_verona.database.verification_context import VerificationContext
 
 
 class MockVerificationContext:

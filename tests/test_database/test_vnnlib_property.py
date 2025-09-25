@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
+from ada_verona.database.vnnlib_property import VNNLibProperty
 
 
 def test_vnnlib_property_initialization():

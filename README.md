@@ -83,7 +83,7 @@ experiment/
 
 ### Auto-Verify
 
-VERONA features a plugin architecture through the [`AutoVerifyModule`](./robustness_experiment_box/verification_module/auto_verify_module.py) which allows integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's installed in the same environment. This design provides several benefits:
+VERONA features a plugin architecture through the [`AutoVerifyModule`](./ada_verona/verification_module/auto_verify_module.py) which allows integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's installed in the same environment. This design provides several benefits:
 
 1. **Independence**: VERONA works perfectly without auto-verify, using attack-based verification methods for empirical upper bounds.
 2. **Automatic Detection**: When auto-verify is installed in the same environment, its verifiers become automatically available
@@ -106,15 +106,15 @@ auto-verify config show
 ```
 ### Possible Extension: How to Add Your Own Verifier
 
-Custom verifiers can be added to VERONA by using the [`VerificationModule`](./robustness_experiment_box/verification_module/verification_module.py) interface.
+Custom verifiers can be added to VERONA by using the [`VerificationModule`](./ada_verona/verification_module/verification_module.py) interface.
 
 **Implement new verifiers using the `VerificationModule` class:**
-   - Create a new class that inherits from [`VerificationModule`](./robustness_experiment_box/verification_module/verification_module.py).
+   - Create a new class that inherits from [`VerificationModule`](./ada_verona/verification_module/verification_module.py).
    - Implement the `verify(self, verification_context: VerificationContext, epsilon: float)` method. This method should return either a string (e.g., "SAT", "UNSAT", "ERR") or a `CompleteVerificationData` object.
 
    Example:
    ```python
-   from robustness_experiment_box.verification_module.verification_module import VerificationModule
+   from ada_verona.verification_module.verification_module import VerificationModule
 
    class MyCustomVerifier(VerificationModule):
        def verify(self, verification_context, epsilon):
@@ -132,7 +132,7 @@ Currently VERONA implements the following adversarial attack methods:
 
 ### Possible Extension: Custom Attacks
 
-Custom attacks can be implemented by using the [`Attack`](./robustness_experiment_box/verification_module/attacks/attack.py) interface.
+Custom attacks can be implemented by using the [`Attack`](./ada_verona/verification_module/attacks/attack.py) interface.
 
 
 

@@ -3,10 +3,10 @@ from pathlib import Path
 import pytest
 from autoverify.verifier.verification_result import CompleteVerificationData
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.database.verification_context import VerificationContext
+from ada_verona.verification_module.verification_module import VerificationModule
 
 
 @pytest.fixture

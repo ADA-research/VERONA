@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
-from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
+from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 
 
 @pytest.fixture
