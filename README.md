@@ -18,8 +18,8 @@ This package was created and is maintained by members the [ADA Research Group](h
 
 ## Installation and Environment Setup
 
-### Create Virtual Environment and install the ada-verona package
-To run ada-verona, we recommend to set up a conda environment. Preferably use [miniforge](https://github.com/conda-forge/miniforge) as the package manager.
+### Create Virtual Environment and install ada-verona
+To run ada-verona, we recommend to set up a conda environment. We recommend using [miniforge](https://github.com/conda-forge/miniforge) as the package manager.
 
 **Create a new conda environment named `verona_env`:**
 ```bash
