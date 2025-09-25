@@ -5,9 +5,9 @@ import pytest
 import torch
 import yaml
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.network import Network
+from ada_verona.database.verification_context import VerificationContext
 
 
 def test_get_act_experiment_path(experiment_repository):

@@ -6,12 +6,12 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-from robustness_experiment_box.analysis.report_creator import ReportCreator
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
+from ada_verona.analysis.report_creator import ReportCreator
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.database.network import Network
+from ada_verona.database.verification_context import VerificationContext
+from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
 DEFAULT_RESULT_CSV_NAME = "result_df.csv"
 PER_EPSILON_RESULT_CSV_NAME = "per_epsilon_results.csv"

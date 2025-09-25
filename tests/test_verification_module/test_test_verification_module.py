@@ -4,18 +4,18 @@ from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Ok
 from torch import tensor
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import VerificationResult
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.network import Network
+from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import VerificationResult
+from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+from ada_verona.verification_module.property_generator.one2one_property_generator import (
     One2OnePropertyGenerator,
 )
-from robustness_experiment_box.verification_module.test_verification_module import TestVerificationModule
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from ada_verona.verification_module.test_verification_module import TestVerificationModule
+from ada_verona.verification_module.verification_module import VerificationModule
 
 
 def test_cannot_instantiate_verification_module():
