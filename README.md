@@ -221,8 +221,8 @@ if ada_verona.HAS_AUTO_VERIFY and "nnenum" in ada_verona.AUTO_VERIFY_VERIFIERS:
     print(f"Using formal verification: {verifier.name}")
 else:
     # Fallback to attack-based verification
-    from ada_verona.robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
-    from ada_verona.robustness_experiment_box.verification_module.attacks.pgd_attack import PGDAttack
+    from ada_verona.verification_module.attack_estimation_module import AttackEstimationModule
+    from ada_verona.verification_module.attacks.pgd_attack import PGDAttack
     verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=10, step_size=0.01))
     print(f"Using attack-based verification: {verifier.name}")
 ```
@@ -243,19 +243,19 @@ For more information about the installation of auto-verify, please refer to the 
 
 ### Possible Extension: Custom Verifiers
 
-Custom verifiers can be implemented by using the [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py) interface.
+Custom verifiers can be implemented by using the [`VerificationModule`](./src/ada_verona/verification_module/verification_module.py) interface.
 
 ## How to Add Your Own Verifier
 
 You can easily add your own verifier by following these steps:
 
 1. **Implement the `VerificationModule` interface:**
-   - Create a new class that inherits from [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py).
+   - Create a new class that inherits from [`VerificationModule`](./src/ada_verona/verification_module/verification_module.py).
    - Implement the `verify(self, verification_context: VerificationContext, epsilon: float)` method. This method should return either a string (e.g., "SAT", "UNSAT", "ERR") or a `CompleteVerificationData` object.
 
    Example:
    ```python
-   from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
+   from ada_verona.verification_module.verification_module import VerificationModule
 
    class MyCustomVerifier(VerificationModule):
        def verify(self, verification_context, epsilon):
@@ -265,12 +265,12 @@ You can easily add your own verifier by following these steps:
    ```
 
 2. **(Optional) If your verifier wraps an external tool:**
-   - Implement the `Verifier` interface in [`verification_runner.py`](./src/ada_verona/robustness_experiment_box/verification_module/verification_runner.py).
+   - Implement the `Verifier` interface in [`verification_runner.py`](./src/ada_verona/verification_module/verification_runner.py).
    - Then, use the `GenericVerifierModule` to wrap your `Verifier` implementation, which will handle property file management and result parsing for you.
 
    Example:
    ```python
-   from ada_verona.robustness_experiment_box.verification_module.verification_runner import Verifier, GenericVerifierModule
+   from ada_verona.verification_module.verification_runner import Verifier, GenericVerifierModule
 
    class MyExternalToolVerifier(Verifier):
        def verify_property(self, network_path, property_path, timeout, config=None):
@@ -299,7 +299,7 @@ Currently the package implements the following adversarial attack methods:
 
 ### Possible Extension: Custom Attacks
 
-Custom attacks can be implemented by using the [`Attack`](./src/ada_verona/robustness_experiment_box/verification_module/attacks/attack.py) interface.
+Custom attacks can be implemented by using the [`Attack`](./src/ada_verona/verification_module/attacks/attack.py) interface.
 
 ## Datasets
 
