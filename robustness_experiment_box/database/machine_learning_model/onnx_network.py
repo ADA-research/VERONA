@@ -120,4 +120,8 @@ class ONNXNetwork(Network):
         Returns:
             ONNXNetwork: The created ONNXNetwork.
         """
+
+        if not file.is_file():
+            raise FileNotFoundError(f"File not found: {file}")
+
         return cls(path = file)

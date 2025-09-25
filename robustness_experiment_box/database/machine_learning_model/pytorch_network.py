@@ -193,8 +193,11 @@ class PyTorchNetwork(Network):
         Returns:
             PyTorchNetwork: The created ONNXNetwork.
         """
-        #TODO: what if weights is none, is that an issue?
-   
+        
+        for path, label in [(architecture, "architecture"), (weights, "weights")]:
+            if not path.is_file():
+                raise FileNotFoundError(f"{label.capitalize()} file not found: {path}")
+
         
         return cls(architecture=architecture, weights=weights)
       
