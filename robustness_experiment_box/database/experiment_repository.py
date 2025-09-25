@@ -131,16 +131,11 @@ class ExperimentRepository:
                 print("Falling back to directory scanning for ONNX files.")
                 return None
 
-        if csv_name:
+        if csv_path.exists():
             networks = try_load_csv(csv_path)
             if networks is not None:
                 return networks
 
-        if not csv_name and csv_path.exists():
-            networks = try_load_csv(csv_path)
-            if networks is not None:
-                return networks
-        print(self.network_folder.iterdir())
         return [Network.from_file({"architecture": p, "network_type": "onnx"}) 
                 for p in self.network_folder.iterdir() 
                 if p.suffix == ".onnx"]
@@ -164,8 +159,8 @@ class ExperimentRepository:
                 else f"Error parsing networks CSV file: {e}"
             )
             raise ValueError(msg) from None
-
-        missing = [c for c in ("architecture",) if c not in df.columns]
+        
+        missing = [c for c in ("architecture", "network_type") if c not in df.columns]
         if missing:
             raise ValueError(f"Missing required columns in networks CSV: {missing}")
 
