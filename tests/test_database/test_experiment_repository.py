@@ -5,10 +5,10 @@ import pytest
 import torch
 import yaml
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.machine_learning_model.onnx_network import ONNXNetwork
-from robustness_experiment_box.database.machine_learning_model.pytorch_network import PyTorchNetwork
-from robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
+from ada_verona.database.verification_context import VerificationContext
 
 
 @pytest.fixture

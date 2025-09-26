@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import torch
 
-from robustness_experiment_box.database.machine_learning_model.pytorch_network import PyTorchNetwork
+from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
 
 
 def test_pytorch_network_initialization(architecture_file, weights_file):
