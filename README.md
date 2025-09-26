@@ -1,28 +1,14 @@
 # VERification Of Neural Architectures (VERONA)
 
-The ada-verona package simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
-The entire package is class-based, which means that extending the existing configurations is accessible and easy. 
+VERONA simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
+VERONA is class-based, which means that extending the existing configurations is accessible and easy. 
 With one script it is possible to run an entire experiment with various networks, images and perturbation magnitudes (epsilons). 
 
-The package can be used to create robustness distributions [Bosman, Berger, Hoos and van Rijn, 2025](https://jair.org/index.php/jair/article/view/18403), as well as empirically measuring robustness of networks using adversarial attacks and verify networks with formal verification tools using the [auto-verify](https://github.com/ADA-research/auto-verify) plugin that currently supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab).
-
-
-We plan to add more verifiers to the plugin in the future.
-
-## Announcements
-
-### auto-verify Plugin System Update
-
-> **Important:**  
-> The `auto-verify` package is currently being updated to function fully as a plugin system.  
-> We are actively collaborating with the maintainers to implement the required changes.
-
-
-For formal verification capabilities, please check back for the updated auto-verify package release.
+Example use cases of the VERONA package include creating robustness distributions [Bosman, Berger, Hoos and van Rijn, 2025](https://jair.org/index.php/jair/article/view/18403), empirically measuring robustness of networks using adversarial attacks and verifying networks with formal verification tools using the external [auto-verify](https://github.com/ADA-research/auto-verify) package.
 
 ## Authors
 
-This package was created and is maintained by members the [ADA Research Group](https://adaresearch.wordpress.com/about/), which focuses on the development of AI techniques that complement human intelligence and automated algorithm design. The current core team includes:
+This package was created and is maintained by members the [ADA Research Group](https://ada.liacs.nl/), which focuses on the development of AI techniques that complement human intelligence and automated algorithm design. The current core team includes:
 
 - **Annelot Bosman** (LIACS, Leiden University)
 - **Aaron Berger** (TU Delft)
@@ -33,12 +19,21 @@ This package was created and is maintained by members the [ADA Research Group](h
 ## Installation and Environment Setup
 
 ### Create Virtual Environment and install ada-verona
-To run ada-verona, we recommend to set up a conda environment. We recommend using [miniforge](https://github.com/conda-forge/miniforge) as the package manager.
 
-**Create a new conda environment:**
+The python package for VERONA is called `ada-verona`, as our research group is called ADA.
+
+To run ada-verona, we recommend to set up a conda environment. We also recommend using [miniforge](https://github.com/conda-forge/miniforge) as the package manager.
+
+**Create a new conda environment named `verona_env`:**
 ```bash
-conda create -n verona python=3.10
-conda activate verona
+conda create -n verona_env python=3.10
+conda activate verona_env
+```
+### Installing the package
+
+Inside the conda environment, install the ada-verona package preferably using uv (fast Python package installer and resolver). Alternatively, you can install the package using pip only.
+```bash
+uv pip install ada-verona
 ```
 
 ### Local installation for e.g. development purposes
@@ -50,7 +45,6 @@ git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
 uv pip install -e .
 ```
-
 
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts:
 - **Main Guide:**
@@ -85,28 +79,22 @@ experiment/
 |   |-- ...
 ```
 
-### Directory Structure Options
-
-You have two main options for organizing your experiments:
-
-1. **Default Structure**: Place an `experiment` folder in your working directory with the above structure. The CLI will use this by default.
-
-2. **Custom Paths**: Specify custom paths for networks, data, and output using command-line arguments which is illustrated below. 
-
-
-
 ## Verification
 
-### Auto-Verify Plugin System
+### Auto-Verify
 
-Ada-verona features a plugin architecture that allows integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's installed in the same environment. This design provides several benefits:
+VERONA features a plugin architecture through the [`AutoVerifyModule`](./ada_verona/verification_module/auto_verify_module.py) which allows integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's installed in the same environment. This design provides several benefits:
 
-1. **Independence**: Ada-verona works perfectly without auto-verify, using attack-based verification methods for empirical upper bounds.
+1. **Independence**: VERONA works perfectly without auto-verify, using attack-based verification methods for empirical upper bounds.
 2. **Automatic Detection**: When auto-verify is installed in the same environment, its verifiers become automatically available
 3. **Interface**: The same API works regardless of which verification backend is used
 
-### Verifier Installation
-Verifiers can be installed using the `auto-verify` command.
+### Available Verifiers
+
+Currently, auto-verify supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab). We thank the authors and maintainers of these projects for their contributions to the robustness research community.
+
+We plan to add more verifiers to auto-verify in the future. For additional information about auto-verify, please refer to the [official GitHub repository](https://github.com/ADA-research/auto-verify) and [documentation](https://ada-research.github.io/auto-verify/).
+Verifiers can be installed using the `auto-verify` command, e.g. to install nnenum and abcrown:
 
 ```bash
 auto-verify install nnenum abcrown
@@ -116,24 +104,17 @@ To see the current configuration of auto-verify, you can use the `auto-verify co
 ```bash
 auto-verify config show
 ```
-For more information about the installation of auto-verify, please refer to the [documentation](https://ada-research.github.io/auto-verify/).
+### Possible Extension: How to Add Your Own Verifier
 
+Custom verifiers can be added to VERONA by using the [`VerificationModule`](./ada_verona/verification_module/verification_module.py) interface.
 
-### Possible Extension: Custom Verifiers
-
-Custom verifiers can be implemented by using the [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py) interface.
-
-## How to Add Your Own Verifier
-
-You can easily add your own verifier by following these steps:
-
-1. **Implement new verifiers using the `VerificationModule` class:**
-   - Create a new class that inherits from [`VerificationModule`](./src/ada_verona/robustness_experiment_box/verification_module/verification_module.py).
+**Implement new verifiers using the `VerificationModule` class:**
+   - Create a new class that inherits from [`VerificationModule`](./ada_verona/verification_module/verification_module.py).
    - Implement the `verify(self, verification_context: VerificationContext, epsilon: float)` method. This method should return either a string (e.g., "SAT", "UNSAT", "ERR") or a `CompleteVerificationData` object.
 
    Example:
    ```python
-   from ada_verona.robustness_experiment_box.verification_module.verification_module import VerificationModule
+   from ada_verona.verification_module.verification_module import VerificationModule
 
    class MyCustomVerifier(VerificationModule):
        def verify(self, verification_context, epsilon):
@@ -142,42 +123,19 @@ You can easily add your own verifier by following these steps:
            return "UNSAT"
    ```
 
-2. **(Optional) If your verifier wraps an external tool:**
-   - Implement the `Verifier` interface in [`verification_runner.py`](./src/ada_verona/robustness_experiment_box/verification_module/verification_runner.py).
-   - Then, use the `GenericVerifierModule` to wrap your `Verifier` implementation, which will handle property file management and result parsing for you.
+## Adversarial Attacks
 
-   Example:
-   ```python
-   from ada_verona.robustness_experiment_box.verification_module.verification_runner import Verifier, GenericVerifierModule
-
-   class MyExternalToolVerifier(Verifier):
-       def verify_property(self, network_path, property_path, timeout, config=None):
-           # Call your external tool here
-           # Return Ok(result) or Err(error_message)
-           pass
-
-   my_verifier = MyExternalToolVerifier()
-   module = GenericVerifierModule(my_verifier, timeout=60)
-   ```
-
-3. **Register and use your verifier in your experiment scripts.**
-
-| Interface/Class         | Purpose                                      | Where to Implement/Use                |
-|------------------------|----------------------------------------------|---------------------------------------|
-| `VerificationModule`   | Main interface for all verifiers             | Subclass for custom logic             |
-| `Verifier`             | For verifiers wrapping external tools        | Subclass if using external binaries   |
-| `GenericVerifierModule`| Wraps a `Verifier` for property/result mgmt  | Use if you subclass `Verifier`        |
-
-## Available Attacks
-
-Currently the package implements the following adversarial attack methods:
+Currently VERONA implements the following adversarial attack methods:
 - **Fast Gradient Sign Method (FGSM)** [Goodfellow et al., 2015](https://arxiv.org/abs/1412.6572)
 - **Projected Gradient Descent (PGD)** [Madry et al., 2018](https://arxiv.org/abs/1706.06083)
-- **AutoAttack** [Croce and Hein, 2020](https://github.com/fra31/auto-attack). For using AutoAttack the package has to be installed first as described in the AutoAttack repository.
+- **AutoAttack** [Croce and Hein, 2020](https://pypi.org/project/pyautoattack/).
 
 ### Possible Extension: Custom Attacks
 
-Custom attacks can be implemented by using the [`Attack`](./src/ada_verona/robustness_experiment_box/verification_module/attacks/attack.py) interface.
+Custom attacks can be implemented by using the [`Attack`](./ada_verona/verification_module/attacks/attack.py) interface.
+
+
+
 
 ## Datasets
 
@@ -185,7 +143,7 @@ The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for
 
 ## Related Papers and Citation
 
-This package was created to simplify reproducing and extending the results of two different lines of work of the ADA research group. 
+This package was created to simplify reproducing and extending the results of different lines of work of the ADA research group. For more information about the ADA research group, please refer to the [official website](https://ada.liacs.nl/).
 
 ### Robustness distributions 
 

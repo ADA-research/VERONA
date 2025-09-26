@@ -5,7 +5,7 @@ import pytest
 import torch
 from torch import Tensor
 
-from robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
+from ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
 
 
 class FakeAutoAttack:
@@ -57,7 +57,7 @@ def test_execute_calls_autoattack_and_returns_tensor(monkeypatch):
 
     # Import the module object that defines AutoAttackWrapper so we can patch its AutoAttack name.
     aa_module = importlib.import_module(
-        "robustness_experiment_box.verification_module.attacks.auto_attack_wrapper"
+        "ada_verona.verification_module.attacks.auto_attack_wrapper"
     )
 
     # Patch the AutoAttack symbol in that module to our fake implementation
@@ -117,7 +117,7 @@ def test_execute_records_call_arguments(monkeypatch):
             created["instance"] = self
 
     aa_module = importlib.import_module(
-        "robustness_experiment_box.verification_module.attacks.auto_attack_wrapper"
+        "ada_verona.verification_module.attacks.auto_attack_wrapper"
     )
     monkeypatch.setattr(aa_module, "AutoAttack", RecordingFakeAutoAttack)
 

@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+from ada_verona.database.vnnlib_property import VNNLibProperty
+from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
 
@@ -48,7 +48,7 @@ def test_to_dict(property_generator):
         "data_lb": 0,
         "data_ub": 1, 
         'type': 'One2AnyPropertyGenerator', 
-        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator'
+        'module': 'ada_verona.verification_module.property_generator.one2any_property_generator'
     }
 
 def test_from_dict():
@@ -57,7 +57,7 @@ def test_from_dict():
         "data_lb": 0,
         "data_ub": 1, 
         'type': 'One2AnyPropertyGenerator', 
-        'module': 'robustness_experiment_box.verification_module.property_generator.one2any_property_generator'
+        'module': 'ada_verona.verification_module.property_generator.one2any_property_generator'
     }
     property_generator = One2AnyPropertyGenerator.from_dict(data)
     assert isinstance(property_generator, One2AnyPropertyGenerator)

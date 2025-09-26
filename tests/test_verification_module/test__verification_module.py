@@ -1,6 +1,6 @@
 # test_verification_module.py
 import pytest
-from robustness_experiment_box.verification_module.verification_module import VerificationModule
+from ada_verona.verification_module.verification_module import VerificationModule
 
 def test_cannot_instantiate_verification_module():
     with pytest.raises(TypeError):

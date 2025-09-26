@@ -1,5 +1,5 @@
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.verification_result import VerificationResult
+from ada_verona.database.epsilon_status import EpsilonStatus
+from ada_verona.database.verification_result import VerificationResult
 
 
 def test_epsilon_status_initialization():

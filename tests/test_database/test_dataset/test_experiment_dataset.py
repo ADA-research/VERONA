@@ -1,6 +1,6 @@
 import pytest
 
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
+from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 
 
 def test_cannot_instantiate_dataset():

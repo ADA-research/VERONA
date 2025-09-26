@@ -5,21 +5,21 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from robustness_experiment_box.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
-from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
-from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
+from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
+from ada_verona.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
+from ada_verona.database.experiment_repository import ExperimentRepository
+from ada_verona.dataset_sampler.dataset_sampler import DatasetSampler
+from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
+from ada_verona.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-from robustness_experiment_box.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
-from robustness_experiment_box.verification_module.attack_estimation_module import AttackEstimationModule
-from robustness_experiment_box.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+from ada_verona.epsilon_value_estimator.epsilon_value_estimator import EpsilonValueEstimator
+from ada_verona.verification_module.attack_estimation_module import AttackEstimationModule
+from ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
+from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
+from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
 torch.manual_seed(0)
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)

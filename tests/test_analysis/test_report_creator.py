@@ -2,7 +2,7 @@
 import pytest
 import pandas as pd
 from matplotlib.figure import Figure
-from robustness_experiment_box.analysis.report_creator import ReportCreator  # Replace with the actual module name
+from ada_verona.analysis.report_creator import ReportCreator  # Replace with the actual module name
 
 @pytest.fixture
 def sample_df():
