@@ -73,7 +73,7 @@ def create_distribution(
     # Example of slurmscript template
     slurm_script_template = (
         "#!/bin/sh \n"
-        "#SBATCH --job-name=robox\n"
+        "#SBATCH --job-name=ada_verona\n"
         "#SBATCH --partition=graceGPU \n"
         "#SBATCH --exclude=ethnode[07] \n"
         "#SBATCH --output={slurm_scripts_path}/slurm_output_%A_%a.out \n"

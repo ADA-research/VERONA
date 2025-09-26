@@ -1,6 +1,6 @@
 import logging
 
-root_logname = "[robox::{}]"
+root_logname = "[ada_verona::{}]"
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.NOTSET)
 
