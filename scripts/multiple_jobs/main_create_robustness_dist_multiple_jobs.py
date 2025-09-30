@@ -7,12 +7,12 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from robustness_experiment_box.database.dataset.experiment_dataset import ExperimentDataset
-from robustness_experiment_box.database.dataset.image_file_dataset import ImageFileDataset
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.dataset_sampler.dataset_sampler import DatasetSampler
-from robustness_experiment_box.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
-from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
+from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
+from ada_verona.database.experiment_repository import ExperimentRepository
+from ada_verona.dataset_sampler.dataset_sampler import DatasetSampler
+from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
+from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
 
@@ -73,7 +73,7 @@ def create_distribution(
     # Example of slurmscript template
     slurm_script_template = (
         "#!/bin/sh \n"
-        "#SBATCH --job-name=robox\n"
+        "#SBATCH --job-name=ada_verona\n"
         "#SBATCH --partition=graceGPU \n"
         "#SBATCH --exclude=ethnode[07] \n"
         "#SBATCH --output={slurm_scripts_path}/slurm_output_%A_%a.out \n"
