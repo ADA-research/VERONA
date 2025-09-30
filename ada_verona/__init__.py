@@ -1,15 +1,3 @@
-"""
-ADA-VERONA: Neural Network Robustness Analysis Framework
-
-A framework for analyzing neural network robustness
-through verification and adversarial testing.
-"""
-
-__version__ = "1.0.0"
-__author__ = "ADA Research Group"
-
-import contextlib
-
 # Database classes
 from .database.dataset.data_point import DataPoint
 from .database.dataset.experiment_dataset import ExperimentDataset
@@ -60,9 +48,6 @@ from .verification_module.property_generator.property_generator import PropertyG
 from .verification_module.verification_module import VerificationModule
 
 __all__ = [
-    "__version__",
-    "__author__",
-    
     # Core abstract classes
     "DatasetSampler",
     "EpsilonValueEstimator",
