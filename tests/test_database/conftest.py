@@ -2,12 +2,13 @@ import onnx
 import pytest
 import torch
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.experiment_repository import ExperimentRepository
-from robustness_experiment_box.database.network import Network
-from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
-from robustness_experiment_box.database.verification_context import VerificationContext
+from ada_verona.database.dataset.data_point import DataPoint
+from ada_verona.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.database.experiment_repository import ExperimentRepository
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
+from ada_verona.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
+from ada_verona.database.verification_context import VerificationContext
 
 
 class MockVerificationContext:
@@ -51,11 +52,12 @@ def epsilon_value_result(mock_verification_context):
     return result
 
 
+
 @pytest.fixture
 def network(tmp_path):
     onnx_file = tmp_path / "network.onnx"
     onnx_file.touch()
-    return Network(path=onnx_file)
+    return ONNXNetwork(path=onnx_file)
 
 @pytest.fixture
 def mock_graph():
@@ -109,3 +111,48 @@ def datapoint():
 @pytest.fixture
 def verification_context(network, datapoint, tmp_path, property_generator):
     return VerificationContext(network, datapoint, tmp_path, property_generator)
+
+
+
+@pytest.fixture
+def architecture_file(tmp_path):
+    """Create a temporary architecture file."""
+    arch_file = tmp_path / "test_model.py"
+    arch_file.write_text("""
+import torch.nn as nn
+EXPECTED_INPUT_SHAPE = [0,2]
+class TestModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc = nn.Linear(10, 2)
+    
+    def forward(self, x):
+        return self.fc(x)
+
+test_model = TestModel()
+""")
+
+    return arch_file
+
+@pytest.fixture
+def weights_file(tmp_path, architecture_file):
+    """Create a temporary weights file."""
+    weights_file = tmp_path / "test_weights.pt"
+
+    # Import TestModel from the generated architecture file
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("test_model", architecture_file)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    model = module.TestModel()
+    torch.save(model.state_dict(), weights_file)
+
+    return weights_file
+
+
+@pytest.fixture
+def pytorch_network(architecture_file, weights_file):
+    """Create a PyTorchNetwork instance."""
+    return PyTorchNetwork(architecture=architecture_file, weights=weights_file)

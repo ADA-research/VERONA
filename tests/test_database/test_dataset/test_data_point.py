@@ -1,6 +1,6 @@
 import torch
 
-from robustness_experiment_box.database.dataset.data_point import DataPoint
+from ada_verona.database.dataset.data_point import DataPoint
 
 
 def test_to_dict():
