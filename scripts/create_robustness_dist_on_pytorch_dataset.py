@@ -59,8 +59,8 @@ def create_distribution(
 def main():
     timeout = 600
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
-    experiment_repository_path = Path("../tests/test_experiment")
-    network_folder = Path("../tests/test_experiment/data/networks")
+    experiment_repository_path = Path("../example_experiment")
+    network_folder = Path("../example_experiment/data/networks")
     torch_dataset = torchvision.datasets.MNIST(
         root="./data", train=True, download=True, transform=transforms.ToTensor()
     )
