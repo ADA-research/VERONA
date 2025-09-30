@@ -1,7 +1,9 @@
-import pytest
 import pandas as pd
+import pytest
 from matplotlib.figure import Figure
+
 from ada_verona.analysis.report_creator import ReportCreator  # Replace with the actual module name
+
 
 @pytest.fixture
 def sample_df():
