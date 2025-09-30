@@ -47,13 +47,13 @@ def image_file_dataset(tmp_path, mocker):
 
 
 def test_len(image_file_dataset):
-    dataset_length = image_file_dataset.__len__()
+    dataset_length = len(image_file_dataset)
 
     assert dataset_length == 3
 
 
 def test_getitem(image_file_dataset):
-    data_point = image_file_dataset.__getitem__[1]
+    data_point = image_file_dataset[1]
     
     assert data_point.id == "image_1"
     assert data_point.label == 1
