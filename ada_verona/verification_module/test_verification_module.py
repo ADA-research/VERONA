@@ -1,11 +1,10 @@
 from pathlib import Path
 
-from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Ok
 from torch import Tensor, load
 
 from ada_verona.database.verification_context import VerificationContext
-from ada_verona.database.verification_result import VerificationResult
+from ada_verona.database.verification_result import CompleteVerificationData, VerificationResult
 from ada_verona.verification_module.verification_module import VerificationModule
 
 

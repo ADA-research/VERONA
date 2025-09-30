@@ -4,10 +4,10 @@ from pathlib import Path
 
 import autoverify
 import numpy as np
-from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Err, Ok
 
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 from ada_verona.verification_module.verification_module import VerificationModule
 
 logger = logging.getLogger(__name__)

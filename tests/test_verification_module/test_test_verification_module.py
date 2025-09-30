@@ -1,13 +1,12 @@
 import pytest
 import torch
-from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Ok
 from torch import tensor
 
 from ada_verona.database.dataset.data_point import DataPoint
 from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.verification_context import VerificationContext
-from ada_verona.database.verification_result import VerificationResult
+from ada_verona.database.verification_result import CompleteVerificationData, VerificationResult
 from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )

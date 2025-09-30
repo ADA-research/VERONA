@@ -2,9 +2,9 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from autoverify.verifier.verification_result import CompleteVerificationData
 
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 from ada_verona.verification_module.auto_verify_module import (
     parse_counter_example,
     parse_counter_example_label,
