@@ -2,11 +2,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.epsilon_value_result import EpsilonValueResult
-from robustness_experiment_box.database.verification_context import VerificationContext
-from robustness_experiment_box.database.verification_result import VerificationResult
-from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
+from ada_verona.database.epsilon_status import EpsilonStatus
+from ada_verona.database.epsilon_value_result import EpsilonValueResult
+from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import VerificationResult
+from ada_verona.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
 from tests.test_epsilon_value_estimator.conftest import MockVerificationModule
