@@ -3,115 +3,112 @@ from unittest.mock import Mock
 import pytest
 
 from ada_verona.database.machine_learning_model.network import Network
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
+from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
 
 
-class ConcreteNetwork(Network):
-    """Concrete implementation of the abstract Network for testing."""
-    
-    def __init__(self, name: str):
-        self._name = name
-    
-    def load_pytorch_model(self):
-        return Mock()
-    
-    def get_input_shape(self):
-        return [1, 3, 224, 224]  # Return list to test flexibility
-    
-    def to_dict(self):
-        return {"name": self._name}
-    
-    @classmethod
-    def from_dict(cls, data):
-        return cls(data["name"])
-    
-    @property
-    def name(self):
-        return self._name
 
-
-# Abstract Network Class Tests
-def test_base_network_cannot_instantiate():
-    """Test that Network cannot be instantiated directly."""
+def test_cannot_instantiate_network():
+    """Ensure Network cannot be instantiated directly."""
     with pytest.raises(TypeError):
         Network()
 
 
-def test_concrete_network_instantiation():
-    """Test that concrete implementation can be instantiated."""
-    network = ConcreteNetwork("test_network")
-    assert network.name == "test_network"
+def test_abstract_methods_raise_notimplementederror():
+    # Call the abstract methods on the class itself (unbound)
+    with pytest.raises(NotImplementedError):
+        Network.load_pytorch_model(Network)
+        
+    with pytest.raises(NotImplementedError):
+        Network.get_input_shape(Network)
+        
+def test_from_dict_onnx(tmp_path):
+    onnx_file = tmp_path / "model.onnx"
+    onnx_file.touch()
+
+    data = {
+        "type": "ONNXNetwork",
+        "module": "ada_verona.database.machine_learning_model.onnx_network",
+        "network_path": str(onnx_file),
+    }
+
+    network = Network.from_dict(data)
+
+    assert isinstance(network, ONNXNetwork)
+    assert str(network.path) == str(onnx_file)
 
 
-def test_concrete_network_methods():
-    """Test that concrete implementation has all required methods."""
-    network = ConcreteNetwork("test_network")
+def test_from_dict_pytorch(tmp_path):
+    arch_file = tmp_path / "model.py"
+    weights_file = tmp_path / "weights.pth"
+    arch_file.touch()
+    weights_file.touch()
+
+    data = {
+        "type": "PyTorchNetwork",
+        "module": "ada_verona.database.machine_learning_model.pytorch_network",
+        "architecture": str(arch_file),
+        "weights": str(weights_file),
+    }
+
+    network = Network.from_dict(data)
+
+    assert isinstance(network, PyTorchNetwork)
+    assert str(network.architecture) == str(arch_file)
+    assert str(network.weights) == str(weights_file)
+
+
+def test_from_dict_missing_keys(tmp_path):
+    data_missing_type = {"module": "ada_verona.database.machine_learning_model.onnx_network"}
+    with pytest.raises(ValueError, match="Missing 'class' or 'module' key"):
+        Network.from_dict(data_missing_type)
+
+    data_missing_module = {"type": "ONNXNetwork"}
+    with pytest.raises(ValueError, match="Missing 'class' or 'module' key"):
+        Network.from_dict(data_missing_module)
+
+
+def test_from_dict_nonexistent_class_or_module(tmp_path):
+    data_wrong_class = {"type": "NonExistentNetwork", "module": "ada_verona.database.machine_learning_model.onnx_network"}
+    with pytest.raises(ValueError, match="Could not import NonExistentNetwork"):
+        Network.from_dict(data_wrong_class)
+
+    data_wrong_module = {"type": "ONNXNetwork", "module": "non.existent.module"}
+    with pytest.raises(ValueError, match="Could not import ONNXNetwork"):
+        Network.from_dict(data_wrong_module)
+        
+def test_from_file_onnx(tmp_path):
+  
+    onnx_file = tmp_path / "model.onnx"
+    onnx_file.touch()
+
+    file_dict = {"network_type": "onnx", "architecture": onnx_file}
+    network = Network.from_file(file_dict)
+
+    assert isinstance(network, ONNXNetwork)
+    assert str(network.path).endswith("model.onnx")
+
+
+def test_from_file_pytorch(tmp_path):
     
-    # Test abstract methods are implemented
-    assert hasattr(network, 'load_pytorch_model')
-    assert hasattr(network, 'get_input_shape')
-    assert hasattr(network, 'to_dict')
-    assert hasattr(network, 'from_dict')
-    assert hasattr(network, 'name')
-    
-    # Test methods return expected types
-    assert callable(network.load_pytorch_model)
-    assert callable(network.get_input_shape)
-    assert callable(network.to_dict)
-    assert callable(network.from_dict)
-    
-    # Test property access
-    assert isinstance(network.name, str)
+    arch_file = tmp_path / "model.py"
+    weights_file = tmp_path / "weights.pth"
+    arch_file.touch()
+    weights_file.touch()
+
+    file_dict = {
+        "network_type": "pytorch",
+        "architecture": arch_file,
+        "weights": weights_file,
+    }
+    network = Network.from_file(file_dict)
+
+    assert isinstance(network, PyTorchNetwork)
+    assert str(network.architecture).endswith("model.py")
+    assert str(network.weights).endswith("weights.pth")
 
 
-def test_concrete_network_inheritance():
-    """Test that concrete implementation properly inherits from Network."""
-    network = ConcreteNetwork("test_network")
-    
-    assert isinstance(network, Network)
-    assert issubclass(ConcreteNetwork, Network)
-
-
-def test_concrete_network_abstract_methods():
-    """Test that all abstract methods are properly implemented."""
-    network = ConcreteNetwork("test_network")
-    
-    # These should not raise NotImplementedError
-    model = network.load_pytorch_model()
-    input_shape = network.get_input_shape()
-    network_dict = network.to_dict()
-    
-    assert model is not None
-    assert input_shape is not None
-    assert network_dict is not None
-
-
-def test_concrete_network_class_methods():
-    """Test that class methods work correctly."""
-    data = {"name": "test_from_dict"}
-    network = ConcreteNetwork.from_dict(data)
-    
-    assert isinstance(network, ConcreteNetwork)
-    assert network.name == "test_from_dict"
-
-
-def test_concrete_network_property():
-    """Test that the name property works correctly."""
-    network = ConcreteNetwork("test_property")
-    
-    assert network.name == "test_property"
-    assert isinstance(network.name, str)
-
-
-def test_input_shape_flexibility():
-    """Test that input_shape can return different types."""
-    network = ConcreteNetwork("test_network")
-    input_shape = network.get_input_shape()
-    
-    # Should work with both list and numpy array
-    assert input_shape == [1, 3, 224, 224]
-    
-    # Test that it can be converted to tuple for PyTorch operations
-    shape_tuple = tuple(input_shape.tolist()) if hasattr(input_shape, 'tolist') else tuple(input_shape)
-    
-    assert shape_tuple == (1, 3, 224, 224)
-
+def test_from_file_invalid_type():
+    file_dict = {"network_type": "tensorflow"}
+    with pytest.raises(NotImplementedError, match="Only .onnx and pytorch files are supported"):
+        Network.from_file(file_dict)
