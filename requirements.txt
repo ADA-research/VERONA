@@ -2,7 +2,6 @@
 # Note: NVIDIA packages are excluded for compatibility with different CUDA versions.
 # For direct GPU support, use: uv pip install ada-verona
 
-auto-verify>=0.1.4
 click>=8.1.7
 cloudpickle>=3.0.0
 coloredlogs>=15.0.1
