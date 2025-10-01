@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - documentation
 permissions:
   contents: write
 jobs:
