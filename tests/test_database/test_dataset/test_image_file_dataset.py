@@ -95,3 +95,24 @@ def test_get_subset(image_file_dataset):
     assert subset[0].id == "image_0"
     assert subset[1].id == "image_2"
 
+
+def test_get_id_index_from_value_missing(image_file_dataset):
+    result = image_file_dataset.get_id_index_from_value("does_not_exist")
+    assert result == -1
+    
+    
+
+def test_getitem_without_preprocessing(tmp_path, mocker):
+    image_folder = tmp_path / "images"
+    image_folder.mkdir()
+    label_file = tmp_path / "labels.csv"
+
+    (image_folder / "image_0.pt").write_bytes(b"mock_image_data")
+    pd.DataFrame({"image": ["image_0.pt"], "label": [0]}).to_csv(label_file, index=False)
+
+    mocker.patch("torch.load", return_value=torch.tensor([1.0, 2.0, 3.0]))
+
+    dataset = ImageFileDataset(image_folder=image_folder, label_file=label_file, preprocessing=None)
+    data_point = dataset[0]
+
+    assert torch.equal(data_point.data, torch.tensor([1.0, 2.0, 3.0]))
