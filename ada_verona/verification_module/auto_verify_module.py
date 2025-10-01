@@ -80,6 +80,7 @@ def parse_counter_example(result: Ok, verification_context: VerificationContext)
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
     counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers if x.strip()])
+    
 
     return counter_example_array.reshape(verification_context.data_point.data.shape)
 
