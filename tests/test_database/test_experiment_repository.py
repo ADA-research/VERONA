@@ -1,3 +1,4 @@
+import json
 import os
 
 import pandas as pd
@@ -90,28 +91,6 @@ def test_initialize_new_experiment(experiment_repository):
                 "make sure no results will be overwritten"  ):
         experiment_repository.initialize_new_experiment(experiment_name)
 
-
-def test_cleanup_tmp_directory(experiment_repository):
- 
-    experiment_name = "test_experiment"
-    experiment_repository.initialize_new_experiment(experiment_name)
-
-    # Create a dummy file in the tmp directory to ensure file.unlink() is covered
-    tmp_path = experiment_repository.get_tmp_path()
-    tmp_path.mkdir(parents=True, exist_ok=True)
-    dummy_file = tmp_path / "dummy.txt"
-    dummy_file.write_text("temporary content")
-
-    assert tmp_path.exists()
-    assert dummy_file.exists()
-
-    # Run the cleanup method
-    experiment_repository.cleanup_tmp_directory()
-
-    # Assert the directory and file are both gone
-    assert not dummy_file.exists()
-    assert not tmp_path.exists()
-
 def test_load_experiment(experiment_repository):
     assert experiment_repository.act_experiment_path is None
     experiment_path = "experiments"
@@ -119,6 +98,29 @@ def test_load_experiment(experiment_repository):
     
     assert experiment_repository.act_experiment_path == experiment_repository.base_path/ experiment_path
 
+
+def test_save_configuration(experiment_repository):
+    experiment_name = "test_experiment"
+    experiment_repository.initialize_new_experiment(experiment_name)
+
+    # Data to save
+    config_data = {
+        "test":[0]
+    }
+
+    # Call the function
+    experiment_repository.save_configuration(config_data)
+
+    # Path to the saved configuration
+    config_path = experiment_repository.get_act_experiment_path() / "configuration.json"
+
+    # Assertions
+    assert config_path.exists(), "Configuration file was not created."
+
+    with open(config_path) as f:
+        saved_data = json.load(f)
+
+    assert saved_data == config_data, "Saved configuration does not match input data."
 
 def test_get_network_list(experiment_repository):
 
@@ -130,7 +132,70 @@ def test_get_network_list(experiment_repository):
     
     assert len(network_list) == 1
     assert network_list[0].path == experiment_repository.network_folder /"network1.onnx"
+    assert isinstance(network_list[0], ONNXNetwork)
+    assert isinstance(network_list, list)
+    
+def test_get_network_list_no_networks(experiment_repository):
+    
+    experiment_repository.initialize_new_experiment("test_experiment")
+    networks = experiment_repository.get_network_list()
+    assert networks == []
+    
 
+def test_get_network_list_from_default_csv_no_content(experiment_repository, capsys):
+    networks_csv = experiment_repository.network_folder /"networks.csv"
+    networks_csv.touch()
+    
+    onnx_file = experiment_repository.network_folder / "dummy.onnx"
+    onnx_file.touch()
+
+    network_list = experiment_repository.get_network_list()
+
+    # Capture printed warnings
+    captured = capsys.readouterr()
+
+    assert "Warning: Could not load networks from CSV" in captured.out
+    assert "Falling back to directory scanning for ONNX files." in captured.out
+
+    # And confirm fallback actually worked
+    assert len(network_list) == 1
+    assert isinstance(network_list[0], ONNXNetwork)
+    assert isinstance(network_list, list)
+    
+    
+def test_get_network_list_from_default_csv(experiment_repository, capsys):
+    networks_csv = experiment_repository.network_folder / "networks.csv"
+
+    onnx_file = experiment_repository.network_folder / "dummy.onnx"
+    onnx_file.touch()
+    pytorch_file = experiment_repository.network_folder / "dummy.pth"
+    pytorch_file.touch()
+    pytorch_arch = experiment_repository.network_folder / "dummy.py"
+    pytorch_arch.touch()
+
+
+    df = pd.DataFrame({
+        "network_type": ["onnx", "pytorch"],
+        "architecture": [onnx_file, pytorch_arch],
+        "weights": [None, pytorch_file]
+    })
+    df.to_csv(networks_csv, index=False)
+
+    network_list = experiment_repository.get_network_list()
+
+
+    assert isinstance(network_list, list)
+    assert len(network_list) == 2
+    assert isinstance(network_list[0], ONNXNetwork)
+    assert isinstance(network_list[1], PyTorchNetwork)
+    assert network_list[1].architecture == pytorch_arch
+    assert network_list[1].weights == pytorch_file
+
+    captured = capsys.readouterr()
+    assert "Warning: Could not load networks from CSV" not in captured.out
+
+    
+    
 def test_load_network_from_csv_row_onnx(experiment_repository): 
     onnx_file = experiment_repository.network_folder / "network.onnx"
     onnx_file.touch()
@@ -155,8 +220,6 @@ def test_load_network_from_csv_row_pytorch(experiment_repository, weights_file, 
     network = experiment_repository.load_network_from_csv_row(row)
     
     assert isinstance(network, PyTorchNetwork)
-
-
 
 def test_create_network_from_csv_row_onnx_missing_path(experiment_repository):
     """Test error when ONNX network is missing network_path."""
@@ -304,6 +367,7 @@ def test_get_per_epsilon_result_df(experiment_repository, tmp_path):
     assert "network" in per_epsilon_df.columns
     assert per_epsilon_df.iloc[0]["network"] == "network_1"
     assert per_epsilon_df.iloc[0]["image"] == "image_1"
+    
 
 
 def test_save_per_epsilon_result_df(experiment_repository, tmp_path):
@@ -329,6 +393,38 @@ def test_save_per_epsilon_result_df(experiment_repository, tmp_path):
     assert "network" in saved_df.columns
     assert "image" in saved_df.columns
 
+def test_save_plots_creates_files(experiment_repository):
+    experiment_name = "test_experiment"
+    experiment_repository.initialize_new_experiment(experiment_name)
+    
+    network= experiment_repository.network_folder / "network_1.onnx"
+    network.touch()
+    
+    results_path = experiment_repository.get_results_path()
+    results_path.mkdir(parents=True, exist_ok=True)
+    
+    df = pd.DataFrame({
+        "something": [0,1],
+        "network_path": [network, network],
+        "epsilon_value": [0.1, 0.2],
+        "result": ["sat", "unsat"],
+        "runtime": [1.23, 1.23],
+    })
+    
+    df.to_csv(results_path / "result_df.csv", index=False)
+    
+    experiment_repository.save_plots()
+ 
+    expected_files = [
+        results_path / "hist_figure.png",
+        results_path / "boxplot.png",
+        results_path / "kde_plot.png",
+        results_path / "ecdf_plot.png",
+    ]
+  
+    for f in expected_files:
+        assert f.exists(), f"Expected {f} to be created"
+        assert f.stat().st_size > 0, f"{f} should not be empty"
 
 def test_save_verification_context_to_yaml(experiment_repository,mock_verification_context):
     file_path = "verification_context.yaml"
@@ -340,3 +436,24 @@ def test_save_verification_context_to_yaml(experiment_repository,mock_verificati
         assert data["mock_key"] == "mock_value"
 
     os.remove(file_path)
+
+def test_cleanup_tmp_directory(experiment_repository):
+ 
+    experiment_name = "test_experiment"
+    experiment_repository.initialize_new_experiment(experiment_name)
+
+    # Create a dummy file in the tmp directory to ensure file.unlink() is covered
+    tmp_path = experiment_repository.get_tmp_path()
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    dummy_file = tmp_path / "dummy.txt"
+    dummy_file.write_text("temporary content")
+
+    assert tmp_path.exists()
+    assert dummy_file.exists()
+
+    # Run the cleanup method
+    experiment_repository.cleanup_tmp_directory()
+
+    # Assert the directory and file are both gone
+    assert not dummy_file.exists()
+    assert not tmp_path.exists()

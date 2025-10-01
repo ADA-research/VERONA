@@ -32,7 +32,6 @@ classifiers = [
 # Core dependencies
 dependencies = [
     # Basic dependencies
-    "auto-verify>=0.1.4",
     "click>=8.1.7",
     "cloudpickle>=3.0.0",
     "coloredlogs>=15.0.1",
@@ -235,17 +234,22 @@ Issues = "https://github.com/ADA-research/VERONA/issues"
 packages = ["."]
 include = [
     "*.py",
-    "ada_verona/**/*",
-    "scripts/**/*",
-    "notebooks/**/*"
+    "ada_verona/**/*"
 ]
 exclude = [
     "test/**/*",
     "tests/**/*",
+    "example_experiment/**/*",
+    "notebooks/**/*",
+    "scripts/**/*",
     "*.pyc",
     "__pycache__/**/*",
     ".github/**/*",
     ".git/**/*",
+    "governance.md",
+    "pytorch_support.md",
+    "CONTRIBUTING.md",
+    "roadmap.md",
     ".gitignore",
     ".gitkeep",
     ".gitmodules",
