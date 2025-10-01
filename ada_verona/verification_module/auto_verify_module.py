@@ -2,8 +2,8 @@ import logging
 import re
 from pathlib import Path
 
-import autoverify
 import numpy as np
+from autoverify.verifier.verifier import Verifier
 from result import Err, Ok
 
 from ada_verona.database.verification_context import VerificationContext
@@ -19,7 +19,7 @@ class AutoVerifyModule(VerificationModule):
     A module for automatically verifying the robustness of a model using a specified verifier.
     """
 
-    def __init__(self, verifier: autoverify.verifier.verifier.Verifier, timeout: float, config: Path = None) -> None:
+    def __init__(self, verifier: Verifier, timeout: float, config: Path = None) -> None:
         """
         Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
         Args:
