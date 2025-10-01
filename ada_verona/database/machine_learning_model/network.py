@@ -21,7 +21,9 @@ class Network(ABC):
         Returns:
             torch.nn.Module: The loaded PyTorch model.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
+      
+
 
     @abstractmethod
     def get_input_shape(self) -> np.ndarray | tuple[int, ...]:
@@ -31,7 +33,9 @@ class Network(ABC):
         Returns:
             Union[np.ndarray, tuple[int, ...]]: The input shape of the model.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
+      
+
 
     @abstractmethod
     def to_dict(self) -> dict:
@@ -41,7 +45,9 @@ class Network(ABC):
         Returns:
             dict: The dictionary representation of the network.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
+      
+
 
     @classmethod
     @abstractmethod
@@ -77,7 +83,9 @@ class Network(ABC):
         Returns:
             str: The name of the network.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
+      
+
     
 
     @classmethod
