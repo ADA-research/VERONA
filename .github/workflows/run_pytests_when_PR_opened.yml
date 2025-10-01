@@ -39,6 +39,14 @@ jobs:
       - name: Install local package
         run: |
           conda run -n verona uv pip install -e .
+
+      - name: Install autoverify for verify tests
+        run: |
+          conda run -n verona uv pip install auto-verify
+
+      - name: Install autoattack for attack module tests
+        run: |
+          conda run -n verona uv pip install git+https://github.com/fra31/auto-attack
           
       - name: Install pytest and pytest-mock
         run: |
