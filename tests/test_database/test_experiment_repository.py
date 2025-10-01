@@ -1,16 +1,16 @@
+import json
 import os
 
 import pandas as pd
 import pytest
 import torch
 import yaml
-import json 
 
 from ada_verona.database.dataset.data_point import DataPoint
 from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
 from ada_verona.database.verification_context import VerificationContext
-from ada_verona.analysis.report_creator import ReportCreator
+
 
 @pytest.fixture
 def networks_dir(tmp_path):
