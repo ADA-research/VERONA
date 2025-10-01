@@ -1,11 +1,9 @@
-from unittest.mock import Mock
 
 import pytest
 
 from ada_verona.database.machine_learning_model.network import Network
 from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
-
 
 
 def test_cannot_instantiate_network():
@@ -69,7 +67,10 @@ def test_from_dict_missing_keys(tmp_path):
 
 
 def test_from_dict_nonexistent_class_or_module(tmp_path):
-    data_wrong_class = {"type": "NonExistentNetwork", "module": "ada_verona.database.machine_learning_model.onnx_network"}
+    data_wrong_class = {
+        "type": "NonExistentNetwork",
+        "module": "ada_verona.database.machine_learning_model.onnx_network",
+    }
     with pytest.raises(ValueError, match="Could not import NonExistentNetwork"):
         Network.from_dict(data_wrong_class)
 
