@@ -137,7 +137,43 @@ def test_load_pytorch_model_cached(pytorch_network):
     
     assert model1 is model2
 
+def test_load_model_import_error(tmp_path, weights_file):
+    bad_arch = tmp_path / "bad_dir"
+    bad_arch.mkdir()  # not a file, so spec loader fails
 
+    net = PyTorchNetwork(architecture=bad_arch, weights=weights_file)
+    with pytest.raises(ImportError, match="Could not load model architecture"):
+        net.load_model()
+
+def test_load_model_with_state_dict_mismatched_keys(tmp_path):
+    arch_file = tmp_path / "model_mismatch.py"
+    arch_file.write_text("""
+import torch.nn as nn
+class M(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc = nn.Linear(10, 2)
+    def forward(self, x): 
+        return self.fc(x)
+test_model = M()
+""")
+
+    weights_file = tmp_path / "weights.pt"
+    dummy = torch.nn.Linear(5, 5) 
+    torch.save({"state_dict": dummy.state_dict()}, weights_file)
+
+    net = PyTorchNetwork(arch_file, weights_file)
+    model = net.load_model()  
+    assert isinstance(model, torch.nn.Module)
+    
+    
+    
+def test_get_input_shape_cached(pytorch_network):
+    pytorch_network.input_shape = np.array([1, 2, 3])
+    result = pytorch_network.get_input_shape()
+    assert np.array_equal(result, [1, 2, 3])       
+        
+        
 def test_to_dict(architecture_file, weights_file):
     """Test converting to dictionary."""
     network = PyTorchNetwork(architecture=architecture_file, weights=weights_file)
@@ -183,6 +219,22 @@ test_model = TestModel()
     non_existent_weights = tmp_path / "non_existent.pt"
     network = PyTorchNetwork(architecture=arch_file, weights=non_existent_weights)
     
-    # Should not raise an error, just load model without weights
     model = network.load_model()
     assert isinstance(model, torch.nn.Module)
+    
+def test_from_file_architecture_missing(tmp_path, weights_file):
+    arch_file = tmp_path / "missing_arch.py"
+    with pytest.raises(FileNotFoundError, match="Architecture file not found"):
+        PyTorchNetwork.from_file(arch_file, weights_file)
+        
+def test_from_file_weights_missing(tmp_path, architecture_file):
+    w_file = tmp_path / "missing_w.py"
+    with pytest.raises(FileNotFoundError, match="Weights file not found"):
+        PyTorchNetwork.from_file(architecture_file, w_file)
+        
+
+def test_from_file_success(architecture_file, weights_file):
+    network = PyTorchNetwork.from_file(architecture_file, weights_file)
+    assert isinstance(network, PyTorchNetwork)
+    assert network.architecture == architecture_file
+    assert network.weights == weights_file
