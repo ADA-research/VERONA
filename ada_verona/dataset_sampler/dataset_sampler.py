@@ -16,4 +16,4 @@ class DatasetSampler(ABC):
         Returns:
             ExperimentDataset: The sampled dataset we are analysing for this Network object.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
