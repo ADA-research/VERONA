@@ -3,3 +3,4 @@ dist/
 tests/test_experiment/*
 !tests/test_experiment/data
 .coverage*
+site/
