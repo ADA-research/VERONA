@@ -33,13 +33,13 @@ class PredictionsBasedSampler(DatasetSampler):
             ExperimentDataset: The sampled dataset.
         """
         input_shape = network.get_input_shape()
-
+  
         sess_opt = rt.SessionOptions()
         sess_opt.intra_op_num_threads = 1
         sess = rt.InferenceSession(str(network.path), sess_options=sess_opt)
         input_name = sess.get_inputs()[0].name
         label_name = sess.get_outputs()[0].name
-
+     
         selected_indices = []
 
         for data_point in dataset:
@@ -49,7 +49,7 @@ class PredictionsBasedSampler(DatasetSampler):
                 )[0]
                 predicted_label = np.argmax(prediction_onnx)
             except Exception as e:
-                raise Exception(f"Opening inference session for network {network.path} failed with error: {e}") from e
+                raise Exception(f"Creating prediction for network {network.path} failed with error: {e}") from e
 
             if self.sample_correct_predictions:
                 if predicted_label == int(data_point.label):
