@@ -30,7 +30,8 @@ Your PyTorch model architecture file should contain a model class that inherits 
 Furthermore, the file should contain some information about the required shape of the input. 
 The file should either define a model instance at module level:
 
-``import torch.nn as nn
+```python
+import torch.nn as nn
 
 EXPECTED_INPUT_SHAPE = ..
 
@@ -48,22 +49,25 @@ class ResNet18(nn.Module):
 
         # ... forward pass ...
 
-        return x``
+        return x
+```
 
 Instead of the global variable `EXPECTED_INPUT_SHAPE` you could also add the following function:
 
-``
+```python
 def get_input_shape()->list[int]:
     return ...
-``
+```
 
 # Create model instance for easy loading
-
+```python
 resnet18_model = ResNet18(num_classes=10)
+```
 
 Define a function that creates and returns the model:
 
-``import torch.nn as nn
+```python
+import torch.nn as nn
 
 def create_resnet18(num_classes=10):
 
@@ -73,7 +77,8 @@ def create_resnet18(num_classes=10):
 
 class ResNet18(nn.Module):
 
-    # ... model definition ... ``
+    # ... model definition ...
+```
 
 
 ## Weights Files
@@ -84,11 +89,13 @@ Store your trained model weights in .pt or .pth files. These should contain the 
 
 In the normal pipeline of VERONA, the networks are created within the ExperimentRepository like so:
 
-``networks = experiment_repository.get_network_list()``
+```python
+networks = experiment_repository.get_network_list()
+```
 
 However it is also possible to instantiate your own networks: 
 
-``
+```python
 from .database.machine_learning_model.network import Network
 
 
@@ -107,16 +114,15 @@ from .database.machine_learning_model.network import Network
  }
  network = Network.from_file(net_info) 
 
- ``
+```
 
 Or if you want to create a network directly for a specific type, for example onnx. 
 
-``
+```python
 from .database.machine_learning_model.onnx_network import OnnxNetwork
 
-network = OnnxNetwork(./path/to/model.onnx)
-
-``
+network = OnnxNetwork("./path/to/model.onnx")
+```
 
 
 
