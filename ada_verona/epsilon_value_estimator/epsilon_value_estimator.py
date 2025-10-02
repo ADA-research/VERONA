@@ -32,4 +32,4 @@ class EpsilonValueEstimator(ABC):
         Returns:
             EpsilonValueResult: The result of the epsilon value estimation.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
