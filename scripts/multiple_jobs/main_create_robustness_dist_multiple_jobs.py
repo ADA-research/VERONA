@@ -137,10 +137,10 @@ def main():
     timeout = 360
     epsilon_list = np.arange(0.0039, 0.2, 0.0039)
 
-    experiment_repository_path = Path("../tests/test_experiment")
-    network_folder = Path("../tests/test_experiment/data/networks")
-    image_folder = Path("../tests/test_experiment/data/images")
-    image_label_file = Path("../tests/test_experiment/data/image_labels.csv")
+    experiment_repository_path = Path("../example_experiment")
+    network_folder = Path("../example_experiment/data/networks")
+    image_folder = Path("../example_experiment/data/images")
+    image_label_file = Path("../example_experiment/data/image_labels.csv")
 
     dataset = ImageFileDataset(image_folder=image_folder, label_file=image_label_file)
     experiment_repository = ExperimentRepository(base_path=experiment_repository_path, network_folder=network_folder)

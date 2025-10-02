@@ -16,12 +16,12 @@ from ada_verona.verification_module.test_verification_module import TestVerifica
 
 @pytest.fixture
 def network():
-    return ONNXNetwork("./tests/test_experiment/data/networks/mnist-net_256x2.onnx")
+    return ONNXNetwork("./example_experiment/data/networks/mnist-net_256x2.onnx")
 
 
 @pytest.fixture
 def datapoint():
-    return DataPoint(label=5, data=load("./tests/test_experiment/data/images/mnist_train_0.pt"), id="0")
+    return DataPoint(label=5, data=load("./example_experiment/data/images/mnist_train_0.pt"), id="0")
 
 
 @pytest.fixture
