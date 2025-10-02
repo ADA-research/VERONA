@@ -2,12 +2,11 @@ import logging
 import re
 from pathlib import Path
 
-import autoverify
 import numpy as np
-from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Err, Ok
 
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 from ada_verona.verification_module.verification_module import VerificationModule
 
 logger = logging.getLogger(__name__)
@@ -19,7 +18,7 @@ class AutoVerifyModule(VerificationModule):
     A module for automatically verifying the robustness of a model using a specified verifier.
     """
 
-    def __init__(self, verifier: autoverify.verifier.verifier.Verifier, timeout: float, config: Path = None) -> None:
+    def __init__(self, verifier, timeout: float, config: Path = None) -> None:
         """
         Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
         Args:
@@ -27,6 +26,12 @@ class AutoVerifyModule(VerificationModule):
             timeout (float): The timeout for the verification process.
             config (Path, optional): The configuration file for the verifier.
         """
+        #lazy import required due to __init__ loading
+        from autoverify.verifier.verifier import Verifier
+
+        if not isinstance(verifier, Verifier):
+            raise TypeError(f"verifier must be a Verifier instance, got {type(verifier)}")
+
         self.verifier = verifier
         self.timeout = timeout
         self.config = config
@@ -80,6 +85,7 @@ def parse_counter_example(result: Ok, verification_context: VerificationContext)
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
     counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers if x.strip()])
+    
 
     return counter_example_array.reshape(verification_context.data_point.data.shape)
 

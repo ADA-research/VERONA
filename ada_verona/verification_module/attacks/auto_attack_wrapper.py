@@ -1,4 +1,3 @@
-from pyautoattack import AutoAttack
 from torch import Tensor
 from torch.nn.modules import Module
 
@@ -44,6 +43,10 @@ class AutoAttackWrapper(Attack):
         Returns:
             Tensor: The perturbed data.
         """
+        from pyautoattack import (
+            AutoAttack,  #Lazy import required as otherwise it gives an error at __init__.py loading.
+        )
+        
         adversary = AutoAttack(
             model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
         )
