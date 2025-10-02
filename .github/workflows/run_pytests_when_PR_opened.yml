@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Run pytests when PR opened
+name: Pytests
 
 # Controls when the workflow will run
 on:
@@ -40,10 +40,10 @@ jobs:
         run: |
           conda run -n verona uv pip install -e .
           
-      - name: Install pytest and pytest-mock
+      - name: Install pytest, pytest-mock and pytest-cov
         run: |
-          conda run -n verona uv pip install pytest pytest-mock
+          conda run -n verona uv pip install pytest pytest-mock pytest-cov
   
       - name: Run pytest
         run: |
-          conda run -n verona python -m pytest tests/ --verbose
+          conda run -n verona python -m pytest --cov tests/ --verbose
