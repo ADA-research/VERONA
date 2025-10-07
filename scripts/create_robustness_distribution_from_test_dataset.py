@@ -18,10 +18,10 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=loggin
 
 experiment_name = "auto_verify"
 timeout = 600
-experiment_repository_path = Path("../tests/test_experiment")
-network_folder = Path("../tests/test_experiment/data/networks")
-image_folder = Path("../tests/test_experiment/data/images")
-image_label_file = Path("../tests/test_experiment/data/image_labels.csv")
+experiment_repository_path = Path("../example_experiment")
+network_folder = Path("../example_experiment/data/networks")
+image_folder = Path("../example_experiment/data/images")
+image_label_file = Path("../example_experiment/data/image_labels.csv")
 epsilon_list = [0.001, 0.005, 0.01, 0.02, 0.05, 0.08]
 
 dataset = ImageFileDataset(image_folder=image_folder, label_file=image_label_file)

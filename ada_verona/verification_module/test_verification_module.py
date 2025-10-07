@@ -87,7 +87,7 @@ class TestVerificationModule(VerificationModule):
         """
 
         if epsilon >= 0.5:
-            return load("./tests/test_experiment/data/images/mnist_train_1.pt")
+            return load("./example_experiment/data/images/mnist_train_1.pt")
 
         else:
             return data_on_device
