@@ -1,11 +1,11 @@
 from pathlib import Path
 
 import pytest
-from autoverify.verifier.verification_result import CompleteVerificationData
 
 from ada_verona.database.dataset.data_point import DataPoint
 from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 from ada_verona.verification_module.verification_module import VerificationModule
 
 
