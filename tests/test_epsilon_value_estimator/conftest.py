@@ -21,7 +21,7 @@ def network():
 
 @pytest.fixture
 def tmp_path():
-    return Path("tests/test_experiment/tmp")
+    return Path("example_experiment/tmp")
 
 
 @pytest.fixture
