@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from result import Ok
@@ -43,7 +44,7 @@ class TestVerificationModule(VerificationModule):
         
 
     def verify_property(
-        self, network_path: Path, vnnlib_property_path: Path, timeout: int
+        self, network_path: Path, vnnlib_property_path: Path, timeout: int, config=None
     ) -> str | CompleteVerificationData:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.
@@ -67,7 +68,20 @@ class TestVerificationModule(VerificationModule):
         if not Path(vnnlib_property_path).exists():
             raise Exception("[TestVerificationModule]: image path not found")
         
-        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=timeout))
+        stem = vnnlib_property_path.stem
+        parts = stem.split("_")
+        if len(parts) >= 3:
+            try:
+                epsilon = float(".".join(parts[-2:]))
+            except ValueError:
+                m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
+                epsilon = float(m.group(1)) if m else 0.0
+        else:
+            m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
+            epsilon = float(m.group(1)) if m else 0.0
+        result = VerificationResult.SAT if epsilon > 0.5 else VerificationResult.UNSAT
+
+        return Ok(CompleteVerificationData(result=result, took=timeout))
 
    
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:

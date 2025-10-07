@@ -75,7 +75,7 @@ def test_verify_network_path_not_found(test_verification_module, datapoint, tmp_
 
 def test_verify_property(test_verification_module, tmp_path):
     network_path = tmp_path / "network.onnx"
-    vnnlib_path = tmp_path / "property.vnnlib"
+    vnnlib_path = tmp_path / "property_5_0_6.vnnlib"
     network_path.touch()
     vnnlib_path.touch()
 

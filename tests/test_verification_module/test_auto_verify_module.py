@@ -1,7 +1,9 @@
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pytest
+from result import Err
 
 from ada_verona.database.verification_context import VerificationContext
 from ada_verona.database.verification_result import CompleteVerificationData
@@ -20,6 +22,7 @@ from ada_verona.verification_module.property_generator.one2one_property_generato
 @pytest.fixture(params=[One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def property_generator(request):
     return request.param
+
 @pytest.fixture
 def tmp_path():
     return Path("/tmp")
@@ -28,17 +31,35 @@ def tmp_path():
 def verification_context(network, datapoint, tmp_path, property_generator):
     return VerificationContext(network, datapoint, tmp_path, property_generator)
 
+@pytest.fixture
+def auto_verify_module_fixture(request, auto_verify_module, auto_verify_module_config):
+    if request.param == "auto_verify_module":
+        return auto_verify_module
+    elif request.param == "auto_verify_module_config":
+        return auto_verify_module_config
+
 def test_auto_verify_module_initialization(auto_verify_module, verifier):
     assert auto_verify_module.verifier == verifier
     assert auto_verify_module.timeout == 60
     assert auto_verify_module.config is None
 
-def test_auto_verify_module_verify(auto_verify_module, verification_context):
-    epsilon = 0.1
-    result = auto_verify_module.verify(verification_context, epsilon)
-    print("this is the result", result)
+
+@pytest.mark.parametrize(
+    "auto_verify_module_fixture", 
+    ["auto_verify_module", "auto_verify_module_config"], 
+    indirect=True
+)
+def test_auto_verify_module_verify(auto_verify_module_fixture, verification_context):
+    result = auto_verify_module_fixture.verify(verification_context, 0.6)
+
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "SAT"
+    
+    result = auto_verify_module_fixture.verify(verification_context, 0.01)
+
+    assert isinstance(result, CompleteVerificationData)
+    assert result.result == "UNSAT"
+   
 
 def test_parse_counter_example(result, verification_context):
     counter_example = parse_counter_example(result, verification_context)
