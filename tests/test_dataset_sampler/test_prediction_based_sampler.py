@@ -9,7 +9,7 @@ from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBase
 
 @pytest.fixture
 def network():
-    return ONNXNetwork("./tests/test_experiment/data/networks/mnist-net_256x2.onnx")
+    return ONNXNetwork("./example_experiment/data/networks/mnist-net_256x2.onnx")
 
 def test_init():
     sampler = PredictionsBasedSampler()
@@ -21,8 +21,8 @@ def test_init():
     
 @pytest.fixture
 def dataset():
-    dataset = ImageFileDataset(image_folder=Path("./tests/test_experiment/data/images"),
-                                label_file=Path("./tests/test_experiment/data/image_labels.csv"))
+    dataset = ImageFileDataset(image_folder=Path("./example_experiment/data/images"),
+                                label_file=Path("./example_experiment/data/image_labels.csv"))
     return dataset
 
 
