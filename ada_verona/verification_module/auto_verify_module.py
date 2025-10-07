@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 import numpy as np
+from autoverify.verifier.verifier import Verifier
 from result import Err, Ok
 
 from ada_verona.database.verification_context import VerificationContext
@@ -18,7 +19,7 @@ class AutoVerifyModule(VerificationModule):
     A module for automatically verifying the robustness of a model using a specified verifier.
     """
 
-    def __init__(self, verifier, timeout: float, config: Path = None) -> None:
+    def __init__(self, verifier: Verifier, timeout: float, config: Path = None) -> None:
         """
         Initialize the AutoVerifyModule with a specific verifier, timeout, and optional configuration.
         Args:
@@ -26,11 +27,6 @@ class AutoVerifyModule(VerificationModule):
             timeout (float): The timeout for the verification process.
             config (Path, optional): The configuration file for the verifier.
         """
-        #lazy import required due to __init__ loading
-        from autoverify.verifier.verifier import Verifier
-
-        if not isinstance(verifier, Verifier):
-            raise TypeError(f"verifier must be a Verifier instance, got {type(verifier)}")
 
         self.verifier = verifier
         self.timeout = timeout
