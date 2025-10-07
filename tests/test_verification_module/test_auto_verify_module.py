@@ -1,9 +1,7 @@
 from pathlib import Path
-from unittest.mock import patch
 
 import numpy as np
 import pytest
-from result import Err
 
 from ada_verona.database.verification_context import VerificationContext
 from ada_verona.database.verification_result import CompleteVerificationData

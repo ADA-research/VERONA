@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 import pytest
 from result import Ok
 from torch import load
