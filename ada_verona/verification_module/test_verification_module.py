@@ -43,6 +43,19 @@ class TestVerificationModule(VerificationModule):
             return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
         
 
+    def _extract_epsilon_from_file_name(self,vnnlib_property_path: Path):
+        stem = vnnlib_property_path.stem
+        parts = stem.split("_")
+        if len(parts) >= 3:
+            try:
+                return float(".".join(parts[-2:]))
+            except ValueError:
+                m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
+                return float(m.group(1)) if m else 0.0
+        else:
+            m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
+            return float(m.group(1)) if m else 0.0
+        
     def verify_property(
         self, network_path: Path, vnnlib_property_path: Path, timeout: int, config=None
     ) -> str | CompleteVerificationData:
@@ -68,21 +81,11 @@ class TestVerificationModule(VerificationModule):
         if not Path(vnnlib_property_path).exists():
             raise Exception("[TestVerificationModule]: image path not found")
         
-        stem = vnnlib_property_path.stem
-        parts = stem.split("_")
-        if len(parts) >= 3:
-            try:
-                epsilon = float(".".join(parts[-2:]))
-            except ValueError:
-                m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
-                epsilon = float(m.group(1)) if m else 0.0
-        else:
-            m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
-            epsilon = float(m.group(1)) if m else 0.0
+        epsilon = self._extract_epsilon_from_file_name(vnnlib_property_path)
         result = VerificationResult.SAT if epsilon > 0.5 else VerificationResult.UNSAT
 
         return Ok(CompleteVerificationData(result=result, took=timeout))
-
+        
    
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:
         """ 
