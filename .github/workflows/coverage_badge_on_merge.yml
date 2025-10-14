@@ -55,4 +55,4 @@ jobs:
               id: coverage
               run: |
                 conda run -n verona coverage report
-            
+              coverage: '/TOTAL.+ ([0-9]{1,3}%)/
