@@ -9,7 +9,7 @@ def test_cannot_instantiate_dataset():
         ExperimentDataset()
 
 
-def test_abstract_methods_raise_notimplementederror():
+def test_abstract_methods_raise_not_implemented_error():
     # Call the abstract methods on the class itself (unbound)
     with pytest.raises(NotImplementedError):
         ExperimentDataset.__len__(ExperimentDataset)
