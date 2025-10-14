@@ -59,3 +59,7 @@ jobs:
                 COVERAGE=$(echo $COVERAGE_LINE | awk '{print $NF}' | tr -d '%')
                 echo "Coverage is $COVERAGE%"
                 echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+            - name: Create coverage badge JSON
+              run: |
+                echo "{ \"schemaVersion\": 1, \"label\": \"coverage\", \"message\": \"${{ steps.coverage.outputs.coverage }}%\", \"color\": \"green\" }" > coverage-badge.json
+              

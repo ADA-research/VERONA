@@ -1,4 +1,4 @@
-[![Pytests](https://github.com/ADA-research/VERONA/actions/workflows/coverage_badge_on_merge.yml/coverage.svg?job=coverage)](https://github.com/ADA-research/VERONA/actions/workflows/coverage_badge_on_merge.yml)
+![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ADA-research/VERONA/main/coverage-badge.json)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 
