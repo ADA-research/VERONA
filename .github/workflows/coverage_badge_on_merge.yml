@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+    branches: [ "main" ] #delete this once works
 
 
   # Allows you to run this workflow manually from the Actions tab
