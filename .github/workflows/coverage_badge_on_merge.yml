@@ -59,13 +59,4 @@ jobs:
             - name: Create coverage badge JSON
               run: |
                 echo "{ \"schemaVersion\": 1, \"label\": \"coverage\", \"message\": \"${{ steps.coverage.outputs.coverage }}%\", \"color\": \"green\" }" > coverage-badge.json
-           
-
-            - name: Make the json coverage badge and add to the repo
-              if: github.ref == 'refs/heads/main'
-              run: |
-                git config user.name "github-actions[bot]"
-                git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                git add coverage-badge.json
-                git commit -m "Update coverage badge" || echo "No changes to commit"
-                git push
+              
