@@ -46,7 +46,6 @@ jobs:
             - name: Extract coverage percentage
               id: coverage
               run: |
-      
                 COVERAGE=$(xmllint --xpath "string(//coverage/@line-rate)" coverage.xml)
                 COVERAGE=$(echo "$COVERAGE * 100" | bc | awk '{printf "%d\n",$1}')
                 echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
