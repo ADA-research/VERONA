@@ -1,4 +1,4 @@
-[![Pytests](https://github.com/ADA-research/VERONA/actions/workflows/run_pytests_when_PR_opened.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/run_pytests_when_PR_opened.yml)
+![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ADA-research/VERONA/main/coverage-badge.json)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 
