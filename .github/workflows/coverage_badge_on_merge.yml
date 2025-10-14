@@ -38,7 +38,7 @@ jobs:
             - name: Install pytest, pytest-mock and pytest-cov
               run: |
                 conda run -n verona uv pip install pytest pytest-mock pytest-cov
-                
+
             - name: Install AutoAttack
               run: |
                 conda run -n verona pip install git+https://github.com/fra31/auto-attack
@@ -49,12 +49,10 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona python -m pytest --cov tests/ --verbose --cov-report=xml
+                conda run -n verona coverage -m pytest tests/ --verbose 
 
             - name: Extract coverage percentage
               id: coverage
               run: |
-                COVERAGE=$(xmllint --xpath "string(//coverage/@line-rate)" coverage.xml)
-                COVERAGE=$(echo "$COVERAGE * 100" | bc | awk '{printf "%d\n",$1}')
-                echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+                conda run -n verona coverage report
             
