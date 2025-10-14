@@ -55,5 +55,7 @@ jobs:
             - name: Extract coverage percentage
               id: coverage
               run: |
-                conda run -n verona coverage report
-              coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+                COVERAGE_LINE=$(conda run -n verona coverage report | grep TOTAL)
+                COVERAGE=$(echo $COVERAGE_LINE | awk '{print $NF}' | tr -d '%')
+                echo "Coverage is $COVERAGE%"
+                echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
