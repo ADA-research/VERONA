@@ -1,5 +1,6 @@
 import pytest
-from autoverify.verifier.verification_result import CompleteVerificationData
+
+from ada_verona.database.verification_result import CompleteVerificationData
 
 
 def test_attack_estimation_module_initialization(attack_estimation_module, attack):

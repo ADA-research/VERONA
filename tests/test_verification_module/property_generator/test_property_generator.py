@@ -12,7 +12,7 @@ def test_cannot_instantiate_property_generator():
     with pytest.raises(TypeError):
         PropertyGenerator()
 
-def test_abstract_methods_raise_notimplementederror():
+def test_abstract_methods_raise_not_implemented_error():
     with pytest.raises(NotImplementedError):
         PropertyGenerator.create_vnnlib_property(PropertyGenerator, None, None, None)
     with pytest.raises(NotImplementedError):

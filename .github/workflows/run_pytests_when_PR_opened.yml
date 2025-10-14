@@ -43,6 +43,14 @@ jobs:
       - name: Install pytest, pytest-mock and pytest-cov
         run: |
           conda run -n verona uv pip install pytest pytest-mock pytest-cov
+
+      - name: Install AutoAttack
+        run: |
+          conda run -n verona pip install git+https://github.com/fra31/auto-attack
+
+      - name: Install AutoVerify
+        run: |
+          conda run -n verona pip install auto-verify==0.1.4
   
       - name: Run pytest
         run: |
