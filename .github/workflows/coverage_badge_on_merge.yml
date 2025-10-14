@@ -49,7 +49,7 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona coverage -m pytest tests/ --verbose 
+                conda run -n verona coverage run -m pytest tests/ --verbose 
 
             - name: Extract coverage percentage
               id: coverage
