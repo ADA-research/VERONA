@@ -1,4 +1,4 @@
-[![Pytests](https://github.com/ADA-research/VERONA/actions/workflows/run_pytests_when_PR_opened.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/run_pytests_when_PR_opened.yml)
+[![Pytests](https://github.com/ADA-research/VERONA/actions/workflows/coverage_badge_on_merge.yml/coverage.svg?job=coverage)](https://github.com/ADA-research/VERONA/actions/workflows/run_pytests_when_PR_opened.yml)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 
