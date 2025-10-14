@@ -26,4 +26,5 @@ class Attack(ABC):
         Returns:
             torch.Tensor: The perturbed data after the attack.
         """
-        pass
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
+ 

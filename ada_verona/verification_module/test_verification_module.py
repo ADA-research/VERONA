@@ -1,11 +1,11 @@
+import re
 from pathlib import Path
 
-from autoverify.verifier.verification_result import CompleteVerificationData
 from result import Ok
 from torch import Tensor, load
 
 from ada_verona.database.verification_context import VerificationContext
-from ada_verona.database.verification_result import VerificationResult
+from ada_verona.database.verification_result import CompleteVerificationData, VerificationResult
 from ada_verona.verification_module.verification_module import VerificationModule
 
 
@@ -43,8 +43,21 @@ class TestVerificationModule(VerificationModule):
             return CompleteVerificationData(result=VerificationResult.UNSAT, took=10.0)
         
 
+    def _extract_epsilon_from_file_name(self,vnnlib_property_path: Path):
+        stem = vnnlib_property_path.stem
+        parts = stem.split("_")
+        if len(parts) >= 3:
+            try:
+                return float(".".join(parts[-2:]))
+            except ValueError:
+                m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
+                return float(m.group(1)) if m else 0.0
+        else:
+            m = re.search(r"([0-9]+(?:\.[0-9]+)?)", stem)
+            return float(m.group(1)) if m else 0.0
+        
     def verify_property(
-        self, network_path: Path, vnnlib_property_path: Path, timeout: int
+        self, network_path: Path, vnnlib_property_path: Path, timeout: int, config=None
     ) -> str | CompleteVerificationData:
         """ 
         A module for testing other parts of the pipeline. This module does not actually verify anything.
@@ -68,8 +81,11 @@ class TestVerificationModule(VerificationModule):
         if not Path(vnnlib_property_path).exists():
             raise Exception("[TestVerificationModule]: image path not found")
         
-        return Ok(CompleteVerificationData(result=VerificationResult.SAT, took=timeout))
+        epsilon = self._extract_epsilon_from_file_name(vnnlib_property_path)
+        result = VerificationResult.SAT if epsilon > 0.5 else VerificationResult.UNSAT
 
+        return Ok(CompleteVerificationData(result=result, took=timeout))
+        
    
     def execute(self, torch_model, data_on_device, target_on_device, epsilon) -> Tensor:
         """ 

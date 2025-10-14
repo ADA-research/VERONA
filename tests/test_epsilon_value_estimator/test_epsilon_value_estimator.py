@@ -9,7 +9,7 @@ def test_cannot_instantiate_epsilon_valu_estimator():
         EpsilonValueEstimator()
 
 
-def test_abstract_methods_raise_notimplementederror():
+def test_abstract_methods_raise_not_implemented_error():
     # Call the abstract methods on the class itself (unbound)
     with pytest.raises(NotImplementedError):
         EpsilonValueEstimator.compute_epsilon_value(EpsilonValueEstimator, None)

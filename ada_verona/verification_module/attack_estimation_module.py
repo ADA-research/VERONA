@@ -1,10 +1,9 @@
 import time
 
 import torch
-from autoverify.verifier.verification_result import CompleteVerificationData
 
 from ada_verona.database.verification_context import VerificationContext
-from ada_verona.database.verification_result import VerificationResult
+from ada_verona.database.verification_result import CompleteVerificationData, VerificationResult
 from ada_verona.verification_module.attacks.attack import Attack
 from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,

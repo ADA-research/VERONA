@@ -44,6 +44,7 @@ class AutoAttackWrapper(Attack):
         Returns:
             Tensor: The perturbed data.
         """
+        
         adversary = AutoAttack(
             model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
         )
