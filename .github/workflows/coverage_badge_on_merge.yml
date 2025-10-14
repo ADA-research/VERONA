@@ -41,14 +41,13 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona python -m pytest --cov=verona --cov-report=term --cov-report=xml --verbose
-            
+                conda run -n verona python -m pytest --cov tests/ --verbose --cov-report=xml
+
             - name: Extract coverage percentage
               id: coverage
               run: |
-                # Extract total coverage from the XML report
+      
                 COVERAGE=$(xmllint --xpath "string(//coverage/@line-rate)" coverage.xml)
-                # Convert from 0.87 to 87
                 COVERAGE=$(echo "$COVERAGE * 100" | bc | awk '{printf "%d\n",$1}')
                 echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
             
