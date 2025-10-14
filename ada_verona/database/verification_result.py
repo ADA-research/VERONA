@@ -27,7 +27,7 @@ class CompleteVerificationData:
 
     Attributes:
         result: Outcome (e.g. SAT, UNSAT...)
-        took: Walltime spent
+        took: Wallclock time used
         counter_example: Example that violates property (if SAT)
         err: stderr
         stdout: stdout
