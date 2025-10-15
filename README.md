@@ -1,4 +1,4 @@
-![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ADA-research/VERONA/main/coverage-badge.json)
+[![codecov](https://app.codecov.io/gh/ADA-research/VERONA/graph/badge.svg)](https://app.codecov.io/gh/ADA-research/VERONA)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 
