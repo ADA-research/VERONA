@@ -3,8 +3,6 @@ name: Pytest with Coverage
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-      branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -58,10 +56,10 @@ jobs:
                 COVERAGE=$(echo $COVERAGE_LINE | awk '{print $NF}' | tr -d '%')
                 echo "Coverage is $COVERAGE%"
                 echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+                
             - name: Create coverage badge JSON
               run: |
-                echo "{ \"schemaVersion\": 1, \"label\": \"coverage\", \"message\": \"${{ steps.coverage.outputs.coverage }}%\", \"color\": \"green\" }" > coverage-badge.json
-           
+                echo "{ \"schemaVersion\": 1, \"label\": \"coverage\", \"message\": \"${{ steps.coverage.outputs.coverage }}%\", \"color\": \"green\" }" > coverage-badge.json           
 
             - name: Make the json coverage badge and add to the repo
               if: github.ref == 'refs/heads/main'
