@@ -51,12 +51,11 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona coverage run -m pytest tests/  --cov --junitxml=junit.xml -o junit_family=legacy
+                conda run -n verona coverage run -m pytest tests/  --cov --cov-report=xml
 
             - name: Upload coverage to codecov
               uses: codecov/codecov-action@main
               with:
-                files: .junit.xml
                 fail_ci_if_error: true
                 token: ${{ secrets.CODECOV_TOKEN }}
                 verbose: true
