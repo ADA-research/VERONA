@@ -49,25 +49,14 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona coverage run -m pytest tests/ --verbose 
+                conda run -n verona coverage run -m pytest tests/ --verbose --cov-report=xml
 
-            - name: Extract coverage percentage
-              id: coverage
-              run: |
-                COVERAGE_LINE=$(conda run -n verona coverage report | grep TOTAL)
-                COVERAGE=$(echo $COVERAGE_LINE | awk '{print $NF}' | tr -d '%')
-                echo "Coverage is $COVERAGE%"
-                echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
-            - name: Create coverage badge JSON
-              run: |
-                echo "{ \"schemaVersion\": 1, \"label\": \"coverage\", \"message\": \"${{ steps.coverage.outputs.coverage }}%\", \"color\": \"green\" }" > coverage-badge.json
-           
-
-            - name: Make the json coverage badge and add to the repo
-              if: github.ref == 'refs/heads/main'
-              run: |
-                git config user.name "github-actions[bot]"
-                git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                git add coverage-badge.json
-                git commit -m "Update coverage badge" || echo "No changes to commit"
-                git push
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                token: ${{ secrets.CODECOV_TOKEN }}
+                files: coverage.xml
+                flags: full
+                name: full-tests-${{ matrix.python-version }}
+                verbose: true
+                fail_ci_if_error: true
