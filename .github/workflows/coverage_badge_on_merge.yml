@@ -2,7 +2,9 @@ name: Pytest with Coverage
 
 on:
   push:
-    branches: [ "main"]
+    branches: ["main", "coverage-repair"]
+    pull_request:
+      branches: ["main", "coverage-repair"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -10,6 +12,8 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
+        permissions:
+          id-token: write
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -47,18 +51,11 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona coverage run -m pytest tests/ --verbose --cov-report=xml
+                conda run -n verona coverage run -m pytest tests/  --cov --cov-report=xml
 
-            - name: Save coverage report
-              run: | 
-                conda run -n verona coverage html
-
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v5
+            - name: Upload coverage to codecov
+              uses: codecov/codecov-action@main
               with:
-                token: ${{ secrets.CODECOV_TOKEN }}
-                files: htmlcov/index.html
-                flags: full
-                name: full-tests-${{ matrix.python-version }}
-                verbose: true
                 fail_ci_if_error: true
+                token: ${{ secrets.CODECOV_TOKEN }}
+                verbose: true
