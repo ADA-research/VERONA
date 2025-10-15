@@ -51,7 +51,7 @@ jobs:
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona coverage run -m pytest tests/  --junitxml=junit.xml -o junit_family=legacy
+                conda run -n verona coverage run -m pytest tests/  --cov --junitxml=junit.xml -o junit_family=legacy
 
             - name: Upload coverage to codecov
               uses: codecov/codecov-action@main
