@@ -1,4 +1,4 @@
-[![codecov](https://app.codecov.io/gh/ADA-research/VERONA/graph/badge.svg)](https://app.codecov.io/gh/ADA-research/VERONA)
+[![codecov](https://app.codecov.io/gh/ADA-research/VERONA/graph/coverage.svg?branch=115-add-percentage-of-coverage-instead-of-passing-only)](https://app.codecov.io/gh/ADA-research/VERONA)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 
