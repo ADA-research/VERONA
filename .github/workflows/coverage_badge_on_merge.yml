@@ -2,7 +2,7 @@ name: Pytest with Coverage
 
 on:
   push:
-    branches: [ "main", "115-add-percentage-of-coverage-instead-of-passing-only"]
+    branches: [ "main"]
   pull_request:
       branches: [ "main" ]
 
