@@ -151,17 +151,21 @@ __all__ = [
 
 
 if HAS_AUTOATTACK:
-    from .ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
+    from .ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper  # noqa: F401
     __all__.extend([
         "AutoAttackWrapper"
     ])
     
 if HAS_AUTOVERIFY:
     from .ada_verona.verification_module.auto_verify_module import (
-        AutoVerifyModule,
+        AutoVerifyModule,  # noqa: F401
         parse_counter_example,
         parse_counter_example_label,
     )
+
+    # Add to __all__ only if imported
     __all__.extend([
-        "AutoVerifyModule"
+        "AutoVerifyModule",
+        "parse_counter_example",
+        "parse_counter_example_label",
     ])
