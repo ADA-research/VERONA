@@ -99,7 +99,7 @@ __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
-    "HAS_AUTOVERIFY"
+    "HAS_AUTOVERIFY",
     "analysis",
     "database",
     "dataset_sampler",
