@@ -19,6 +19,7 @@ from .ada_verona import (
     verification_module,
 )
 
+
 with contextlib.suppress(ImportError):
     # Database classes
     from .ada_verona.database.dataset.data_point import DataPoint
@@ -84,12 +85,26 @@ if not HAS_AUTOATTACK:
         stacklevel=2
     )
 
-
+# Check for autoverify availability
+try:
+    import importlib.util
+    HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
+except ImportError:
+    HAS_AUTOVERIFY = False
+    
+if not HAS_AUTOVERIFY:
+    import warnings
+    warnings.warn(
+        "AutoVerify not found. Some complete verification features will be limited. "
+        "To install: pip install autoverify",
+        stacklevel=2
+    )
 
 __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
+    "HAS_AUTOVERIFY"
     "analysis",
     "database",
     "dataset_sampler",
@@ -131,8 +146,6 @@ __all__ = [
     "AttackEstimationModule",
     "PGDAttack",
     "FGSMAttack",
-    "AutoAttackWrapper",
-    "AutoVerifyModule",
     "parse_counter_example",
     "parse_counter_example_label",
 
@@ -140,3 +153,13 @@ __all__ = [
     "One2AnyPropertyGenerator",
     "One2OnePropertyGenerator",
 ]
+
+
+if HAS_AUTOATTACK:
+    __all__.extend([
+        "AutoAttackWrapper"
+    ])
+if HAS_AUTOVERIFY:
+    __all__.extend([
+        "AutoVerifyModule"
+    ])
