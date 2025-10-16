@@ -53,14 +53,8 @@ with contextlib.suppress(ImportError):
     # Verification module classes
     from .ada_verona.verification_module.attack_estimation_module import AttackEstimationModule
     from .ada_verona.verification_module.attacks.attack import Attack
-    from .ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
     from .ada_verona.verification_module.attacks.fgsm_attack import FGSMAttack
     from .ada_verona.verification_module.attacks.pgd_attack import PGDAttack
-    from .ada_verona.verification_module.auto_verify_module import (
-        AutoVerifyModule,
-        parse_counter_example,
-        parse_counter_example_label,
-    )
     from .ada_verona.verification_module.property_generator.one2any_property_generator import (
         One2AnyPropertyGenerator,
     )
@@ -156,10 +150,17 @@ __all__ = [
 
 
 if HAS_AUTOATTACK:
+    from .ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
     __all__.extend([
         "AutoAttackWrapper"
     ])
+    
 if HAS_AUTOVERIFY:
+    from .ada_verona.verification_module.auto_verify_module import (
+        AutoVerifyModule,
+        parse_counter_example,
+        parse_counter_example_label,
+    )
     __all__.extend([
         "AutoVerifyModule"
     ])
