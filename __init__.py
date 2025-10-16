@@ -19,7 +19,6 @@ from .ada_verona import (
     verification_module,
 )
 
-
 with contextlib.suppress(ImportError):
     # Database classes
     from .ada_verona.database.dataset.data_point import DataPoint
@@ -105,6 +104,8 @@ __all__ = [
     "epsilon_value_estimator",
     "util",
     "verification_module",
+    
+    "ReportCreator"
     
     # Core abstract classes
     "DatasetSampler",
