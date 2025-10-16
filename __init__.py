@@ -20,6 +20,8 @@ from .ada_verona import (
 )
 
 with contextlib.suppress(ImportError):
+    from .ada_verona.analysis.report_creator import ReportCreator
+
     # Database classes
     from .ada_verona.database.dataset.data_point import DataPoint
     from .ada_verona.database.dataset.experiment_dataset import ExperimentDataset
@@ -105,7 +107,7 @@ __all__ = [
     "util",
     "verification_module",
     
-    "ReportCreator"
+    "ReportCreator",
     
     # Core abstract classes
     "DatasetSampler",
