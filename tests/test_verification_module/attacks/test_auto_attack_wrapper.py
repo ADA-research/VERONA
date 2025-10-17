@@ -14,7 +14,7 @@ def test_verbose_assignment(dummy_model):
     epsilon = 0.1
     norm = 'Linf'
     version = 'standard'
-    verbose_value = False  
+    verbose_value = False 
 
     adversary = AutoAttack(
         dummy_model,
@@ -25,6 +25,7 @@ def test_verbose_assignment(dummy_model):
     )
 
     adversary.verbose = verbose_value
+
 
     assert hasattr(adversary, 'verbose'), "AutoAttack should have a 'verbose' attribute"
     assert adversary.verbose == verbose_value, "Verbose flag not correctly set"
