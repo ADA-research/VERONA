@@ -1,5 +1,12 @@
+import importlib.util
 import logging
 from pathlib import Path
+
+if importlib.util.find_spec("autoverify") is None:
+    raise ImportError(
+        "AutoVerify not found. This package is required for this script. "
+        "To install: pip install auto-verify"
+    )
 
 from autoverify.verifier import AbCrown
 
