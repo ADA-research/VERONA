@@ -52,16 +52,16 @@ cd VERONA
 uv pip install -e .
 ```
 
-To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts:
+To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts in the folder [`examples`](./examples/) :
 - **Main Guide:**
-  - The primary resource for learning how to use VERONA is the Jupyter notebook found in the [`notebooks`](./notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
+  - The primary resource for learning how to use VERONA is the Jupyter notebook found in the [`notebooks`](./examples/notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
 
 - **Quick-Start Example Scripts:**
-  - The [`scripts`](./scripts/) folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
-    - Running VERONA with a custom dataset and ab-crown ([`create_robustness_distribution_from_test_dataset.py`](./scripts/create_robustness_distribution_from_test_dataset.py)).
-    - Loading a PyTorch dataset and running VERONA with one-to-any or one-to-one verification ([`create_robustness_dist_on_pytorch_dataset.py`](./scripts/create_robustness_dist_on_pytorch_dataset.py)).
-    - Distributing jobs across multiple nodes using SLURM for large-scale experiments ([`multiple_jobs`](./scripts/multiple_jobs/) folder), including distributing tasks over CPU and GPU for different verifiers in the same experiment.
-    - Using auto-verify integration ([`create_robustness_dist_with_auto_verify.py`](./scripts/create_robustness_dist_with_auto_verify.py)).
+  - The [`scripts`](./examples/scripts/) folder contains a variety of example scripts designed to help you get started quickly with ada-verona. These scripts cover common use cases and can be run directly (from within the `scripts` folder) to see how to perform tasks such as:
+    - Running VERONA with a custom dataset and ab-crown ([`create_robustness_distribution_from_test_dataset.py`](./examples/scripts/create_robustness_distribution_from_test_dataset.py)).
+    - Loading a PyTorch dataset and running VERONA with one-to-any or one-to-one verification ([`create_robustness_dist_on_pytorch_dataset.py`](./examples/scripts/create_robustness_dist_on_pytorch_dataset.py)).
+    - Distributing jobs across multiple nodes using SLURM for large-scale experiments ([`multiple_jobs`](./examples/scripts/multiple_jobs/) folder), including distributing tasks over CPU and GPU for different verifiers in the same experiment.
+    - Using auto-verify integration ([`create_robustness_dist_with_auto_verify.py`](./examples/scripts/create_robustness_dist_with_auto_verify.py)).
 
 The notebook is your main entry point for learning and understanding the package, while the scripts serve as practical templates and quick-start resources for your own experiments.
 
@@ -86,42 +86,6 @@ year = {2025}
 ```
 - [Paper link](https://jair.org/index.php/jair/article/view/18403)
 
-A short introduction to the concept of robustness distributions can be found in the following paper:
-```bibtex
-@article{BosEtAl23,
-    author = "Bosman, Annelot W. and Hoos, Holger H. and van Rijn, Jan N.",
-    title = "A Preliminary Study of Critical Robustness Distributions in Neural Network Verification",
-    year = "2023",
-    journal = "6th Workshop on Formal Methods for ML-Enabled Autonomous Systems (FoMLAS) co-located with the 35th International Conference on Computer Aided Verification (CAV 2023)"
-}
-```
-  
-- [Paper link](https://ada.liacs.leidenuniv.nl/papers/BosEtAl23.pdf)
-
-### Upper bounds to robustness distributions
-
-The concept of using adversarial attacks to compute upper bounds to robustness distributions is introduced in the following paper:
-```bibtex
-@inproceedings{bergerEmpiricalAnalysisUpper,
-  title = {Empirical {{Analysis}} of {{Upper Bounds}} of {{Robustness Distributions}} Using {{Adversarial Attacks}}},
-  booktitle = {{{THE 19TH LEARNING AND IN}}℡{{LIGENT OPTIMIZATION CONFERENCE}}},
-  author = {Berger, Aaron and Eberhardt, Nils and Bosman, Annelot Willemijn and Duwe, Henning and family=Rijn, given=Jan N., prefix=van, useprefix=true and Hoos, Holger}
-}
-```
-- [Paper link](https://openreview.net/forum?id=jsfqoRrsjy)
-
-### Per-class robustness distributions
-
-The concept of per-class robustness distributions is introduced in the following paper:
-```bibtex
-@inproceedings{BosEtAl24,
-    author = {Bosman, Annelot W. and Münz, Anna L. and Hoos, Holger H. and van Rijn, Jan N.},
-    title = {{A Preliminary Study to Examining Per-Class Performance Bias via Robustness Distributions}},
-    year = {2024},
-    booktitle = {The 7th International Symposium on AI Verification (SAIV) co-located with the 36th International Conference on Computer Aided Verification (CAV 2024)}
-}
-```
-- [Paper link](https://ada.liacs.leidenuniv.nl/papers/BosEtAl24.pdf)
 
 ## Acknowledgements
 
@@ -136,26 +100,3 @@ This package makes use of the following tools and libraries:
 
 We thank the authors and maintainers of these projects, as well as the authors and maintainers of the verifiers for their contributions to the robustness research community.
 
-## Contributing
-
-We welcome contributions to the ada-verona package! If you find a bug, have a feature request, or want to contribute code, please follow these steps:
-
-1. **Create an Issue:** Before starting work on a new feature or bug, please create an issue in the [GitHub repository](https://github.com/ADA-research/VERONA/issues) to discuss your plans. This helps us coordinate contributions and avoid duplicate work.
-
-2. **Fork the Repository:** Create a personal copy of the repository on GitHub.
-
-3. **Create a Branch:** Create a new branch for your feature or bug fix.
-
-4. **Make Changes:** Implement your changes in the codebase.
-
-5. **Test Your Changes:** Ensure that your changes do not break existing functionality and that new features work as intended.
-
-6. **Commit Your Changes:** Write clear and concise commit messages describing your changes.
-
-7. **Push to Your Fork:** Push your changes to your forked repository.
-
-8. **Create a Pull Request:** Open a pull request against the main repository, describing your changes and why they are needed.
-
-9. **Review Process:** Your pull request will be reviewed by at least one of the maintainers. They may request changes or provide feedback.
-
-Thank you for contributing! 
