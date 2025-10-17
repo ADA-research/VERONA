@@ -1,7 +1,8 @@
 [run]
-source = ada_verona
+source = .
 omit =
     */_remote_module_non_scriptable.py
+    __init__.py
 
 [report]
 skip_empty = true
