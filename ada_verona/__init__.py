@@ -109,17 +109,19 @@ __all__ = [
 
 
 if HAS_AUTOATTACK:
-    from .verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
-    __all__.extend([
-        "AutoAttackWrapper"
-    ])
-    
-if HAS_AUTOVERIFY:
-    from .verification_module.auto_verify_module import (
-        AutoVerifyModule,
-        parse_counter_example,
-        parse_counter_example_label,
+    auto_attack_module = importlib.import_module(
+        ".verification_module.attacks.auto_attack_wrapper", __package__
     )
+    AutoAttackWrapper = auto_attack_module.AutoAttackWrapper
+    __all__.append("AutoAttackWrapper")
+
+if HAS_AUTOVERIFY:
+    autoverify_module = importlib.import_module(
+        ".verification_module.auto_verify_module", __package__
+    )
+    AutoVerifyModule = autoverify_module.AutoVerifyModule
+    parse_counter_example = autoverify_module.parse_counter_example
+    parse_counter_example_label = autoverify_module.parse_counter_example_label
     __all__.extend([
         "AutoVerifyModule",
         "parse_counter_example",
