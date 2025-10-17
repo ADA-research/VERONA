@@ -41,8 +41,6 @@ from .verification_module.property_generator.one2one_property_generator import (
 from .verification_module.property_generator.property_generator import PropertyGenerator
 from .verification_module.verification_module import VerificationModule
 
-
-
 try:
     import importlib.util
     HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
