@@ -1,3 +1,4 @@
+import importlib.util
 import logging
 from pathlib import Path
 
@@ -5,6 +6,13 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 from autoverify.verifier import AbCrown, Nnenum
+
+if importlib.util.find_spec("auto-verify") is None:
+    raise ImportError(
+        "AutoVerify not found. This package is required for this script. "
+        "To install: pip install auto-verify"
+    )
+
 
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
