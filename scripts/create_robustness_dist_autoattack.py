@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import importlib.util
 
 import torch
 import torchvision
@@ -54,6 +55,13 @@ def create_distribution(
 
 
 def main():
+    
+    if importlib.util.find_spec("pyautoattack") is None:
+        raise ImportError(
+            "PyAutoAttack not found. This package is required for this script. "
+            "To install: pip install pyautoattack"
+        )
+    
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
     experiment_repository_path = Path("../example_experiment")
     network_folder = Path("../example_experiment/data/networks")
