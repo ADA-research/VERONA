@@ -10,7 +10,7 @@ def test_autoattack_verbose_assignment(attack_wrapper, model,data,target,verbose
     assert attack_wrapper.version == 'standard'
 
     epsilon = 0.123
-    out = attack_wrapper.execute(model, data.squeeze(0), target, epsilon, verbose_value) 
+    out = attack_wrapper.execute(model, data.squeeze(0), target, epsilon) 
 
     attack_wrapper.verbose = verbose_value
 

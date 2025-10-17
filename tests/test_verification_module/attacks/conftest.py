@@ -29,7 +29,7 @@ def target():
 
 @pytest.fixture
 def attack_wrapper():
-    return AutoAttackWrapper(device="cpu", norm="Linf", version="standard", verbose=False)
+    return AutoAttackWrapper(device="cpu", norm="Linf", version="standard")
 
 @pytest.fixture
 def pgd_attack():
