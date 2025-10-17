@@ -1,5 +1,5 @@
 [run]
-source = ada_verona
+source = .
 omit =
     */_remote_module_non_scriptable.py
 
