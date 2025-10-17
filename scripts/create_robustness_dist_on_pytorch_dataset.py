@@ -6,7 +6,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
-if importlib.util.find_spec("auto-verify") is None:
+if importlib.util.find_spec("autoverify") is None:
     raise ImportError(
         "AutoVerify not found. This package is required for this script. "
         "To install: pip install auto-verify"
