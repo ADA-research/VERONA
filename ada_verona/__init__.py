@@ -1,3 +1,6 @@
+import importlib.util
+import warnings
+
 # Database classes
 from .database.dataset.data_point import DataPoint
 from .database.dataset.experiment_dataset import ExperimentDataset
@@ -41,33 +44,22 @@ from .verification_module.property_generator.one2one_property_generator import (
 from .verification_module.property_generator.property_generator import PropertyGenerator
 from .verification_module.verification_module import VerificationModule
 
-try:
-    import importlib.util
-    HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
-except ImportError:
-    HAS_AUTOATTACK = False
-    
+# Check for pyautoattack availability
+HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
 if not HAS_AUTOATTACK:
-    import warnings
     warnings.warn(
         "PyAutoAttack not found. Some adversarial attack features will be limited. "
         "To install: pip install pyautoattack",
-        stacklevel=2
+        stacklevel=2,
     )
 
 # Check for autoverify availability
-try:
-    import importlib.util
-    HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
-except ImportError:
-    HAS_AUTOVERIFY = False
-    
+HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
 if not HAS_AUTOVERIFY:
-    import warnings
     warnings.warn(
         "AutoVerify not found. Some complete verification features will be limited. "
         "To install: pip install autoverify",
-        stacklevel=2
+        stacklevel=2,
     )
     
     
@@ -128,8 +120,6 @@ if HAS_AUTOVERIFY:
         parse_counter_example,
         parse_counter_example_label,
     )
-
-    # Add to __all__ only if imported
     __all__.extend([
         "AutoVerifyModule",
         "parse_counter_example",
