@@ -109,14 +109,14 @@ __all__ = [
 
 
 if HAS_AUTOATTACK:
-    from .verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper  # noqa: F401
+    from .verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
     __all__.extend([
         "AutoAttackWrapper"
     ])
     
 if HAS_AUTOVERIFY:
     from .verification_module.auto_verify_module import (
-        AutoVerifyModule,  # noqa: F401
+        AutoVerifyModule,
         parse_counter_example,
         parse_counter_example_label,
     )
