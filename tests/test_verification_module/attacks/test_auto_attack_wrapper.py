@@ -2,8 +2,25 @@ import pytest
 import torch
 
 
+class DummyAutoAttack:
+    def __init__(self, model, *, attacks=None, device='cpu', eps=0.3, norm='Linf', seed=None, version='standard'):
+        self.model = model
+        self.device = device
+        self.epsilon = eps
+        self.norm = norm
+        self.version = version
+        self.verbose = True  # default
+    def run_standard_evaluation(self, data, target):
+        # Just return a dummy tensor or a tuple
+        return data.clone()  # or (data.clone(), torch.zeros(data.shape[0], dtype=torch.long))
+
+
 @pytest.mark.parametrize("verbose_value", [True, False])
-def test_autoattack_verbose_assignment(attack_wrapper, model,data,target,verbose_value):
+def test_autoattack_verbose_assignment(monkeypatch,attack_wrapper, model,data,target,verbose_value):
+    monkeypatch.setattr(
+        "ada_verona.verification_module.attacks.auto_attack_wrapper.AutoAttack",
+        DummyAutoAttack
+    )
 
     assert attack_wrapper.device == 'cpu'
     assert attack_wrapper.norm == 'Linf'
