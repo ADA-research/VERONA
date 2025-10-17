@@ -30,14 +30,8 @@ from .epsilon_value_estimator.iterative_epsilon_value_estimator import (
 # Verification module classes
 from .verification_module.attack_estimation_module import AttackEstimationModule
 from .verification_module.attacks.attack import Attack
-from .verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
 from .verification_module.attacks.fgsm_attack import FGSMAttack
 from .verification_module.attacks.pgd_attack import PGDAttack
-from .verification_module.auto_verify_module import (
-    AutoVerifyModule,
-    parse_counter_example,
-    parse_counter_example_label,
-)
 from .verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
@@ -47,6 +41,38 @@ from .verification_module.property_generator.one2one_property_generator import (
 from .verification_module.property_generator.property_generator import PropertyGenerator
 from .verification_module.verification_module import VerificationModule
 
+
+
+try:
+    import importlib.util
+    HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
+except ImportError:
+    HAS_AUTOATTACK = False
+    
+if not HAS_AUTOATTACK:
+    import warnings
+    warnings.warn(
+        "PyAutoAttack not found. Some adversarial attack features will be limited. "
+        "To install: pip install pyautoattack",
+        stacklevel=2
+    )
+
+# Check for autoverify availability
+try:
+    import importlib.util
+    HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
+except ImportError:
+    HAS_AUTOVERIFY = False
+    
+if not HAS_AUTOVERIFY:
+    import warnings
+    warnings.warn(
+        "AutoVerify not found. Some complete verification features will be limited. "
+        "To install: pip install autoverify",
+        stacklevel=2
+    )
+    
+    
 __all__ = [
     # Core abstract classes
     "DatasetSampler",
@@ -82,8 +108,6 @@ __all__ = [
     "AttackEstimationModule",
     "PGDAttack",
     "FGSMAttack",
-    "AutoAttackWrapper",
-    "AutoVerifyModule",
     "parse_counter_example",
     "parse_counter_example_label",
 
@@ -91,3 +115,25 @@ __all__ = [
     "One2AnyPropertyGenerator",
     "One2OnePropertyGenerator",
 ]
+
+
+
+if HAS_AUTOATTACK:
+    from .verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper  # noqa: F401
+    __all__.extend([
+        "AutoAttackWrapper"
+    ])
+    
+if HAS_AUTOVERIFY:
+    from .verification_module.auto_verify_module import (
+        AutoVerifyModule,  # noqa: F401
+        parse_counter_example,
+        parse_counter_example_label,
+    )
+
+    # Add to __all__ only if imported
+    __all__.extend([
+        "AutoVerifyModule",
+        "parse_counter_example",
+        "parse_counter_example_label",
+    ])
