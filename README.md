@@ -16,7 +16,7 @@ This package was created and is maintained by members the [ADA Research Group](h
 
 - **Annelot Bosman** (LIACS, Leiden University)
 - **Aaron Berger** (TU Delft)
-- **Hendrik S. Baacke** (AIM, RWTH Aachen University)
+- **Hendrik Baacke** (AIM, RWTH Aachen University)
 - **Holger H. Hoos** (AIM, RWTH Aachen University)
 - **Jan van Rijn** (LIACS, Leiden University)
 
@@ -51,7 +51,7 @@ git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
 uv pip install -e .
 ```
-
+### Guides
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts in the folder [`examples`](./examples/) :
 - **Main Guide:**
   - The primary resource for learning how to use VERONA is the Jupyter notebook found in the [`notebooks`](./examples/notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
