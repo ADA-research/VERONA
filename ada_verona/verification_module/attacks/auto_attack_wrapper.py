@@ -46,9 +46,8 @@ class AutoAttackWrapper(Attack):
         """
         
         adversary = AutoAttack(
-            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose =self.verbose
         )
-        adversary.verbose = self.verbose
         data = data.unsqueeze(0)
 
         # auto attack requires NCHW input format

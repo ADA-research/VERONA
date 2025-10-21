@@ -3,13 +3,13 @@ import torch
 
 
 class DummyAutoAttack:
-    def __init__(self, model, *, attacks=None, device='cpu', eps=0.3, norm='Linf', seed=None, version='standard'):
+    def __init__(self, model, *, attacks=None, device='cpu', eps=0.3, norm='Linf', seed=None, version='standard', verbose=False):
         self.model = model
         self.device = device
         self.epsilon = eps
         self.norm = norm
         self.version = version
-        self.verbose = True  
+        self.verbose = verbose 
     def run_standard_evaluation(self, data, target):
         return data.clone()  
 
