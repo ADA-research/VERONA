@@ -3,7 +3,8 @@ import torch
 
 
 class DummyAutoAttack:
-    def __init__(self, model, *, attacks=None, device='cpu', eps=0.3, norm='Linf', seed=None, version='standard', verbose=False):
+    def __init__(self, model, *, attacks=None, device='cpu', eps=0.3, norm='Linf',
+                 seed=None, version='standard', verbose=False):
         self.model = model
         self.device = device
         self.epsilon = eps
