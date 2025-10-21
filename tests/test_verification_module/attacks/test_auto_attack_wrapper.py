@@ -9,11 +9,9 @@ class DummyAutoAttack:
         self.epsilon = eps
         self.norm = norm
         self.version = version
-        self.verbose = True  # default
+        self.verbose = True  
     def run_standard_evaluation(self, data, target):
-        # Just return a dummy tensor or a tuple
-        return data.clone()  # or (data.clone(), torch.zeros(data.shape[0], dtype=torch.long))
-
+        return data.clone()  
 
 @pytest.mark.parametrize("verbose_value", [True, False])
 def test_autoattack_verbose_assignment(monkeypatch,attack_wrapper, model,data,target,verbose_value):
