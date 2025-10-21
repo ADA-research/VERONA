@@ -232,9 +232,6 @@ Issues = "https://github.com/ADA-research/VERONA/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["ada_verona"]
-include = [
-    "ada_verona/**/*"
-]
 exclude = [
     "*.pyc",
     "__pycache__/**/*",
@@ -244,9 +241,6 @@ exclude = [
     ".DS_Store",
     "Thumbs.db"
 ]
-
-[tool.hatch.version]
-path = "__init__.py"
 
 [tool.hatch.metadata]
 allow-direct-references = true
