@@ -67,7 +67,7 @@ The notebook is your main entry point for learning and understanding the package
 
 ## Datasets
 
-The package was tested on the MNIST and the CIFAR10 dataset. Example scripts for executing the package on MNIST or a custom dataset can be found in the [`scripts`](./scripts/) folder.
+The package was tested on the MNIST, GTRSB and the CIFAR-10 datasets. Example scripts for executing the package on MNIST or a custom dataset can be found in the [`scripts`](./examples/scripts/) folder.
 
 ## Related Papers and Citation
 
