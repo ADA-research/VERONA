@@ -231,9 +231,8 @@ Issues = "https://github.com/ADA-research/VERONA/issues"
 
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["ada_verona"]
 include = [
-    "*.py",
     "ada_verona/**/*"
 ]
 exclude = [
