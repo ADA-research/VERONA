@@ -1,4 +1,4 @@
-from pyautoattack import AutoAttack
+from autoattack import AutoAttack
 from torch import Tensor
 from torch.nn.modules import Module
 
@@ -46,7 +46,7 @@ class AutoAttackWrapper(Attack):
         """
         
         adversary = AutoAttack(
-            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose =self.verbose
         )
         data = data.unsqueeze(0)
 
