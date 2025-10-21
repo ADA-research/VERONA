@@ -51,7 +51,7 @@ git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
 uv pip install -e .
 ```
-### Guides
+## Guides
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts in the folder [`examples`](./examples/) :
 - **Main Guide:**
   - The primary resource for learning how to use VERONA is the Jupyter notebook found in the [`notebooks`](./examples/notebooks/) folder. This tutorial notebook offers an overview of the package components, step-by-step instructions, and practical demonstrations of typical workflows. We highly recommend starting here to understand the core concepts and capabilities of the package.
