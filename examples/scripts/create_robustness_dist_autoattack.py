@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 if importlib.util.find_spec("pyautoattack") is None:
     raise ImportError(
         "PyAutoAttack not found. This package is required for this script. "
-        "To install: pip install pyautoattack"
+        "To install: pip install git+https://github.com/fra31/auto-attack"
     )
 
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset

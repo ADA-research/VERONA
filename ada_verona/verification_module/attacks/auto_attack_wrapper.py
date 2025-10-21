@@ -1,4 +1,4 @@
-from pyautoattack import AutoAttack
+from autoattack import AutoAttack
 from torch import Tensor
 from torch.nn.modules import Module
 
