@@ -1,3 +1,13 @@
+"""
+ADA-VERONA: Neural Network Robustness Analysis Framework
+
+A framework for analyzing neural network robustness
+through verification and adversarial testing.
+"""
+
+__version__ = "1.0.0"
+__author__ = "ADA Research Group"
+
 import importlib.util
 import warnings
 
@@ -64,6 +74,11 @@ if not HAS_AUTOVERIFY:
     
     
 __all__ = [
+    "__version__",
+    "__author__",
+    "HAS_AUTOATTACK",
+    "HAS_AUTOVERIFY",
+    
     # Core abstract classes
     "DatasetSampler",
     "EpsilonValueEstimator",
@@ -98,8 +113,6 @@ __all__ = [
     "AttackEstimationModule",
     "PGDAttack",
     "FGSMAttack",
-    "parse_counter_example",
-    "parse_counter_example_label",
 
     # Property generator classes
     "One2AnyPropertyGenerator",
@@ -113,7 +126,7 @@ if HAS_AUTOATTACK:
         ".verification_module.attacks.auto_attack_wrapper", __package__
     )
     AutoAttackWrapper = auto_attack_module.AutoAttackWrapper
-    __all__.append("AutoAttackWrapper")
+    __all__.extend(["AutoAttackWrapper"])
 
 if HAS_AUTOVERIFY:
     autoverify_module = importlib.import_module(
