@@ -16,7 +16,7 @@ authors = [
 author = "Annelot Bosmann, Aaron Berger, Hendrik Baacke, Jan van Rijn, Holger H. Hoos"
 author_email = "a.w.bosman@liacs.leidenuniv.nl, aaron.berger@rwth-aachen.de, hendrik.baacke@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl, hh@aim.rwth-aachen.de"
 readme = "README.md"
-requires-python = ">=3.10,<3.12" 
+requires-python = ">=3.10,<3.11" 
 license = {file = "LICENSE"}
 keywords = ["neural networks", "robustness", "verification", "adversarial", "adversarial robustness", "adversarial attacks", "AI safety"]
 classifiers = [
