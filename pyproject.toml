@@ -29,7 +29,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
-# Core dependencies
 dependencies = [
     "click>=8.1.7",
     "cloudpickle>=3.0.0",
@@ -78,6 +77,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+
+cpu = [
+    "torch==2.6.0+cpu",
+    "torchaudio", 
+    "torchvision==0.21.0+cpu"
+]
+
 gpu = [
     "torch>=2.6.0",
     "torchaudio", 
@@ -97,48 +103,8 @@ gpu = [
     "triton>=3.2.0,<4.0.0"
 ]
 
-cpu = [
-    "torch==2.6.0+cpu",
-    "torchaudio", 
-    "torchvision==0.21.0+cpu"
-
-]
-
-# Development dependencies with full package + tools
+[dependency-groups]
 dev = [
-    "torch==2.6.0+cpu",
-    "torchaudio", 
-    "torchvision==0.21.0+cpu",
-
-    # Devel tools
-    "pytest>=8.2.2",
-    "pytest-mock>=3.14.0",
-    "ruff>=0.3.4",
-    "black>=22.0.0",
-    "mypy>=0.991",
-    "build>=0.10.0",
-    "twine>=4.0.0"
-]
-
-# Devel dependencies with GPU support
-dev-gpu = [
-    "torch>=2.6.0",
-    "torchaudio", 
-    "torchvision>=0.18.1",
-    "nvidia-cublas-cu12>=12.1.0,<13.0.0",
-    "nvidia-cuda-cupti-cu12>=12.1.0,<13.0.0",
-    "nvidia-cuda-nvrtc-cu12>=12.1.0,<13.0.0",
-    "nvidia-cuda-runtime-cu12>=12.1.0,<13.0.0",
-    "nvidia-cudnn-cu12>=9.1.0,<10.0.0",
-    "nvidia-cufft-cu12>=11.0.0,<12.0.0",
-    "nvidia-curand-cu12>=10.3.0,<11.0.0",
-    "nvidia-cusolver-cu12>=11.4.0,<12.0.0",
-    "nvidia-cusparse-cu12>=12.1.0,<13.0.0",
-    "nvidia-nccl-cu12>=2.20.0,<3.0.0",
-    "nvidia-nvjitlink-cu12>=12.4.0,<13.0.0",
-    "nvidia-nvtx-cu12>=12.1.0,<13.0.0",
-    "triton>=3.2.0,<4.0.0",
-    
     "pytest>=8.2.2",
     "pytest-mock>=3.14.0",
     "ruff>=0.3.4",
@@ -195,7 +161,6 @@ select = [
     "I",
 ]
 
-# UV-specific configuration
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "cpu" },
@@ -213,4 +178,6 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.uv]
-conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
+conflicts = [
+    [{extra = "cpu"}, {extra = "gpu"}]
+]
