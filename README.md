@@ -37,13 +37,13 @@ conda activate verona_env
 ```
 ### Installing the package
 
-Inside the conda environment, install the ada-verona package preferably using uv (fast Python package installer and resolver). Alternatively, you can install the package using pip only. 
+Inside the conda environment, install the ada-verona package preferably using uv (fast Python package installer and resolver).
 
 
 ```bash
 uv pip install ada-verona[cpu]
 ```
-
+Alternatively, you can install the package using pip only. 
 ```bash
 pip install ada-verona[cpu] --extra-index-url https://download.pytorch.org/whl/cpu #the extra index is required
 ```
