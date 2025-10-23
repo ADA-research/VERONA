@@ -9,13 +9,16 @@ This roadmap outlines the planned development and priorities for VERONA.
 ## 2. Near-Term Goals (Sept 2025 – Jan 2026)  
 - **Roadmap meeting** – Finalise this draft in an open meeting with all council members.  
 - **Certified defense with randomized smoothing** – For transformer-based image classifiers.  
-- **Vehicle integration for local robustness.**  
+- **Vehicle integration for local robustness.**
+- use uv lockfiles in our CI/CD pipelines to have consistent environments across developer's systems
 
 ## 3. Mid-Term Goals (2026)  
 - **Vehicle integration for complex properties** – Extend to properties with tree structures requiring GPU communication in parallel execution. Add an estimator for this.  
 - **Reduce dependency on AutoVerify.**  
 - **Support for tree-based models** – Add support for decision trees and random forests (based on Marie’s bachelor project + student work).  
-- **Docker support** – Provide Docker images for reproducibility and paper-specific setups.  
+- **Docker support** – Provide Docker images for reproducibility and paper-specific setups.
+- improve how users can specify data transforms (reduce boilerplate code to be written by the user, e.g. torch.transform pipeline); this is well-aligned with the idea of VERONA
+   
 
 ## 4. Long-Term Goals  
 - **Maintain AutoVerify / Create lean version.**  
