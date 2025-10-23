@@ -73,21 +73,15 @@ dependencies = [
     "tornado>=6.4",
     "tqdm>=4.66.2",
     "typing_extensions",
-    "urllib3>=2.2.1"
+    "urllib3>=2.2.1",
+    "torch>=2.6.0",
+    "torchaudio", 
+    "torchvision>=0.18.1"
 ]
 
 [project.optional-dependencies]
 
-cpu = [
-    "torch==2.6.0+cpu",
-    "torchaudio", 
-    "torchvision==0.21.0+cpu"
-]
-
 gpu = [
-    "torch>=2.6.0",
-    "torchaudio", 
-    "torchvision>=0.18.1",
     "nvidia-cublas-cu12>=12.1.0,<13.0.0",
     "nvidia-cuda-cupti-cu12>=12.1.0,<13.0.0",
     "nvidia-cuda-nvrtc-cu12>=12.1.0,<13.0.0",
@@ -160,22 +154,3 @@ select = [
     # isort
     "I",
 ]
-
-[tool.uv.sources]
-torch = [
-    { index = "pytorch-cpu", extra = "cpu" },
-]
-torchvision = [
-    { index = "pytorch-cpu", extra = "cpu" },
-]
-torchaudio = [
-    { index = "pytorch-cpu", extra = "cpu" },
-]
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
-
-[tool.uv]
-conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
