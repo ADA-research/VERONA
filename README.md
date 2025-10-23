@@ -41,7 +41,7 @@ Inside the conda environment, install the ada-verona package preferably using uv
 
 
 ```bash
-uv pip install ada-verona[cpu]
+uv pip install ada-verona
 ```
 
 ### GPU-version Installation
