@@ -43,10 +43,6 @@ Inside the conda environment, install the ada-verona package preferably using uv
 ```bash
 uv pip install ada-verona[cpu]
 ```
-Alternatively, you can install the package using pip only: 
-```bash
-pip install ada-verona[cpu] --extra-index-url https://download.pytorch.org/whl/cpu #the extra index is required
-```
 
 ### GPU-version Installation
 
