@@ -37,20 +37,20 @@ conda activate verona_env
 ```
 ### Installing the package
 
-Inside the conda environment, install the ada-verona package preferably using uv (fast Python package installer and resolver). Alternatively, you can install the package using pip only. 
+Inside the conda environment, install the ada-verona package preferably using uv (fast Python package installer and resolver):
 
 
 ```bash
 uv pip install ada-verona[cpu]
 ```
-
+Alternatively, you can install the package using pip only: 
 ```bash
 pip install ada-verona[cpu] --extra-index-url https://download.pytorch.org/whl/cpu #the extra index is required
 ```
 
 ### GPU-version Installation
 
-Note that the default installation is CPU-only, and that we recommend to install the GPU version for full functionality, as e.g. [AB-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN) and [pyautoattack](https://pypi.org/project/pyautoattack/) rely heavily on GPU parallelization for practical performance.
+Note that the default installation is CPU-only, and that we recommend to install the GPU version for full functionality, as e.g. [AB-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN) and [pyautoattack](https://pypi.org/project/pyautoattack/) rely heavily on GPU parallelization for practical performance:
 
 ```bash
 uv pip install ada-verona[gpu]
@@ -63,7 +63,7 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv pip install -e .[dev] #or uv pip install -e .[dev-gpu]
+uv sync --extra cpu --dev #or uv sync --extra gpu --dev  
 ```
 ## Guides
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts in the folder [`examples`](./examples/) :
