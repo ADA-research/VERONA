@@ -49,6 +49,7 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
+uv pip install -r requirements.txt
 uv pip install -e .
 ```
 ## Guides
