@@ -5,11 +5,9 @@ A framework for analyzing neural network robustness
 through verification and adversarial testing.
 """
 
-__version__ = "1.0.0"
-__author__ = "ADA Research Group"
-
 import importlib.util
 import warnings
+from importlib.metadata import version
 
 # Database classes
 from .database.dataset.data_point import DataPoint
@@ -54,6 +52,8 @@ from .verification_module.property_generator.one2one_property_generator import (
 from .verification_module.property_generator.property_generator import PropertyGenerator
 from .verification_module.verification_module import VerificationModule
 
+__version__ = version("ada-verona")
+__author__ = "ADA Research Group"
 # Check for pyautoattack availability
 HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
 if not HAS_AUTOATTACK:
