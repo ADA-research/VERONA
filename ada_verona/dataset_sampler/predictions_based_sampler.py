@@ -32,31 +32,22 @@ class PredictionsBasedSampler(DatasetSampler):
         Returns:
             ExperimentDataset: The sampled dataset.
         """
-        input_shape = network.get_input_shape()
-  
-        sess_opt = rt.SessionOptions()
-        sess_opt.intra_op_num_threads = 1
-        sess = rt.InferenceSession(str(network.path), sess_options=sess_opt)
-        input_name = sess.get_inputs()[0].name
-        label_name = sess.get_outputs()[0].name
-     
+
         selected_indices = []
 
-        for data_point in dataset:
-            try:
-                prediction_onnx = sess.run(
-                    [label_name], {input_name: data_point.data.reshape(input_shape).detach().numpy()}
-                )[0]
-                predicted_label = np.argmax(prediction_onnx)
-            except Exception as e:
-                raise Exception(f"Creating prediction for network {network.path} failed with error: {e}") from e
+        model = network.load_pytorch_model()
 
+        for data_point in dataset:
+            output = model(data_point.data)
+
+            _, predicted_label = output.max(1, keepdim=True)
             if self.sample_correct_predictions:
                 if predicted_label == int(data_point.label):
                     selected_indices.append(data_point.id)
             else:
                 if predicted_label != int(data_point.label):
                     selected_indices.append(data_point.id)
+
 
         return dataset.get_subset(selected_indices)
 
