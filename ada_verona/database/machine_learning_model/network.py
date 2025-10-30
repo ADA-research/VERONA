@@ -84,12 +84,9 @@ class Network(ABC):
             str: The name of the network.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-      
-
-    
 
     @classmethod
-    def from_file(cls, file:dict[Path]):
+    def from_file(cls, file: dict[Path]):
         """Create network from file
         Args: 
             file (dict[Path]): contains the paths to the relevant weights (for ONNX) 
@@ -98,16 +95,6 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-        if file.get('network_type') == "onnx":
-            module = importlib.import_module("ada_verona.database.machine_learning_model.onnx_network")
-            subclass = module.ONNXNetwork  
-            return subclass.from_file(file.get('architecture'))
-        elif file.get('network_type')== "pytorch":
-            module = importlib.import_module(
-                "ada_verona.database.machine_learning_model.pytorch_network") 
-            subclass = module.PyTorchNetwork
-            return subclass.from_file(file.get('architecture'), file.get('weights'))
-        else:
-            raise NotImplementedError(
-                f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
+        raise NotImplementedError(
+            f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
         
