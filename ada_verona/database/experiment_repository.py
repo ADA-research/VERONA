@@ -250,7 +250,7 @@ class ExperimentRepository:
         Returns:
             VerificationContext: The created verification context.
         """
-        tmp_path = self.get_tmp_path() / f"{self.get_file_name(network.path)}" / f"image_{data_point.id}"
+        tmp_path = self.get_tmp_path() / f"{network.name}" / f"image_{data_point.id}"
         return VerificationContext(network, data_point, tmp_path, property_generator)
 
     def get_result_df(self) -> pd.DataFrame:

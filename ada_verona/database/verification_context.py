@@ -50,7 +50,7 @@ class VerificationContext:
             dict: The dictionary representation of the epsilon result.
         """
         return dict(
-            network_path=self.network.path.resolve(),
+            network_path=self.network.name,
             image_id=self.data_point.id,
             original_label=self.data_point.label,
             tmp_path=self.tmp_path.resolve(),
