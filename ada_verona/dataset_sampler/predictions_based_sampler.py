@@ -1,6 +1,3 @@
-import numpy as np
-import onnxruntime as rt
-
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.machine_learning_model.network import Network
 from ada_verona.dataset_sampler.dataset_sampler import DatasetSampler
