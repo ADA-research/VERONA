@@ -53,7 +53,7 @@ uv pip install -e .
 ```
 ### Optional: AutoAttack Installation
 
-To use the AutoAttack adversarial attack wrapper (`AutoAttackWrapper`), you need to install AutoAttack separately from its GitHub repository:
+To use the AutoAttack adversarial attack wrapper ([`AutoAttackWrapper`](./ada_verona/verification_module/attacks/auto_attack_wrapper.py)), you need to install AutoAttack separately from its GitHub repository:
 
 ```bash
 uv pip install git+https://github.com/fra31/auto-attack
