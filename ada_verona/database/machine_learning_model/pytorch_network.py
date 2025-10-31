@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 import torch
 
@@ -40,7 +42,17 @@ class PyTorchNetwork(Network):
             str: The name of the network.
         """
         return self._name
+    
+    @property
+    def path(self) -> Path:
+        """
+        Get the path of the network.
 
+        Returns:
+            Path: The path of the network.
+        """
+        return None
+    
     def get_input_shape(self) -> np.ndarray:
         """
         Get the input shape of the PyTorch model.
@@ -69,7 +81,7 @@ class PyTorchNetwork(Network):
     
 
     def to_dict(self):
-        raise NotImplementedError("class does not support to_dict function currently.")
+        raise NotImplementedError("PytorchNetwork does not support to_dict() function currently.")
     
-    def from_dict(self):
-         raise NotImplementedError("class does not support from_dict function currently.")
+    def from_dict(cls, data: dict):
+         raise NotImplementedError("PytorchNetwork does not support from_dict() function currently.")

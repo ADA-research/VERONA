@@ -112,7 +112,7 @@ def test_get_dict_for_epsilon_result(verification_context, tmp_path):
     network_file = tmp_path / "network.onnx"
     network_file.touch()  # create the file
 
-    verification_context.tmp_path = Path("/tmp/some_tmp_dir")
+    verification_context.tmp_path = tmp_path
     verification_context.tmp_path.mkdir(parents=True, exist_ok=True)
 
     result_dict = verification_context.get_dict_for_epsilon_result()

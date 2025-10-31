@@ -35,7 +35,8 @@ class PredictionsBasedSampler(DatasetSampler):
         model = network.load_pytorch_model()
 
         for data_point in dataset:
-            output = model(data_point.data)
+            data = data_point.data.reshape(network.get_input_shape())
+            output = model(data)
 
             _, predicted_label = output.max(1, keepdim=True)
             if self.sample_correct_predictions:
