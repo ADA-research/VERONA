@@ -36,12 +36,21 @@ experiment/
 
 ### Auto-Verify
 
-VERONA features a plugin architecture through the [`AutoVerifyModule`](./ada_verona/verification_module/auto_verify_module.py) which allows integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's installed in the same environment. This design provides several benefits:
+VERONA features a plugin architecture through the [`AutoVerifyModule`](./ada_verona/verification_module/auto_verify_module.py) which allows integration with [auto-verify](https://github.com/ADA-research/auto-verify) when it's installed in the same environment. 
+AutoVerify handles installation of various verifiers (see next section) as well as configuration and execution of the verifiers. 
+
+This design provides several benefits:
 
 1. **Independence**: VERONA works perfectly without auto-verify, using attack-based verification methods for empirical upper bounds.
 2. **Automatic Detection**: When auto-verify is installed in the same environment, its verifiers become automatically available
 3. **Interface**: The same API works regardless of which verification backend is used
 
+Auto-Verify can be installed in the following way: 
+
+```bash
+uv pip install auto-verify>=0.1.4
+```
+It is important to note that in order to use AutoVerify in VERONA, the pip version for AutoVerify should be >=0.1.4.
 ### Available Verifiers
 
 Currently, auto-verify supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab). We thank the authors and maintainers of these projects for their contributions to the robustness research community.
@@ -83,8 +92,13 @@ Currently VERONA implements the following adversarial attack methods:
 
 - **Fast Gradient Sign Method (FGSM)** [Goodfellow et al., 2015](https://arxiv.org/abs/1412.6572)
 - **Projected Gradient Descent (PGD)** [Madry et al., 2018](https://arxiv.org/abs/1706.06083)
-- **AutoAttack** [Croce and Hein, 2020](https://pypi.org/project/pyautoattack/).
+- **AutoAttack** [Croce and Hein, 2020](https://github.com/fra31/auto-attack).
 
+Note: Similar to AutoVerify, AutoAttack has to be installed seperately from ada-verona inorder to use the AutoAttackModule. 
+
+```bash
+uv pip install git+https://github.com/fra31/auto-attack
+```
 ### Possible Extension: Custom Attacks
 
 Custom attacks can be implemented by using the [`Attack`](./ada_verona/verification_module/attacks/attack.py) interface.
