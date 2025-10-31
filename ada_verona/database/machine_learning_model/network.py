@@ -95,6 +95,5 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-        raise NotImplementedError(
-            f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
         
