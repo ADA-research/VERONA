@@ -50,7 +50,7 @@ Auto-Verify can be installed in the following way:
 ```bash
 uv pip install auto-verify>=0.1.4
 ```
-It is important to note that inorder to use AutoVerify in VERONA, the pip version for AutoVerify should be >=0.1.4.
+It is important to note that in order to use AutoVerify in VERONA, the pip version for AutoVerify should be >=0.1.4.
 ### Available Verifiers
 
 Currently, auto-verify supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab). We thank the authors and maintainers of these projects for their contributions to the robustness research community.
@@ -97,7 +97,7 @@ Currently VERONA implements the following adversarial attack methods:
 Note: Similar to AutoVerify, AutoAttack has to be installed seperately from ada-verona inorder to use the AutoAttackModule. 
 
 ```bash
-pip install git+https://github.com/fra31/auto-attack
+uv pip install git+https://github.com/fra31/auto-attack
 ```
 ### Possible Extension: Custom Attacks
 
