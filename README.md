@@ -46,7 +46,7 @@ uv pip install ada-verona
 
 ### GPU-version Installation
 
-Note that the default installation is CPU-only, and that we recommend to install the GPU version for full functionality, as e.g. [AB-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN) heavily relies on GPU parallelization for practical performance. The package resolver will automatically resolve the correct version of the package for your system, depending on whether you have a GPU available, but you can also explicitly install the GPU version with the following command:
+Note that the default installation is CPU-only, and that we recommend to install the GPU version for full functionality, as, e.g. [AB-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN), heavily relies on GPU parallelization for practical performance. The package resolver will automatically resolve the correct version of the package for your system, depending on whether you have a GPU available, but you can also explicitly install the GPU version with the following command:
 
 ```bash
 uv pip install ada-verona[gpu]
