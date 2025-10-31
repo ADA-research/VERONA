@@ -8,7 +8,7 @@ from ada_verona.verification_module.attacks.attack import Attack
 class AutoAttackWrapper(Attack):
     """
     A wrapper for the AutoAttack adversarial attack.
-    install in pip using: pip install pyautoattack
+    Install using: uv pip install git+https://github.com/fra31/auto-attack
 
     Args:
         Attack (class): The base class for attacks.
