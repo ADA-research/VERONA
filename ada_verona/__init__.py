@@ -54,12 +54,12 @@ from .verification_module.verification_module import VerificationModule
 
 __version__ = version("ada-verona")
 __author__ = "ADA Research Group"
-# Check for pyautoattack availability
-HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
+# Check for autoattack availability
+HAS_AUTOATTACK = importlib.util.find_spec("autoattack") is not None
 if not HAS_AUTOATTACK:
     warnings.warn(
-        "PyAutoAttack not found. Some adversarial attack features will be limited. "
-        "To install: pip install pyautoattack",
+        "AutoAttack not found. Some adversarial attack features will be limited. "
+        "To install: uv pip install git+https://github.com/fra31/auto-attack",
         stacklevel=2,
     )
 
@@ -68,7 +68,7 @@ HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
 if not HAS_AUTOVERIFY:
     warnings.warn(
         "AutoVerify not found. Some complete verification features will be limited. "
-        "To install: pip install autoverify",
+        "To install: uv pip install auto-verify",
         stacklevel=2,
     )
     

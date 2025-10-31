@@ -51,6 +51,26 @@ git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
 uv pip install -e .
 ```
+### Optional: AutoAttack Installation
+
+To use the AutoAttack adversarial attack wrapper (`AutoAttackWrapper`), you need to install AutoAttack separately from its GitHub repository:
+
+```bash
+uv pip install git+https://github.com/fra31/auto-attack
+```
+
+This package provides ensemble-based adversarial attacks for robustness evaluation, as described in the paper by [Croce and Hein (2020)](https://proceedings.mlr.press/v139/croce21a.html).
+
+### Optional: AutoVerify Installation
+
+To use the auto-verify verifiers, you need to install auto-verify separately:
+
+```bash
+uv pip install auto-verify>=0.1.4
+```
+
+This package provides a framework for integrating verifiers. Please refer to the [auto-verify documentation](https://ada-research.github.io/auto-verify/) for details about auto-verify.
+
 ## Guides
 To help you get up and running with ada-verona, we provide a tutorial notebook and a collection of example scripts in the folder [`examples`](./examples/) :
 - **Main Guide:**
@@ -92,7 +112,7 @@ year = {2025}
 This package makes use of the following tools and libraries:
 
 - **AutoAttack** ([GitHub](https://github.com/fra31/auto-attack))
-    - F. Croce and M. Hein, "Mind the box: l_1 -APGD for sparse adversarial attacks on image classifiers," in International Conference on Machine Learning, PMLR, 2021, pp. 2201–2211. [Online]. Available: http://proceedings.mlr.press/v139/croce21a.html
+    - F. Croce and M. Hein, "Mind the box: l_1 -APGD for sparse adversarial attacks on image classifiers," in International Conference on Machine Learning, PMLR, 2021, pp. 2201–2211. [Online]. Available: https://proceedings.mlr.press/v139/croce21a.html
     - F. Croce and M. Hein, "Reliable evaluation of adversarial robustness with an ensemble of diverse parameter-free attacks," in International conference on machine learning, PMLR, 2020, pp. 2206–2216. [Online]. Available: https://proceedings.mlr.press/v119/croce20b.html
 
 - **auto-verify** ([GitHub](https://github.com/ADA-research/auto-verify))
