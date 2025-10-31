@@ -26,7 +26,7 @@ class ONNXNetwork(Network):
         Args:
             path (Path): The path to the network file.
         """
-        self.path = path
+        self._path = path
         self.onnx_model = None
         self.torch_model_wrapper = None
 
@@ -39,6 +39,16 @@ class ONNXNetwork(Network):
             str: The name of the network.
         """
         return self.path.stem
+    
+    @property
+    def path(self) -> Path:
+        """
+        Get the path of the network.
+
+        Returns:
+            Path: The path of the network.
+        """
+        return self._path
 
     def load_onnx_model(self) -> onnx.ModelProto:
         """

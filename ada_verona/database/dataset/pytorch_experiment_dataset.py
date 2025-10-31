@@ -46,7 +46,8 @@ class PytorchExperimentDataset:
 
     def get_subset(self, indices: list[int]) -> Self:
         """
-        Get a subset of the dataset for the specified indices.
+        Get a subset of the underlying pytorch dataset for 
+        the specified indices.
 
         Args:
             indices (list[int]): The list of indices to get the subset for.

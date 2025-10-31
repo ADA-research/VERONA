@@ -50,5 +50,5 @@ def test_sample_network_prediction_failure(dataset, network):
     # Temporarily override get_input_shape to return a shape that will fail reshaping
     network.get_input_shape = lambda: (100, 100)
 
-    with pytest.raises(Exception, match=r"Creating prediction for network .* failed"):
+    with pytest.raises(Exception, match=r"shape .* is invalid .*"):
         sampler.sample(network, dataset)

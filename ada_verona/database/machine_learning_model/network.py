@@ -1,4 +1,3 @@
-import importlib
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -61,17 +60,7 @@ class Network(ABC):
         Returns:
             BaseNetwork: The created network.
         """
-        class_name = data.pop("type", None)
-        module_name = data.pop("module", None)  # Get module info
-        if not class_name or not module_name:
-            raise ValueError("Missing 'class' or 'module' key in dictionary")
-        try:
-            module = importlib.import_module(module_name)  # Dynamically import module
-            subclass = getattr(module, class_name)  # Get class from module
-        except (ModuleNotFoundError, AttributeError) as e:
-            raise ValueError(f"Could not import {class_name} from {module_name}: {e}") from e
-
-        return subclass.from_dict(data)  # Call subclass's `from_dict`
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
 
 
     @property
@@ -84,12 +73,20 @@ class Network(ABC):
             str: The name of the network.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-      
-
     
+    @property
+    @abstractmethod
+    def path(self) -> Path:
+        """
+        Get the path of the network.
+
+        Returns:
+            Path: The path of the network.
+        """
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
 
     @classmethod
-    def from_file(cls, file:dict[Path]):
+    def from_file(cls, file: dict[Path]):
         """Create network from file
         Args: 
             file (dict[Path]): contains the paths to the relevant weights (for ONNX) 
@@ -98,16 +95,5 @@ class Network(ABC):
         Returns: 
             Created network from the correct class OR error. 
         """
-        if file.get('network_type') == "onnx":
-            module = importlib.import_module("ada_verona.database.machine_learning_model.onnx_network")
-            subclass = module.ONNXNetwork  
-            return subclass.from_file(file.get('architecture'))
-        elif file.get('network_type')== "pytorch":
-            module = importlib.import_module(
-                "ada_verona.database.machine_learning_model.pytorch_network") 
-            subclass = module.PyTorchNetwork
-            return subclass.from_file(file.get('architecture'), file.get('weights'))
-        else:
-            raise NotImplementedError(
-                f"Only .onnx and pytorch files are supported at the moment, got: {file.get('network_type')}")
+        raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
         
