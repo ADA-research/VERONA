@@ -4,6 +4,7 @@
 matplotlib>=3.10.0
 numpy>=1.24.3
 onnx>=1.14.0
+onnxruntime>=1.14.1
 onnx2torch>=1.5.14
 pandas>=2.0.1
 PyYAML>=6.0.1
