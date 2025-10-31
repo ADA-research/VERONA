@@ -28,7 +28,7 @@ We recommend to have a look at the [Documentation](https://ada-research.github.i
 
 The python package for VERONA is called `ada-verona`, as our research group is called ADA.
 
-To run ada-verona, we recommend to set up a conda environment. We also recommend using [miniforge](https://github.com/conda-forge/miniforge) as the package manager.
+To run ada-verona, we recommend to set up a conda environment. We also recommend using [miniforge](https://github.com/conda-forge/miniforge) as the package manager and using [uv](https://docs.astral.sh/uv/) for dependency management.
 
 **Create a new conda environment named `verona_env`:**
 ```bash
@@ -37,9 +37,19 @@ conda activate verona_env
 ```
 ### Installing the package
 
-Inside the conda environment, install the ada-verona package preferably using uv (fast Python package installer and resolver). Alternatively, you can install the package using pip only.
+Inside the conda environment, install the ada-verona package:
+
+
 ```bash
 uv pip install ada-verona
+```
+
+### GPU-version Installation
+
+Note that the default installation is CPU-only, and that we recommend to install the GPU version for full functionality, as, e.g. [AB-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN), heavily relies on GPU parallelization for practical performance. The package resolver will automatically resolve the correct version of the package for your system, depending on whether you have a GPU available, but you can also explicitly install the GPU version with the following command:
+
+```bash
+uv pip install ada-verona[gpu]
 ```
 
 ### Local installation for e.g. development purposes
@@ -49,7 +59,8 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv pip install -e .
+uv sync --dev  #or uv sync --extra gpu --dev for GPU-version installation
+
 ```
 ### Optional: AutoAttack Installation
 
