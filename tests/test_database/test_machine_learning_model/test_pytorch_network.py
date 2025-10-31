@@ -45,3 +45,7 @@ def test_from_dict(pytorch_network):
   
     with pytest.raises(NotImplementedError):
         pytorch_network.from_dict(dict())
+
+def test_properties(pytorch_network):
+    assert pytorch_network.path is None
+    assert pytorch_network.name == "test_model"
