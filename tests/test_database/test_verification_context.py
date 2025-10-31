@@ -109,14 +109,12 @@ def test_delete_tmp_path(verification_context):
     assert not tmp_file.exists()
 
 def test_get_dict_for_epsilon_result(verification_context, tmp_path):
-    network_file = tmp_path / "network.onnx"
-    network_file.touch()  # create the file
 
     verification_context.tmp_path = tmp_path
     verification_context.tmp_path.mkdir(parents=True, exist_ok=True)
 
     result_dict = verification_context.get_dict_for_epsilon_result()
-    assert result_dict["network_path"] == network_file
+    assert result_dict["network"] == "network"
     assert result_dict["image_id"] == "1"
     assert result_dict["original_label"] == 0
     assert result_dict["tmp_path"] == verification_context.tmp_path
