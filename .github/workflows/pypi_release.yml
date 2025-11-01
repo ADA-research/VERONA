@@ -1,61 +1,32 @@
-# This workflow uploads a Python Package to PyPI when a release is created
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
-
 name: Release to PyPI
 
 on:
-  release:
-    types: [published]
-
-permissions:
-  contents: read
+  push:
+    tags:
+      - 'v*'  # Triggers on tags like v1.0.0
 
 jobs:
-  release-build:
+  pypi:
+    name: Publish to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: PYPI distribution
+      url: https://pypi.org/project/ada-verona/  # change this to real pypi.org
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
 
-      - name: Build package for test distribution
-        run: |
-          python -m pip install build setuptools==75.6.0 wheel
-          # Clean any previous builds
-          rm -rf dist/ build/ *.egg-info/
-          python -m build
-      - name: Upload distributions
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-dists 
-          path: dist/
+      - name: Install Python
+        run: uv python install 3.10
 
-  pypi-publish:
-    runs-on: ubuntu-latest
-    needs:
-      - release-build
-    permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
-      id-token: write
+      - name: Build
+        run: uv build
 
-    # Use pypi environment for PyPI
-    environment:
-      name: pypi
-      # PyPI project URL
-      url: https://pypi.org/project/ada-verona/
-
-    steps:
-      - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dists
-          path: dist/
-
-      - name: Publish release distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: dist/
-          # Use default PyPI repository (no repository-url needed for production PyPI)
+      - name: Publish
+        run: uv publish 
