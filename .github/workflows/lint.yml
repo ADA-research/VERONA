@@ -12,27 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v2
-      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      
-      - name: Cache uv dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/uv
-            .venv
-          key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
-          restore-keys: |
-            uv-${{ runner.os }}-
-      
-      - name: Sync dependencies from uv.lock
-        run: uv sync
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
           
       - name: Lint with Ruff
         run: |
-          uv run ruff check --config pyproject.toml . || (echo "::error::Linting issues found. Please run 'ruff check --config pyproject.toml .' to see issues." && exit 1)
+          ruff check --config pyproject.toml . || (echo "::error::Linting issues found. Please run 'ruff check --config pyproject.toml .' to see issues." && exit 1)
