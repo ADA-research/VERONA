@@ -18,18 +18,40 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
         
-            - name: Install uv
-              uses: astral-sh/setup-uv@v6
+            - name: Set up Miniconda
+              uses: conda-incubator/setup-miniconda@v3
               with:
-                python-version: "3.10"
+                activate-environment: verona  
+                python-version: "3.10"  
+                auto-activate-base: false
+        
+            - name: Install uv
+              run: |
+                conda run -n verona pip install uv
         
             - name: Install dependencies with uv
               run: |
-                uv pip install -e ".[dev]"
+                conda run -n verona uv pip install -r requirements.txt
+        
+            - name: Install local package
+              run: |
+                conda run -n verona uv pip install -e .
                 
+            - name: Install pytest, pytest-mock and pytest-cov
+              run: |
+                conda run -n verona uv pip install pytest pytest-mock pytest-cov
+
+            - name: Install AutoAttack
+              run: |
+                conda run -n verona pip install git+https://github.com/fra31/auto-attack
+        
+            - name: Install AutoVerify
+              run: |
+                conda run -n verona pip install auto-verify==0.1.4
+        
             - name: Run pytest with coverage
               run: |
-                coverage run -m pytest tests/ --cov --cov-report=xml
+                conda run -n verona coverage run -m pytest tests/  --cov --cov-report=xml
 
             - name: Upload coverage to codecov
               uses: codecov/codecov-action@main
