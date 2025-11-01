@@ -11,14 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - uses: astral-sh/setup-uv@v2
+      
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-      - uses: actions/cache@v3
+          python-version: "3.10"
+      
+      - name: Cache uv dependencies
+        uses: actions/cache@v4
         with:
-          key: ${{ github.ref }}
+          path: |
+            ~/.cache/uv
+            .venv
+          key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+          restore-keys: |
+            uv-${{ runner.os }}-
+      
+      - name: Install dependencies with uv
+        run: uv sync
+      
+      - name: Install mkdocs dependencies
+        run: |
+          uv pip install mkdocs-material "mkdocstrings[python]"
+      
+      - name: Cache mkdocs build
+        uses: actions/cache@v4
+        with:
           path: .cache
-      - run: |
-          pip install mkdocs-material
-          pip install "mkdocstrings[python]"
-      - run: mkdocs gh-deploy --force
+          key: ${{ github.ref }}-mkdocs
+      
+      - name: Deploy documentation
+        run: uv run mkdocs gh-deploy --force
