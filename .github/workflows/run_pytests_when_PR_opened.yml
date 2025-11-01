@@ -32,10 +32,6 @@ jobs:
         run: |
           conda run -n verona pip install uv
   
-      - name: Install dependencies with uv
-        run: |
-          conda run -n verona uv pip install -r requirements.txt
-  
       - name: Install local package with dev dependencies
         run: |
           conda run -n verona uv pip install -e ".[dev]"
