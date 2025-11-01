@@ -66,6 +66,10 @@ gpu = [
 dev = [
     "pytest>=8.2.2",
     "pytest-mock>=3.14.0",
+    "pytest-cov>=4.1.0",
+    "coverage>=7.0.0",
+    "auto-verify==0.1.4",
+    "autoattack @ git+https://github.com/fra31/auto-attack",
     "ruff>=0.3.4",
     "black>=22.0.0",
     "mypy>=0.991",
