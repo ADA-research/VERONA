@@ -17,13 +17,10 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Install uv
+      - name: Install dependencies
         run: |
-          pip install uv
-          
-      - name: Install Ruff with uv
-        run: |
-          uv pip install ruff
+          python -m pip install --upgrade pip
+          pip install ruff
           
       - name: Lint with Ruff
         run: |
