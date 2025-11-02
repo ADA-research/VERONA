@@ -15,3 +15,13 @@ repos:
         args: [--config, pyproject.toml, --fix]
       - id: ruff-format
         name: Ruff format
+
+  - repo: local
+    hooks:
+      - id: check-pyproject-requirements-sync
+        name: Check pyproject.toml and requirements.txt sync
+        description: Ensure requirements.txt is updated when pyproject.toml changes
+        entry: python scripts/hooks/check_requirements_sync.py
+        language: system
+        files: (pyproject\.toml|requirements\.txt)$
+        stages: [pre-commit]
