@@ -6,6 +6,11 @@ repos:
         name: Update uv.lock
         description: Update uv.lock when pyproject.toml or uv.lock changes
         stages: [pre-commit]
+      - id: uv-export
+        name: Export requirements.txt from uv.lock
+        description: Export uv.lock to requirements.txt
+        args: ["--frozen", "--output-file=requirements.txt", "--quiet"]
+        stages: [pre-commit]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.3
