@@ -19,6 +19,11 @@ We welcome contributions to the ada-verona package! If you find a bug, have a fe
 - Push to Your Fork: Push your changes to your forked repository.
 
 - Create a Pull Request: Open a pull request against the main repository, describing your changes and why they are needed.
+  
+- **Submitting your PR**: When your pull request is ready add the following details to the description:
+    1. What is the purpose of the PR and what issue is addressed.
+    2. What exactly was changed in this PR. 
+    3. How did you test the changes.
 
 - Review Process: Your pull request will be reviewed by at least one of the maintainers. They may request changes or provide feedback.
 
