@@ -5,6 +5,7 @@ import pandas as pd
 from ada_verona.database.dataset.data_point import DataPoint
 from ada_verona.database.epsilon_status import EpsilonStatus
 from ada_verona.database.machine_learning_model.network import Network
+from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.vnnlib_property import VNNLibProperty
 from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
@@ -50,7 +51,7 @@ class VerificationContext:
             dict: The dictionary representation of the epsilon result.
         """
         return dict(
-            network_path=self.network.path.resolve(),
+            network=self.network.name,
             image_id=self.data_point.id,
             original_label=self.data_point.label,
             tmp_path=self.tmp_path.resolve(),
@@ -137,7 +138,7 @@ class VerificationContext:
         """
         # Recreate the network from its dictionary representation
 
-        network = Network.from_dict(data["network"]) 
+        network = ONNXNetwork.from_dict(data["network"]) 
         data_point = DataPoint.from_dict(data["data_point"])
         tmp_path = Path(data["tmp_path"])
         property_generator = PropertyGenerator.from_dict(data["property_generator"])
