@@ -20,7 +20,7 @@ class FGSMAttack(Attack):
             
         """
         super().__init__()
-        self.name = None
+        self.name = "FGSM"
 
     def execute(self, model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
         """
@@ -53,5 +53,5 @@ class FGSMAttack(Attack):
         perturbed_image = data + epsilon * sign_data_grad
         perturbed_image = torch.clamp(
             perturbed_image, 0, 1
-        )  # TODO: adjust the torch clamp as Konstantin says this gives errors
+        )
         return perturbed_image
