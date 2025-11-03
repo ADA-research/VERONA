@@ -18,40 +18,30 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
         
-            - name: Set up Miniconda
-              uses: conda-incubator/setup-miniconda@v3
+            - name: Set up Python
+              uses: actions/setup-python@v5
               with:
-                activate-environment: verona  
-                python-version: "3.10"  
-                auto-activate-base: false
+                python-version: "3.10"
         
-            - name: Install uv
-              run: |
-                conda run -n verona pip install uv
+            - name: Cache venv
+              uses: actions/cache@v4
+              with:
+                path: .venv
+                key: venv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+                restore-keys: venv-${{ runner.os }}-
         
-            - name: Install dependencies with uv
+            - name: Install uv and create environment
               run: |
-                conda run -n verona uv pip install -r requirements.txt
-        
-            - name: Install local package
-              run: |
-                conda run -n verona uv pip install -e .
-                
-            - name: Install pytest, pytest-mock and pytest-cov
-              run: |
-                conda run -n verona uv pip install pytest pytest-mock pytest-cov
-
-            - name: Install AutoAttack
-              run: |
-                conda run -n verona pip install git+https://github.com/fra31/auto-attack
-        
-            - name: Install AutoVerify
-              run: |
-                conda run -n verona pip install auto-verify==0.1.4
+                pip install uv
+                uv venv
+                source .venv/bin/activate
+                uv sync --dev
+                uv pip install -e .
         
             - name: Run pytest with coverage
               run: |
-                conda run -n verona coverage run -m pytest tests/  --cov --cov-report=xml
+                source .venv/bin/activate
+                coverage run -m pytest tests/ --cov --cov-report=xml
 
             - name: Upload coverage to codecov
               uses: codecov/codecov-action@main

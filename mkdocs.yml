@@ -13,7 +13,6 @@ nav:
   - index.md
   - how-to-guides.md
   - api.md
-  - pytorch_support.md
 
 
 repo_url: https://github.com/ADA-research/VERONA/
