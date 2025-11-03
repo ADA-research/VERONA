@@ -2,6 +2,36 @@
 
 This page contains essential information for developers contributing to or maintaining the ada-verona package.
 
+## Development Environment Setup
+
+Install the package with all development dependencies using:
+
+```bash
+uv sync --dev
+```
+
+This command:
+- Installs ada-verona and all dependencies
+- Ensures consistency with the `uv.lock` file
+- Includes all dev dependencies specified in the dependency groups in `pyproject.toml`
+
+You can use this in your preferred virtual environment setup (conda, venv, etc.).
+
+## Pre-Commit Hooks
+
+We use [pre-commit](https://pre-commit.com/) to automatically enforce code quality standards and consistency before commits. 
+
+### Installation
+
+If you haven't already installed pre-commit, do so using:
+
+```bash
+uv pip install pre-commit
+pre-commit install
+```
+
+This command hooks into your Git workflow and runs configured checks on staged files before each commit.
+
 ## Package Release Steps
 
 ### Prerequisites
@@ -52,32 +82,6 @@ git push origin v1.0.0
 
 The release workflow requires approval from at least one council member (see [governance.md](../governance.md)) before deployment. Monitor the [GitHub Actions](https://github.com/ADA-research/VERONA/actions) page for the workflow run and approve it as needed.
 
-## Pre-Commit Hooks
 
-We use [pre-commit](https://pre-commit.com/) to automatically enforce code quality standards and consistency before commits. 
 
-### Installation
 
-If you haven't already installed pre-commit, do so using:
-
-```bash
-uv pip install pre-commit
-pre-commit install
-```
-
-This command hooks into your Git workflow and runs configured checks on staged files before each commit.
-
-## Development Environment Setup
-
-Install the package with all development dependencies using:
-
-```bash
-uv sync --dev
-```
-
-This command:
-- Installs ada-verona and all dependencies
-- Ensures consistency with the `uv.lock` file
-- Includes all dev dependencies specified in the dependency groups in `pyproject.toml`
-
-You can use this in your preferred virtual environment setup (conda, venv, etc.).
