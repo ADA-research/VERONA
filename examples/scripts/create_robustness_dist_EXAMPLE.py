@@ -42,7 +42,7 @@ file_database.save_configuration(
 )
 
 property_generator = One2AnyPropertyGenerator()
-verifier = AttackEstimationModule(verifier=PGDAttack(), timeout=timeout)
+verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=40))
 
 epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
 dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
@@ -58,5 +58,3 @@ for network in network_list:
         epsilon_value_result = epsilon_value_estimator.compute_epsilon_value(verification_context)
 
         file_database.save_result(epsilon_value_result)
-
-file_database.save_plots()
