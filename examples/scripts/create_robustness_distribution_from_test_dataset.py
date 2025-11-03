@@ -1,5 +1,8 @@
-import importlib.util
 import logging
+
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+
+import importlib.util
 from pathlib import Path
 
 if importlib.util.find_spec("autoverify") is None:
@@ -20,8 +23,6 @@ from ada_verona.verification_module.auto_verify_module import AutoVerifyModule
 from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 experiment_name = "auto_verify"
 timeout = 600

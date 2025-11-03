@@ -1,5 +1,7 @@
-import importlib.util
 import logging
+
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+import importlib.util
 from pathlib import Path
 
 import torch
@@ -32,7 +34,6 @@ from ada_verona.verification_module.property_generator.one2one_property_generato
 )
 from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 torch.manual_seed(0)
 
 def create_distribution(

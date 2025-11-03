@@ -1,4 +1,6 @@
 import logging
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+
 from pathlib import Path
 
 from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
@@ -12,8 +14,6 @@ from ada_verona.verification_module.attacks.pgd_attack import PGDAttack
 from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 experiment_name = "pgd"
 timeout = 600
