@@ -1,0 +1,27 @@
+repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.5.0
+    hooks:
+      - id: uv-lock
+        name: Update uv.lock
+        description: Update uv.lock when pyproject.toml or uv.lock changes
+        stages: [pre-commit]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.3
+    hooks:
+      - id: ruff
+        name: Ruff lint
+        args: [--config, pyproject.toml, --fix]
+      - id: ruff-format
+        name: Ruff format
+
+  - repo: local
+    hooks:
+      - id: check-pyproject-requirements-sync
+        name: Check pyproject.toml and requirements.txt sync
+        description: Ensure requirements.txt is updated when pyproject.toml changes
+        entry: python scripts/hooks/check_requirements_sync.py
+        language: system
+        files: (pyproject\.toml|requirements\.txt)$
+        stages: [pre-commit]
