@@ -10,9 +10,6 @@ from ada_verona.epsilon_value_estimator.epsilon_value_estimator import EpsilonVa
 logger = logging.getLogger(__name__)
 
 
-logger = logging.getLogger(__name__)
-
-
 class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
     """
     A class to get the critical epsilon value using binary search.
@@ -107,12 +104,10 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
         """
         if len(epsilon_status_list) == 1:
             outcome = self.verifier.verify(verification_context, epsilon_status_list[0].value)
-            result = outcome.result
-            epsilon_status_list[0].time = outcome.took
-            epsilon_status_list[0].result = result
+            epsilon_status_list[0].set_values(outcome)
             logger.debug(f"current epsilon value: {epsilon_status_list[0].result}, took: {epsilon_status_list[0].time}")
             verification_context.save_result(epsilon_status_list[0])
-            if result == VerificationResult.UNSAT:
+            if epsilon_status_list[0].result == VerificationResult.UNSAT:
                 return epsilon_status_list[0].value, self.get_smallest_sat(epsilon_status_list)
             else:
                 return 0, self.get_smallest_sat(epsilon_status_list)
@@ -125,8 +120,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
 
             if not epsilon_status_list[midpoint].result:
                 outcome = self.verifier.verify(verification_context, epsilon_status_list[midpoint].value)
-                epsilon_status_list[midpoint].result = outcome.result
-                epsilon_status_list[midpoint].time = outcome.took
+                epsilon_status_list[midpoint].set_values(outcome)
                 verification_context.save_result(epsilon_status_list[midpoint])
                 logger.debug(
                     f"current epsilon value: {epsilon_status_list[midpoint].result},"
