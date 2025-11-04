@@ -7,7 +7,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
-if importlib.util.find_spec("pyautoattack") is None:
+if importlib.util.find_spec("autoattack") is None:
     raise ImportError(
         "AutoAttack not found. This package is required for this script. "
         "To install: pip install git+https://github.com/fra31/auto-attack"
