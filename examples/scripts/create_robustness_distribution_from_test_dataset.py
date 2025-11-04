@@ -26,7 +26,7 @@ from ada_verona.verification_module.property_generator.one2any_property_generato
 
 experiment_name = "auto_verify"
 timeout = 600
-experiment_repository_path = Path("../example_experiment")
+experiment_repository_path = Path("../example_experiment/results")
 network_folder = Path("../example_experiment/data/networks")
 image_folder = Path("../example_experiment/data/images")
 image_label_file = Path("../example_experiment/data/image_labels.csv")
