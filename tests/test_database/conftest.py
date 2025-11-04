@@ -9,6 +9,7 @@ from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
 from ada_verona.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 
 
 class MockVerificationContext:
@@ -88,8 +89,7 @@ class MockTorchModel(torch.nn.Module):
 
     def forward(self, x):
         return torch.sum(x).unsqueeze(0)
-
-
+    
 
 @pytest.fixture
 def mock_torch_model():
@@ -113,46 +113,11 @@ def verification_context(network, datapoint, tmp_path, property_generator):
     return VerificationContext(network, datapoint, tmp_path, property_generator)
 
 
-
 @pytest.fixture
-def architecture_file(tmp_path):
-    """Create a temporary architecture file."""
-    arch_file = tmp_path / "test_model.py"
-    arch_file.write_text("""
-import torch.nn as nn
-EXPECTED_INPUT_SHAPE = [0,2]
-class TestModel(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.fc = nn.Linear(10, 2)
-    
-    def forward(self, x):
-        return self.fc(x)
-
-test_model = TestModel()
-""")
-
-    return arch_file
-
-@pytest.fixture
-def weights_file(tmp_path, architecture_file):
-    """Create a temporary weights file."""
-    weights_file = tmp_path / "test_weights.pt"
-
-    # Import TestModel from the generated architecture file
-    import importlib.util
-
-    spec = importlib.util.spec_from_file_location("test_model", architecture_file)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    model = module.TestModel()
-    torch.save(model.state_dict(), weights_file)
-
-    return weights_file
-
-
-@pytest.fixture
-def pytorch_network(architecture_file, weights_file):
+def pytorch_network(mock_torch_model):
     """Create a PyTorchNetwork instance."""
-    return PyTorchNetwork(architecture=architecture_file, weights=weights_file)
+    return PyTorchNetwork(model=mock_torch_model, input_shape=[224,224], name="test_model")
+
+@pytest.fixture
+def complete_verification_data():
+    return CompleteVerificationData("SAT", 2.0, None, [1])

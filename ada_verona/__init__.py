@@ -1,5 +1,13 @@
+"""
+ADA-VERONA: Neural Network Robustness Analysis Framework
+
+A framework for analyzing neural network robustness
+through verification and adversarial testing.
+"""
+
 import importlib.util
 import warnings
+from importlib.metadata import version
 
 # Database classes
 from .database.dataset.data_point import DataPoint
@@ -44,12 +52,14 @@ from .verification_module.property_generator.one2one_property_generator import (
 from .verification_module.property_generator.property_generator import PropertyGenerator
 from .verification_module.verification_module import VerificationModule
 
-# Check for pyautoattack availability
-HAS_AUTOATTACK = importlib.util.find_spec("pyautoattack") is not None
+__version__ = version("ada-verona")
+__author__ = "ADA Research Group"
+# Check for autoattack availability
+HAS_AUTOATTACK = importlib.util.find_spec("autoattack") is not None
 if not HAS_AUTOATTACK:
     warnings.warn(
-        "PyAutoAttack not found. Some adversarial attack features will be limited. "
-        "To install: pip install pyautoattack",
+        "AutoAttack not found. Some adversarial attack features will be limited. "
+        "To install: uv pip install git+https://github.com/fra31/auto-attack",
         stacklevel=2,
     )
 
@@ -58,12 +68,17 @@ HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
 if not HAS_AUTOVERIFY:
     warnings.warn(
         "AutoVerify not found. Some complete verification features will be limited. "
-        "To install: pip install autoverify",
+        "To install: uv pip install auto-verify",
         stacklevel=2,
     )
     
     
 __all__ = [
+    "__version__",
+    "__author__",
+    "HAS_AUTOATTACK",
+    "HAS_AUTOVERIFY",
+    
     # Core abstract classes
     "DatasetSampler",
     "EpsilonValueEstimator",
@@ -98,8 +113,6 @@ __all__ = [
     "AttackEstimationModule",
     "PGDAttack",
     "FGSMAttack",
-    "parse_counter_example",
-    "parse_counter_example_label",
 
     # Property generator classes
     "One2AnyPropertyGenerator",
@@ -113,7 +126,7 @@ if HAS_AUTOATTACK:
         ".verification_module.attacks.auto_attack_wrapper", __package__
     )
     AutoAttackWrapper = auto_attack_module.AutoAttackWrapper
-    __all__.append("AutoAttackWrapper")
+    __all__.extend(["AutoAttackWrapper"])
 
 if HAS_AUTOVERIFY:
     autoverify_module = importlib.import_module(

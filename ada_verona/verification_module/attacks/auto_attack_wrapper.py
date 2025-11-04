@@ -1,4 +1,4 @@
-from pyautoattack import AutoAttack
+from autoattack import AutoAttack
 from torch import Tensor
 from torch.nn.modules import Module
 
@@ -8,7 +8,7 @@ from ada_verona.verification_module.attacks.attack import Attack
 class AutoAttackWrapper(Attack):
     """
     A wrapper for the AutoAttack adversarial attack.
-    install in pip using: pip install pyautoattack
+    Install using: uv pip install git+https://github.com/fra31/auto-attack
 
     Args:
         Attack (class): The base class for attacks.
@@ -46,7 +46,7 @@ class AutoAttackWrapper(Attack):
         """
         
         adversary = AutoAttack(
-            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose =self.verbose
         )
         data = data.unsqueeze(0)
 

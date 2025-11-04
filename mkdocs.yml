@@ -12,8 +12,8 @@ plugins:
 nav:
   - index.md
   - how-to-guides.md
+  - developer-notes.md
   - api.md
-  - pytorch_support.md
 
 
 repo_url: https://github.com/ADA-research/VERONA/

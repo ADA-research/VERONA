@@ -1,9 +1,16 @@
+import importlib.util
 import logging
 from pathlib import Path
 
 import torch
 import torchvision
 import torchvision.transforms as transforms
+
+if importlib.util.find_spec("pyautoattack") is None:
+    raise ImportError(
+        "PyAutoAttack not found. This package is required for this script. "
+        "To install: pip install git+https://github.com/fra31/auto-attack"
+    )
 
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
@@ -54,6 +61,7 @@ def create_distribution(
 
 
 def main():
+    
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
     experiment_repository_path = Path("../example_experiment")
     network_folder = Path("../example_experiment/data/networks")
