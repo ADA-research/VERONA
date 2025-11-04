@@ -1,5 +1,6 @@
 import logging
 
+
 def setup_logging():
     root_logname = "[ada_verona::{}]"
 
