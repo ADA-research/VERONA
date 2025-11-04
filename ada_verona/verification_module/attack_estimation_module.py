@@ -17,15 +17,17 @@ class AttackEstimationModule(VerificationModule):
 
     """
 
-    def __init__(self, attack: Attack) -> None:
+    def __init__(self, attack: Attack, top_k: int = 1) -> None:
         """
         Initialize the AttackEstimationModule with a specific attack.
 
         Args:
             attack (Attack): The attack to be used for robustness estimation.
+            top_k: Number of top scores to take into account for checking the prediction.
         """
         self.attack = attack
-        self.name = f"AttackEstimationModule ({attack.name})"
+        self.top_k = top_k
+        self.name = f"AttackEstimationModule [{attack.name}, top-{top_k}]"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
@@ -54,12 +56,14 @@ class AttackEstimationModule(VerificationModule):
         
             output = torch_model(perturbed_data) 
 
-            _, final_pred = output.max(1, keepdim=True)
+            _, predicted_labels = torch.topk(output, self.top_k) 
 
             duration = time.time() - start 
-            if final_pred == target:
-                return CompleteVerificationData(result=VerificationResult.UNSAT, took=duration)
+            if target in predicted_labels:
+                return CompleteVerificationData(result=VerificationResult.UNSAT, took=duration, 
+                                                obtained_labels=predicted_labels)
             else:
-                return CompleteVerificationData(result=VerificationResult.SAT, took=duration)
+                return CompleteVerificationData(result=VerificationResult.SAT, took=duration, 
+                                                obtained_labels=predicted_labels)
         else:
             raise NotImplementedError("Currently, only one 2 any verification is implemented for adversarial attacks.")
