@@ -9,6 +9,7 @@ from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.machine_learning_model.pytorch_network import PyTorchNetwork
 from ada_verona.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 
 
 class MockVerificationContext:
@@ -116,3 +117,7 @@ def verification_context(network, datapoint, tmp_path, property_generator):
 def pytorch_network(mock_torch_model):
     """Create a PyTorchNetwork instance."""
     return PyTorchNetwork(model=mock_torch_model, input_shape=[224,224], name="test_model")
+
+@pytest.fixture
+def complete_verification_data():
+    return CompleteVerificationData("SAT", 2.0, None, [1])
