@@ -79,6 +79,8 @@ This package provides ensemble-based adversarial attacks for robustness evaluati
 
 To use the auto-verify verifiers, you need to install auto-verify separately:
 
+**Note:** On macOS (and sometimes on Linux), you may need to install `swig` first with `conda install -c conda-forge swig`.
+
 ```bash
 uv pip install auto-verify>=0.1.4
 ```

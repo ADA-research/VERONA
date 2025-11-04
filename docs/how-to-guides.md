@@ -47,10 +47,12 @@ This design provides several benefits:
 
 Auto-Verify can be installed in the following way: 
 
+**Note:** On macOS (and sometimes on Linux), you may need to install `swig` first with `conda install -c conda-forge swig`.
+
 ```bash
 uv pip install auto-verify>=0.1.4
 ```
-It is important to note that in order to use AutoVerify in VERONA, the pip version for AutoVerify should be >=0.1.4.
+It is important to note that in order to use AutoVerify in VERONA, the pip version for AutoVerify must be >=0.1.4.
 ### Available Verifiers
 
 Currently, auto-verify supports [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab). We thank the authors and maintainers of these projects for their contributions to the robustness research community.
