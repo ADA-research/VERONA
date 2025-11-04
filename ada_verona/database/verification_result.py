@@ -36,9 +36,9 @@ class CompleteVerificationData:
     result: VerificationResultString
     took: float
     counter_example: str | None = None
+    obtained_labels: list[str] = None
     err: str = ""
     stdout: str = ""
-
 
 CompleteVerificationResult = Result[
     CompleteVerificationData, CompleteVerificationData

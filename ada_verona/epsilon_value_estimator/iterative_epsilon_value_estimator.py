@@ -61,8 +61,7 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         
         for status in epsilon_status_list:
             outcome = self.verifier.verify(verification_context, status.value)
-            status.result = outcome.result
-            status.time = outcome.took
+            status.set_values(outcome)
             verification_context.save_result(status)
             logger.info(f"epsilon value: {status.value}, result: {status.result}")
 
