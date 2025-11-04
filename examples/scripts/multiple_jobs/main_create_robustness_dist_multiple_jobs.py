@@ -1,4 +1,3 @@
-import logging
 import os
 import stat
 from datetime import datetime
@@ -7,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
+import ada_verona.util.logger as logging
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
 from ada_verona.database.experiment_repository import ExperimentRepository
@@ -16,7 +16,7 @@ from ada_verona.verification_module.property_generator.one2any_property_generato
     One2AnyPropertyGenerator,
 )
 
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+logging.setup_logging()
 torch.manual_seed(0)
 
 def write_slurm_script(

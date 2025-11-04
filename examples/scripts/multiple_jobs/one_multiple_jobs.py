@@ -1,5 +1,4 @@
 import argparse
-import logging
 from pathlib import Path
 
 from autoverify.verifier import AbCrown
@@ -9,8 +8,6 @@ from ada_verona.epsilon_value_estimator.binary_search_epsilon_value_estimator im
     BinarySearchEpsilonValueEstimator,
 )
 from ada_verona.verification_module.auto_verify_module import AutoVerifyModule
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 if __name__ == "__main__":
     # parse arguments from batch script.
