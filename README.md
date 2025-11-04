@@ -5,7 +5,7 @@
 
 # VERification Of Neural Architectures (VERONA)
 
-![Anneplot of the robustness distributions of one convolutional neural network, trained three different ways, generated with \alpha\beta-crown.](https://github.com/ADA-research/VERONA/MNIST_anneplot_convMedGRELU_test_combined.svg)
+![Anneplot of the robustness distributions of one convolutional neural network, trained three different ways, generated with \alpha\beta-crown.](https://github.com/ADA-research/VERONA/assets/MNIST_anneplot_convMedGRELU_test_combined.svg)
 
 VERONA simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 VERONA is class-based, which means that extending the existing configurations is accessible and easy. 
