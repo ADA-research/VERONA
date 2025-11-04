@@ -12,6 +12,7 @@ plugins:
 nav:
   - index.md
   - how-to-guides.md
+  - developer-notes.md
   - api.md
 
 
