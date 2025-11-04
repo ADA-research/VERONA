@@ -1,5 +1,3 @@
-import logging
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 import importlib.util
 from pathlib import Path
 
@@ -13,6 +11,7 @@ if importlib.util.find_spec("autoattack") is None:
         "To install: pip install git+https://github.com/fra31/auto-attack"
     )
 
+import ada_verona.util.logger as logging
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
 from ada_verona.database.experiment_repository import ExperimentRepository
@@ -29,6 +28,7 @@ from ada_verona.verification_module.property_generator.one2any_property_generato
 )
 from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
+logging.setup_logging()
 torch.manual_seed(0)
 
 def create_distribution(

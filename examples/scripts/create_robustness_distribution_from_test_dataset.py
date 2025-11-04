@@ -1,7 +1,3 @@
-import logging
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
-
 import importlib.util
 from pathlib import Path
 
@@ -13,6 +9,7 @@ if importlib.util.find_spec("autoverify") is None:
 
 from autoverify.verifier import AbCrown
 
+import ada_verona.util.logger as logging
 from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
 from ada_verona.database.experiment_repository import ExperimentRepository
 from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
@@ -23,6 +20,8 @@ from ada_verona.verification_module.auto_verify_module import AutoVerifyModule
 from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
+
+logging.setup_logging()
 
 experiment_name = "auto_verify"
 timeout = 600
