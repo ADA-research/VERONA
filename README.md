@@ -7,12 +7,7 @@
 # VERification Of Neural Architectures (VERONA)
 
 <p align="center">
-  <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg" alt="Anneplot of robusntess distributions of one convolutional architecture with three different training methods created with \alpha,\beta-CROWN." height="300" style="vertical-align: top;"/>
-  <img src="./assets/boxplot_train.svg" alt="boxplot of robustness of 12 ffnn trained on MNIST, created with oval-bab. " height="300" style="vertical-align: top; margin-left: 10px;"/>
-</p>
-
-<p align="center">
-  <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg" alt="Anneplot of robusntess distributions of one convolutional architecture with three different training methods created with \alpha,\beta-CROWN." height="300" style="vertical-align: top;"/>
+  <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg" alt="Anneplot of robusntess distributions of one convolutional architecture with three different training methods created with \alpha,\beta-CROWN." height="400" style="vertical-align: top;"/>
 </p>
 
 VERONA simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
