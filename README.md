@@ -6,13 +6,15 @@
 
 # VERification Of Neural Architectures (VERONA)
 
-<p align="center" style="display: flex; justify-content: center; align-items: flex-start; gap: 10px;">
+<p align="center">
   <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg"
        alt="Anneplot"
-       width="46%">
+       width="46%"
+       style="vertical-align: top; margin-right: 10px;">
   <img src="./assets/boxplot_train.svg"
        alt="Boxplot"
-       width="46%">
+       width="46%"
+       style="vertical-align: top;">
 </p>
 VERONA simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 VERONA is class-based, which means that extending the existing configurations is accessible and easy. 
