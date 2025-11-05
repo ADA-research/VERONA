@@ -1,9 +1,14 @@
 [![codecov](https://codecov.io/gh/ADA-research/VERONA/graph/badge.svg?token=O0J6S4TSF2)](https://codecov.io/gh/ADA-research/VERONA)
+[![PyPI](https://img.shields.io/pypi/v/ada-verona)](https://pypi.org/project/ada-verona/)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 [![Documentation](https://github.com/ADA-research/VERONA/actions/workflows/docs.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/docs.yml)
 
 # VERification Of Neural Architectures (VERONA)
+
+<p align="center">
+  <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg" alt="Anneplot of robusntess distributions of one convolutional architecture with three different training methods created with \alpha,\beta-CROWN." height="400" style="vertical-align: top;"/>
+</p>
 
 VERONA simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
 VERONA is class-based, which means that extending the existing configurations is accessible and easy. 
@@ -27,7 +32,7 @@ We recommend to have a look at the [Documentation](https://ada-research.github.i
 
 ### Create Virtual Environment and install ada-verona
 
-The python package for VERONA is called `ada-verona`, as our research group is called ADA.
+The python package for VERONA is called [`ada-verona`](https://pypi.org/project/ada-verona/), as our research group is called ADA.
 
 To run ada-verona, we recommend to set up a conda environment. We also recommend using [miniforge](https://github.com/conda-forge/miniforge) as the package manager and using [uv](https://docs.astral.sh/uv/) for dependency management.
 
