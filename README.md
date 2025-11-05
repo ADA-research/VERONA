@@ -10,7 +10,7 @@
   <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg"
        alt="Anneplot"
        width="46%"
-       style="vertical-align: middle; margin-top: 10px;"/>
+       style="vertical-align: middle; margin-top: 1px;"/>
   <img src="./assets/boxplot_train.svg"
        alt="Boxplot"
        width="46%"
