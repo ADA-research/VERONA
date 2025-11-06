@@ -36,20 +36,26 @@ class PredictionsBasedSampler(DatasetSampler):
 
         selected_indices = []
 
-        model = network.load_pytorch_model()
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = network.load_pytorch_model().to(device)
+        model.eval() 
 
         for data_point in dataset:
             data = data_point.data.reshape(network.get_input_shape())
-            output = model(data)
+            data = data.to(device) 
 
-            _, predicted_labels = torch.topk(output, self.top_k) 
+            with torch.no_grad():  
+                output = model(data)
+
+            _, predicted_labels = torch.topk(output, self.top_k)
+            predicted_labels = predicted_labels.cpu()  
+            
             if self.sample_correct_predictions:
                 if int(data_point.label) in predicted_labels:
                     selected_indices.append(data_point.id)
             else:
                 if int(data_point.label) not in predicted_labels:
                     selected_indices.append(data_point.id)
-
 
         return dataset.get_subset(selected_indices)
 
