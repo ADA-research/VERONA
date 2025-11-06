@@ -1,4 +1,5 @@
 import importlib.util
+import logging
 from pathlib import Path
 
 import torch
@@ -13,7 +14,7 @@ if importlib.util.find_spec("autoverify") is None:
 
 from autoverify.verifier import AbCrown, Nnenum
 
-import ada_verona.util.logger as logging
+import ada_verona.util.logger as logger
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
 from ada_verona.database.experiment_repository import ExperimentRepository
@@ -32,7 +33,8 @@ from ada_verona.verification_module.property_generator.one2one_property_generato
 )
 from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
-logging.setup_logging()
+logger.setup_logging(level=logging.INFO)
+
 torch.manual_seed(0)
 
 def create_distribution(

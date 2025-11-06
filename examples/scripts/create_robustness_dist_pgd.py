@@ -1,6 +1,7 @@
+import logging
 from pathlib import Path
 
-import ada_verona.util.logger as logging
+import ada_verona.util.logger as logger
 from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
 from ada_verona.database.experiment_repository import ExperimentRepository
 from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
@@ -13,7 +14,7 @@ from ada_verona.verification_module.property_generator.one2any_property_generato
     One2AnyPropertyGenerator,
 )
 
-logging.setup_logging()
+logger.setup_logging(level=logging.INFO)
 
 experiment_name = "pgd"
 timeout = 600

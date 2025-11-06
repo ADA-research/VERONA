@@ -1,10 +1,34 @@
 import logging
 
 
-def setup_logging():
-    root_logname = "[ada_verona::{}]"
+def setup_logging(level=logging.INFO):
+    """
+    Set up logging for the ada_verona package:
+    - All loggers under 'ada_verona' follow the given level
+    - Messages have timestamps and logger names
+    - Prevents double logging by disabling propagation
+    """
+    log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
+    logging.basicConfig(format=log_format, level=logging.NOTSET)
 
-    logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.NOTSET)
+    # Adjust all loggers starting with 'ada_verona'
+    for name, logger in logging.Logger.manager.loggerDict.items():
+        if name.startswith("ada_verona") and isinstance(logger, logging.Logger):
+            logger.setLevel(level)
+            logger.propagate = False
+            # Ensure the logger has a StreamHandler
+            if not logger.handlers:
+                handler = logging.StreamHandler()
+                handler.setFormatter(logging.Formatter(log_format))
+                logger.addHandler(handler)
 
-    experiment_logger = logging.getLogger(root_logname.format("experiment"))
-    experiment_logger.setLevel(logging.INFO)
+    # Also create a main package logger for convenience
+    main_logger = logging.getLogger("ada_verona")
+    main_logger.setLevel(level)
+    main_logger.propagate = False
+    if not main_logger.handlers:
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(log_format))
+        main_logger.addHandler(handler)
+
+    return main_logger
