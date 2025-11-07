@@ -5,3 +5,4 @@ tests/test_experiment/*
 .coverage*
 site/
 examples/example_experiment/results/
+data/
