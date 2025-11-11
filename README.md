@@ -58,15 +58,14 @@ Note that the default installation is CPU-only, and that we recommend to install
 uv pip install ada-verona[gpu]
 ```
 
-### Local installation for e.g. development purposes
+### Local installation
 
-If you want to install ada-verona locally using git:
+If you want to install ada-verona locally using git for, e.g., development purposes:
 
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv sync --dev  #or uv sync --extra gpu --dev for GPU-version installation
-
+uv pip install --system -e ".[dev]"
 ```
 ### Optional: AutoAttack Installation
 
