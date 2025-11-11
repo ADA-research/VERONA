@@ -1,14 +1,5 @@
-import importlib.util
 import logging
 from pathlib import Path
-
-if importlib.util.find_spec("autoverify") is None:
-    raise ImportError(
-        "AutoVerify not found. This package is required for this script. "
-        "To install: pip install auto-verify"
-    )
-
-from autoverify.verifier import AbCrown
 
 import ada_verona.util.logger as logger
 from ada_verona.database.dataset.image_file_dataset import ImageFileDataset
@@ -17,15 +8,15 @@ from ada_verona.dataset_sampler.predictions_based_sampler import PredictionsBase
 from ada_verona.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-from ada_verona.verification_module.auto_verify_module import AutoVerifyModule
+from ada_verona.verification_module.attack_estimation_module import AttackEstimationModule
+from ada_verona.verification_module.attacks.pgd_attack import PGDAttack
 from ada_verona.verification_module.property_generator.one2any_property_generator import (
     One2AnyPropertyGenerator,
 )
 
 logger.setup_logging(level=logging.INFO)
 
-
-experiment_name = "auto_verify"
+experiment_name = "pgd"
 timeout = 600
 experiment_repository_path = Path("../example_experiment/results")
 network_folder = Path("../example_experiment/data/networks")
@@ -51,7 +42,7 @@ file_database.save_configuration(
 )
 
 property_generator = One2AnyPropertyGenerator()
-verifier = AutoVerifyModule(verifier=AbCrown(), timeout=timeout)
+verifier = AttackEstimationModule(attack=PGDAttack(number_iterations=40))
 
 epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
 dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)
@@ -67,5 +58,3 @@ for network in network_list:
         epsilon_value_result = epsilon_value_estimator.compute_epsilon_value(verification_context)
 
         file_database.save_result(epsilon_value_result)
-
-file_database.save_plots()

@@ -14,6 +14,7 @@ if importlib.util.find_spec("autoverify") is None:
 
 from autoverify.verifier import AbCrown, Nnenum
 
+import ada_verona.util.logger as logger
 from ada_verona.database.dataset.experiment_dataset import ExperimentDataset
 from ada_verona.database.dataset.pytorch_experiment_dataset import PytorchExperimentDataset
 from ada_verona.database.experiment_repository import ExperimentRepository
@@ -32,7 +33,8 @@ from ada_verona.verification_module.property_generator.one2one_property_generato
 )
 from ada_verona.verification_module.property_generator.property_generator import PropertyGenerator
 
-logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
+logger.setup_logging(level=logging.INFO)
+
 torch.manual_seed(0)
 
 def create_distribution(
@@ -67,7 +69,7 @@ def create_distribution(
 def main():
     timeout = 600
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
-    experiment_repository_path = Path("../example_experiment")
+    experiment_repository_path = Path("../example_experiment/results")
     network_folder = Path("../example_experiment/data/networks")
     torch_dataset = torchvision.datasets.MNIST(
         root="./data", train=True, download=True, transform=transforms.ToTensor()
