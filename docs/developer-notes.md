@@ -11,6 +11,7 @@ uv sync --dev
 ```
 
 This command:
+
 - Installs ada-verona and all dependencies
 - Ensures consistency with the `uv.lock` file
 - Includes all dev dependencies specified in the dependency groups in `pyproject.toml`
@@ -31,6 +32,23 @@ pre-commit install
 ```
 
 This command hooks into your Git workflow and runs configured checks on staged files before each commit.
+
+## Opening a PR
+Before opening a PR, please do the following steps:
+
+- Check you implementation and all the files you changed for the PR
+- Execute the tests ```python -m pytest --cov tests/ --verbose``` and check everything is passing
+- Create a new branch and upload you changes to GitHub
+- Open your PR, check that all workflows are passing and document your changes by describing:
+    - What is the purpose of the PR and what issue is addressed.
+    - What exactly was changed in this PR. 
+    - How did you test the changes.
+- After you documented the PR and checked that the workflows are passing assign a reviewer to the PR
+
+
+## Testing the documentation
+- Install mkdocs via pip ```pip install mkdocs-material``` and ```pip install "mkdocstrings[python]"```
+- Check the documentation locally using ```mkdocs serve```
 
 ## Package Release Steps
 
