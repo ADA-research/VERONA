@@ -51,6 +51,8 @@ file_database.save_configuration(
 )
 
 property_generator = One2AnyPropertyGenerator()
+
+# AbCrown has to be installed using auto-verify
 verifier = AutoVerifyModule(verifier=AbCrown(), timeout=timeout)
 
 epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
