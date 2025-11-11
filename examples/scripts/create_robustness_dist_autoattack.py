@@ -78,7 +78,7 @@ def main():
     experiment_name = "AutoAttack"
     property_generator = One2AnyPropertyGenerator()
 
-    verifier = AttackEstimationModule(attack=AutoAttackWrapper())
+    verifier = AttackEstimationModule(attack=AutoAttackWrapper(device='cuda' if torch.cuda.is_available() else 'cpu'))
 
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(
         epsilon_value_list=epsilon_list.copy(), verifier=verifier

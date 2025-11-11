@@ -83,6 +83,7 @@ def main():
     experiment_name = "nnenum_one2one"
     property_generator = One2OnePropertyGenerator(target_class=1)
 
+    # Nnenum has to be installed using auto-verify
     verifier = AutoVerifyModule(verifier=Nnenum(), timeout=timeout)
 
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(
