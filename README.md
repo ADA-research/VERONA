@@ -60,14 +60,15 @@ uv pip install ada-verona[gpu]
 
 ### Local installation
 
-If you want to install ada-verona locally using git for, e.g., development purposes:
+If you want to install ada-verona locally using git:
 
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
 uv pip install --system -e .
-uv pip install --system -e .[dev] #for development dependencies
+uv pip install --system -e .[dev] #to include development dependencies
 ```
+
 ### Optional: AutoAttack Installation
 
 To use the AutoAttack adversarial attack wrapper ([`AutoAttackWrapper`](./ada_verona/verification_module/attacks/auto_attack_wrapper.py)), you need to install AutoAttack separately from its GitHub repository:
