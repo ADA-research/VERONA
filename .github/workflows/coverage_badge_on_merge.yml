@@ -35,8 +35,7 @@ jobs:
                 pip install uv
                 uv venv
                 source .venv/bin/activate
-                uv sync --dev
-                uv pip install -e .
+                uv sync --extra dev
         
             - name: Run pytest with coverage
               run: |
