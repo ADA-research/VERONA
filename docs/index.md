@@ -39,7 +39,8 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv sync --dev  #or uv sync --extra gpu --dev for GPU-version installation
+uv pip install -e 
+uv pip install -e .[dev] #to include development dependencies
 
 ```
 ### Optional: AutoAttack Installation

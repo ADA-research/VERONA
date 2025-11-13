@@ -2,21 +2,17 @@
 
 This page contains essential information for developers contributing to or maintaining the ada-verona package.
 
-## Development Environment Setup
+### Local installation for e.g. development purposes
 
-Install the package with all development dependencies using:
+If you want to install ada-verona locally using git:
 
 ```bash
-uv sync --dev
+git clone https://github.com/ADA-research/VERONA.git
+cd VERONA
+uv pip install -e 
+uv pip install -e .[dev] #to include development dependencies
+
 ```
-
-This command:
-
-- Installs ada-verona and all dependencies
-- Ensures consistency with the `uv.lock` file
-- Includes all dev dependencies specified in the dependency groups in `pyproject.toml`
-
-You can use this in your preferred virtual environment setup (conda, venv, etc.).
 
 ## Pre-Commit Hooks
 
@@ -47,7 +43,6 @@ Before opening a PR, please do the following steps:
 
 
 ## Testing the documentation
-- Install mkdocs via pip ```pip install mkdocs-material``` and ```pip install "mkdocstrings[python]"```
 - Check the documentation locally using ```mkdocs serve```
 
 ## Package Release Steps
