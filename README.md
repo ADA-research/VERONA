@@ -65,8 +65,8 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv pip install --system -e .
-uv pip install --system -e .[dev] #to include development dependencies
+uv pip install -e .
+uv pip install -e .[dev] #to include development dependencies
 ```
 
 ### Optional: AutoAttack Installation
