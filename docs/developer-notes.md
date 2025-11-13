@@ -25,6 +25,14 @@ pre-commit install
 
 This command hooks into your Git workflow and runs configured checks on staged files before each commit.
 
+### Skipping Specific Hooks
+
+To skip a specific hook for a single commit, use the `SKIP` environment variable, e.g.:
+
+```bash
+SKIP=check-pyproject-requirements-sync git commit -m "Your message"
+```
+
 ## Opening a PR
 Before opening a PR, please do the following steps:
 
