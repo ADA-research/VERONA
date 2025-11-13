@@ -9,25 +9,29 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv pip install -e 
-uv pip install -e .[dev] #to include development dependencies
-
+uv pip install -e .
+uv pip install -e .[dev]  # to include development dependencies
 ```
 
 ## Pre-Commit Hooks
 
 We use [pre-commit](https://pre-commit.com/) to automatically enforce code quality standards and consistency before commits. 
 
-### Installation
-
-If you haven't already installed pre-commit, do so using:
+Pre-commit is included in the dev dependencies. After installing the dev environment, set up the git hooks:
 
 ```bash
-uv pip install pre-commit
 pre-commit install
 ```
 
 This command hooks into your Git workflow and runs configured checks on staged files before each commit.
+
+### Skipping Specific Hooks
+
+To skip a specific hook for a single commit, use the `SKIP` environment variable, e.g.:
+
+```bash
+SKIP=check-pyproject-requirements-sync git commit -m "Your message"
+```
 
 ## Opening a PR
 Before opening a PR, please do the following steps:

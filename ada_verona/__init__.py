@@ -68,17 +68,16 @@ HAS_AUTOVERIFY = importlib.util.find_spec("autoverify") is not None
 if not HAS_AUTOVERIFY:
     warnings.warn(
         "AutoVerify not found. Some complete verification features will be limited. "
-        "To install: uv pip install auto-verify",
+        "To install: uv pip install auto-verify>=0.1.4",
         stacklevel=2,
     )
-    
-    
+
+
 __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
     "HAS_AUTOVERIFY",
-    
     # Core abstract classes
     "DatasetSampler",
     "EpsilonValueEstimator",
@@ -87,7 +86,6 @@ __all__ = [
     "PropertyGenerator",
     "Attack",
     "ExperimentDataset",
-   
     # Database classes
     "ExperimentRepository",
     "VerificationContext",
@@ -99,44 +97,37 @@ __all__ = [
     "EpsilonValueResult",
     "EpsilonStatus",
     "DataPoint",
-
     # Dataset sampler classes
     "PredictionsBasedSampler",
     "PytorchExperimentDataset",
     "ImageFileDataset",
-
     # Epsilon value estimator classes
     "BinarySearchEpsilonValueEstimator",
     "IterativeEpsilonValueEstimator",
-
     # Verification module classes
     "AttackEstimationModule",
     "PGDAttack",
     "FGSMAttack",
-
     # Property generator classes
     "One2AnyPropertyGenerator",
     "One2OnePropertyGenerator",
 ]
 
 
-
 if HAS_AUTOATTACK:
-    auto_attack_module = importlib.import_module(
-        ".verification_module.attacks.auto_attack_wrapper", __package__
-    )
+    auto_attack_module = importlib.import_module(".verification_module.attacks.auto_attack_wrapper", __package__)
     AutoAttackWrapper = auto_attack_module.AutoAttackWrapper
     __all__.extend(["AutoAttackWrapper"])
 
 if HAS_AUTOVERIFY:
-    autoverify_module = importlib.import_module(
-        ".verification_module.auto_verify_module", __package__
-    )
+    autoverify_module = importlib.import_module(".verification_module.auto_verify_module", __package__)
     AutoVerifyModule = autoverify_module.AutoVerifyModule
     parse_counter_example = autoverify_module.parse_counter_example
     parse_counter_example_label = autoverify_module.parse_counter_example_label
-    __all__.extend([
-        "AutoVerifyModule",
-        "parse_counter_example",
-        "parse_counter_example_label",
-    ])
+    __all__.extend(
+        [
+            "AutoVerifyModule",
+            "parse_counter_example",
+            "parse_counter_example_label",
+        ]
+    )

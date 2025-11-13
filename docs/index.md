@@ -39,13 +39,12 @@ If you want to install ada-verona locally using git:
 ```bash
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
-uv pip install -e 
-uv pip install -e .[dev] #to include development dependencies
-
+uv pip install -e .
+uv pip install -e .[dev]  # to include development dependencies
 ```
 ### Optional: AutoAttack Installation
 
-To use the AutoAttack adversarial attack wrapper ([`AutoAttackWrapper`](./ada_verona/verification_module/attacks/auto_attack_wrapper.py)), you need to install AutoAttack separately from its GitHub repository:
+To use the AutoAttack adversarial attack wrapper ([`AutoAttackWrapper`](./ada_verona/verification_module/attacks/auto_attack_wrapper.py)), you need to install AutoAttack from its GitHub repository:
 
 ```bash
 uv pip install git+https://github.com/fra31/auto-attack
@@ -64,3 +63,13 @@ uv pip install auto-verify>=0.1.4
 ```
 
 This package provides a framework for integrating verifiers. Please refer to the [auto-verify documentation](https://ada-research.github.io/auto-verify/) for details about auto-verify.
+
+### Setting up Pre-Commit Hooks
+
+If you installed development dependencies (`uv pip install -e .[dev]`), pre-commit is already available. To install the git hooks, run:
+
+```bash
+pre-commit install
+```
+
+This will automatically enforce code quality standards before each commit.

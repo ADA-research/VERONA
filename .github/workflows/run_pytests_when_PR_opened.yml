@@ -39,6 +39,8 @@ jobs:
           uv venv
           source .venv/bin/activate
           uv sync --extra dev
+          uv pip install auto-verify
+          uv pip install git+https://github.com/fra31/auto-attack
   
       - name: Run pytest
         run: |
