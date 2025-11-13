@@ -66,12 +66,12 @@ If you want to install ada-verona locally using git:
 git clone https://github.com/ADA-research/VERONA.git
 cd VERONA
 uv pip install -e .
-uv pip install -e .[dev] #to include development dependencies
+uv pip install -e .[dev]  # to include development dependencies
 ```
 
 ### Optional: AutoAttack Installation
 
-To use the AutoAttack adversarial attack wrapper ([`AutoAttackWrapper`](./ada_verona/verification_module/attacks/auto_attack_wrapper.py)), you need to install AutoAttack separately from its GitHub repository:
+To use the AutoAttack adversarial attack wrapper ([`AutoAttackWrapper`](./ada_verona/verification_module/attacks/auto_attack_wrapper.py)), you need to install AutoAttack from its GitHub repository:
 
 ```bash
 uv pip install git+https://github.com/fra31/auto-attack
@@ -81,7 +81,7 @@ This package provides ensemble-based adversarial attacks for robustness evaluati
 
 ### Optional: AutoVerify Installation
 
-To use the auto-verify verifiers, you need to install auto-verify separately:
+To use the auto-verify verifiers, you need to additionally install auto-verify:
 
 **Note:** On macOS (and sometimes on Linux), you may need to install `swig` first with `conda install -c conda-forge swig`.
 
