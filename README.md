@@ -1,5 +1,7 @@
 [![codecov](https://codecov.io/gh/ADA-research/VERONA/graph/badge.svg?token=O0J6S4TSF2)](https://codecov.io/gh/ADA-research/VERONA)
 [![PyPI](https://img.shields.io/pypi/v/ada-verona)](https://pypi.org/project/ada-verona/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ADA-research/VERONA/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/pypi/dm/ada-verona)](https://pypi.org/project/ada-verona/)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 [![Documentation](https://github.com/ADA-research/VERONA/actions/workflows/docs.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/docs.yml)
