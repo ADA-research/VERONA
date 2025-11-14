@@ -1,5 +1,6 @@
 [![codecov](https://codecov.io/gh/ADA-research/VERONA/graph/badge.svg?token=O0J6S4TSF2)](https://codecov.io/gh/ADA-research/VERONA)
 [![PyPI](https://img.shields.io/pypi/v/ada-verona)](https://pypi.org/project/ada-verona/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ADA-research/VERONA/blob/main/LICENSE)
 [![Lint](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/lint.yml)
 [![Release to PyPI](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/pypi_release.yml)
 [![Documentation](https://github.com/ADA-research/VERONA/actions/workflows/docs.yml/badge.svg)](https://github.com/ADA-research/VERONA/actions/workflows/docs.yml)
@@ -7,7 +8,7 @@
 # VERification Of Neural Architectures (VERONA)
 
 <p align="center">
-  <img src="./assets/MNIST_anneplot_convMedGRELU_test_combined.svg" alt="Anneplot of robusntess distributions of one convolutional architecture with three different training methods created with \alpha,\beta-CROWN." height="400" style="vertical-align: top;"/>
+  <img src="https://raw.githubusercontent.com/ADA-research/VERONA/main/assets/MNIST_anneplot_convMedGRELU_test_combined.svg" alt="Anneplot of robusntess distributions of one convolutional architecture with three different training methods created with \alpha,\beta-CROWN." height="400"/>
 </p>
 
 VERONA simplifies your experiment pipeline for performing local robustness verification on your networks and datasets. 
