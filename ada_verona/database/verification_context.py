@@ -15,6 +15,7 @@
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from ada_verona.database.dataset.data_point import DataPoint
@@ -87,6 +88,17 @@ class VerificationContext:
         with open(save_path, "w") as f:
             f.write(vnnlib_property.content)
         vnnlib_property.path = save_path
+        
+        # Optionally store additional metadata for verifiers that need direct access
+        # to the original image and class (e.g. SDP-CROWN).
+        if vnnlib_property.image is not None or vnnlib_property.image_class is not None:
+            meta_path = self.tmp_path / f"{vnnlib_property.name}.npz"
+            np.savez_compressed(
+                meta_path,
+                image=vnnlib_property.image,
+                image_class=-1 if vnnlib_property.image_class is None else vnnlib_property.image_class,
+                epsilon=-1.0 if vnnlib_property.epsilon is None else vnnlib_property.epsilon,
+            )
 
     def delete_tmp_path(self) -> None:
         """
