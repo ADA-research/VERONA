@@ -14,9 +14,11 @@
 # ==============================================================================
 
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
+from result import Err, Ok
 
 from ada_verona.database.verification_context import VerificationContext
 from ada_verona.database.verification_result import CompleteVerificationData
@@ -36,13 +38,16 @@ from ada_verona.verification_module.property_generator.one2one_property_generato
 def property_generator(request):
     return request.param
 
+
 @pytest.fixture
 def tmp_path():
     return Path("/tmp")
 
+
 @pytest.fixture
 def verification_context(network, datapoint, tmp_path, property_generator):
     return VerificationContext(network, datapoint, tmp_path, property_generator)
+
 
 @pytest.fixture
 def auto_verify_module_fixture(request, auto_verify_module, auto_verify_module_config):
@@ -51,6 +56,7 @@ def auto_verify_module_fixture(request, auto_verify_module, auto_verify_module_c
     elif request.param == "auto_verify_module_config":
         return auto_verify_module_config
 
+
 def test_auto_verify_module_initialization(auto_verify_module, verifier):
     assert auto_verify_module.verifier == verifier
     assert auto_verify_module.timeout == 60
@@ -58,21 +64,19 @@ def test_auto_verify_module_initialization(auto_verify_module, verifier):
 
 
 @pytest.mark.parametrize(
-    "auto_verify_module_fixture", 
-    ["auto_verify_module", "auto_verify_module_config"], 
-    indirect=True
+    "auto_verify_module_fixture", ["auto_verify_module", "auto_verify_module_config"], indirect=True
 )
 def test_auto_verify_module_verify(auto_verify_module_fixture, verification_context):
     result = auto_verify_module_fixture.verify(verification_context, 0.6)
 
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "SAT"
-    
+
     result = auto_verify_module_fixture.verify(verification_context, 0.01)
 
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "UNSAT"
-   
+
 
 def test_parse_counter_example(result, verification_context):
     counter_example = parse_counter_example(result, verification_context)
@@ -85,3 +89,50 @@ def test_parse_counter_example_label(result):
     label = parse_counter_example_label(result)
     assert isinstance(label, int)
     assert label == 0
+
+
+def test_auto_verify_module_verify_sat_with_counter_example(auto_verify_module, verification_context, datapoint):
+    """Test that SAT results with counter_example parse the label correctly."""
+    # Create a counter example string with Y values
+    formatted_strings = [f"(X_{i} {datapoint.data.flatten()[i]:.4f})" for i in range(28 * 28)]
+    counter_example = "\n".join(formatted_strings)
+    counter_example += "\n(Y_0 0.1)\n(Y_1 0.9)"  # Label 1 has highest value
+
+    # Mock the verifier to return SAT with counter_example
+    mock_result = Ok(CompleteVerificationData(result="SAT", counter_example=counter_example, took=10.0))
+    auto_verify_module.verifier.verify_property = MagicMock(return_value=mock_result)
+
+    result = auto_verify_module.verify(verification_context, 0.6)
+
+    assert isinstance(result, CompleteVerificationData)
+    assert result.result == "SAT"
+    assert result.obtained_labels == ["1"]  # Label 1 should be parsed
+
+
+def test_auto_verify_module_verify_sat_with_counter_example_parse_error(
+    auto_verify_module, verification_context, datapoint
+):
+    """Test that exception during label parsing is handled gracefully."""
+    # Create an invalid counter example that will cause parsing to fail
+    counter_example = "invalid format that cannot be parsed"
+
+    # Mock the verifier to return SAT with invalid counter_example
+    mock_result = Ok(CompleteVerificationData(result="SAT", counter_example=counter_example, took=10.0))
+    auto_verify_module.verifier.verify_property = MagicMock(return_value=mock_result)
+
+    result = auto_verify_module.verify(verification_context, 0.6)
+
+    assert isinstance(result, CompleteVerificationData)
+    assert result.result == "SAT"
+    # obtained_labels should not be set if parsing fails
+
+
+def test_auto_verify_module_verify_error_result(auto_verify_module, verification_context):
+    """Test that Err results are handled correctly."""
+    error_message = "Verification failed with error"
+    mock_result = Err(error_message)
+    auto_verify_module.verifier.verify_property = MagicMock(return_value=mock_result)
+
+    result = auto_verify_module.verify(verification_context, 0.6)
+
+    assert result == error_message
