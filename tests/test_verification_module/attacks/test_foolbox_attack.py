@@ -14,6 +14,7 @@
 # ==============================================================================
 
 import torch
+from torch import nn
 
 
 def test_foolbox_attack_execute(foolbox_attack, model, data, target):
@@ -25,8 +26,19 @@ def test_foolbox_attack_execute(foolbox_attack, model, data, target):
     assert torch.all(perturbed_data >= 0) and torch.all(perturbed_data <= 1)
 
 
-def test_foolbox_attack_execute_3d_data(foolbox_attack, model, target):
+def test_foolbox_attack_execute_3d_data(foolbox_attack, target):
     epsilon = 0.1
+
+    class FlattenModel(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.fc = nn.Linear(10, 2)
+
+        def forward(self, x):
+            x = x.view(x.size(0), -1)
+            return self.fc(x)
+
+    model = FlattenModel()
     data_3d = torch.randn(1, 1, 10)
     normalized_data = torch.sigmoid(data_3d)
     perturbed_data = foolbox_attack.execute(model, normalized_data, target, epsilon)
