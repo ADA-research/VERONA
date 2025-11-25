@@ -15,6 +15,7 @@
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from ada_verona.database.dataset.data_point import DataPoint
@@ -88,14 +89,21 @@ class VerificationContext:
             f.write(vnnlib_property.content)
         vnnlib_property.path = save_path
 
+        if vnnlib_property.image is not None or vnnlib_property.image_class is not None:
+            meta_path = self.tmp_path / f"{vnnlib_property.name}.npz"
+            np.savez_compressed(
+                meta_path,
+                image=vnnlib_property.image,
+                image_class=-1 if vnnlib_property.image_class is None else vnnlib_property.image_class,
+                epsilon=-1.0 if vnnlib_property.epsilon is None else vnnlib_property.epsilon,
+            )
+
     def delete_tmp_path(self) -> None:
         """
         Delete the temporary path and its contents.
         """
-      
 
         self.tmp_path.unlink()
-
 
     def save_status_list(self, epsilon_status_list: list[EpsilonStatus]) -> None:
         """
@@ -153,7 +161,7 @@ class VerificationContext:
         """
         # Recreate the network from its dictionary representation
 
-        network = ONNXNetwork.from_dict(data["network"]) 
+        network = ONNXNetwork.from_dict(data["network"])
         data_point = DataPoint.from_dict(data["data_point"])
         tmp_path = Path(data["tmp_path"])
         property_generator = PropertyGenerator.from_dict(data["property_generator"])
