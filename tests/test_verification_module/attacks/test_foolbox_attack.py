@@ -18,7 +18,8 @@ import torch
 
 def test_foolbox_attack_execute(foolbox_attack, model, data, target):
     epsilon = 0.1
-    perturbed_data = foolbox_attack.execute(model, data, target, epsilon)
+    normalized_data = torch.sigmoid(data)
+    perturbed_data = foolbox_attack.execute(model, normalized_data, target, epsilon)
     assert isinstance(perturbed_data, torch.Tensor)
-    assert perturbed_data.shape == data.shape
+    assert perturbed_data.shape == normalized_data.shape
     assert torch.all(perturbed_data >= 0) and torch.all(perturbed_data <= 1)
