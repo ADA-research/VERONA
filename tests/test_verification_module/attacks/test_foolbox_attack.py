@@ -23,3 +23,23 @@ def test_foolbox_attack_execute(foolbox_attack, model, data, target):
     assert isinstance(perturbed_data, torch.Tensor)
     assert perturbed_data.shape == normalized_data.shape
     assert torch.all(perturbed_data >= 0) and torch.all(perturbed_data <= 1)
+
+
+def test_foolbox_attack_execute_3d_data(foolbox_attack, model, target):
+    epsilon = 0.1
+    data_3d = torch.randn(1, 1, 10)
+    normalized_data = torch.sigmoid(data_3d)
+    perturbed_data = foolbox_attack.execute(model, normalized_data, target, epsilon)
+    assert isinstance(perturbed_data, torch.Tensor)
+    assert perturbed_data.shape == (1, 1, 1, 10)
+    assert torch.all(perturbed_data >= 0) and torch.all(perturbed_data <= 1)
+
+
+def test_foolbox_attack_execute_0d_target(foolbox_attack, model, data):
+    epsilon = 0.1
+    target_0d = torch.tensor(1)
+    normalized_data = torch.sigmoid(data)
+    perturbed_data = foolbox_attack.execute(model, normalized_data, target_0d, epsilon)
+    assert isinstance(perturbed_data, torch.Tensor)
+    assert perturbed_data.shape == normalized_data.shape
+    assert torch.all(perturbed_data >= 0) and torch.all(perturbed_data <= 1)
