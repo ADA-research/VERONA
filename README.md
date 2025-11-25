@@ -138,6 +138,10 @@ This package makes use of the following tools and libraries:
 
 - **auto-verify** ([GitHub](https://github.com/ADA-research/auto-verify))
     - For integrating verifiers [nnenum](https://github.com/stanleybak/nnenum), [AB-Crown](https://github.com/Verified-Intelligence/alpha-beta-CROWN), [VeriNet](https://github.com/vas-group-imperial/VeriNet), and [Oval-Bab](https://github.com/oval-group/oval-bab). Please refer to the auto-verify [documentation](https://ada-research.github.io/auto-verify/) for details about auto-verify.
+    
+- **foolbox** ([GitHub](https://github.com/bethgelab/foolbox))
+  - Rauber, J., Brendel, W., and Bethge, M., "Foolbox: A Python toolbox to benchmark the robustness of machine learning models," in *Reliable Machine Learning in the Wild Workshop, 34th International Conference on Machine Learning*, 2017. [Online]. Available: http://arxiv.org/abs/1707.04131
+  - Rauber, J., Zimmermann, R., Bethge, M., and Brendel, W., "Foolbox Native: Fast adversarial attacks to benchmark the robustness of machine learning models in PyTorch, TensorFlow, and JAX," *Journal of Open Source Software*, vol. 5, no. 53, p. 2607, 2020. [Online]. Available: https://doi.org/10.21105/joss.02607
 
 We thank the authors and maintainers of these projects, as well as the authors and maintainers of the verifiers for their contributions to the robustness research community.
 

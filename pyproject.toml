@@ -35,6 +35,7 @@ dependencies = [
     "onnx>=1.14.0",
     "onnxruntime>=1.14.1",
     "onnx2torch>=1.5.14",
+    "foolbox>=3.3.4",
     "pandas>=2.0.1",
     "PyYAML>=6.0.1",
     "result>=0.9.0",
