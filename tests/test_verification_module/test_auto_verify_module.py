@@ -80,25 +80,25 @@ def test_auto_verify_module_verify(auto_verify_module_fixture, verification_cont
 
 def test_parse_counter_example(result, verification_context):
     counter_example = parse_counter_example(result, verification_context)
-    assert isinstance(counter_example, np.ndarray)
 
+    assert isinstance(counter_example, np.ndarray)
     assert counter_example.shape == verification_context.data_point.data.shape
 
 
 def test_parse_counter_example_label(result):
     label = parse_counter_example_label(result)
+
     assert isinstance(label, int)
     assert label == 0
 
 
 def test_auto_verify_module_verify_sat_with_counter_example(auto_verify_module, verification_context, datapoint):
     """Test that SAT results with counter_example parse the label correctly."""
-    # Create a counter example string with Y values
+
     formatted_strings = [f"(X_{i} {datapoint.data.flatten()[i]:.4f})" for i in range(28 * 28)]
     counter_example = "\n".join(formatted_strings)
-    counter_example += "\n(Y_0 0.1)\n(Y_1 0.9)"  # Label 1 has highest value
+    counter_example += "\n(Y_0 0.1)\n(Y_1 0.9)"
 
-    # Mock the verifier to return SAT with counter_example
     mock_result = Ok(CompleteVerificationData(result="SAT", counter_example=counter_example, took=10.0))
     auto_verify_module.verifier.verify_property = MagicMock(return_value=mock_result)
 
@@ -109,14 +109,11 @@ def test_auto_verify_module_verify_sat_with_counter_example(auto_verify_module, 
     assert result.obtained_labels == ["1"]  # Label 1 should be parsed
 
 
-def test_auto_verify_module_verify_sat_with_counter_example_parse_error(
-    auto_verify_module, verification_context, datapoint
-):
+def test_auto_verify_module_verify_sat_with_counter_example_parse_error(auto_verify_module, verification_context):
     """Test that exception during label parsing is handled gracefully."""
-    # Create an invalid counter example that will cause parsing to fail
+
     counter_example = "invalid format that cannot be parsed"
 
-    # Mock the verifier to return SAT with invalid counter_example
     mock_result = Ok(CompleteVerificationData(result="SAT", counter_example=counter_example, took=10.0))
     auto_verify_module.verifier.verify_property = MagicMock(return_value=mock_result)
 
@@ -124,7 +121,7 @@ def test_auto_verify_module_verify_sat_with_counter_example_parse_error(
 
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "SAT"
-    # obtained_labels should not be set if parsing fails
+    assert result.obtained_labels is None
 
 
 def test_auto_verify_module_verify_error_result(auto_verify_module, verification_context):
