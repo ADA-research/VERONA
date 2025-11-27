@@ -106,7 +106,7 @@ def test_auto_verify_module_verify_sat_with_counter_example(auto_verify_module, 
 
     assert isinstance(result, CompleteVerificationData)
     assert result.result == "SAT"
-    assert result.obtained_labels == ["1"]  # Label 1 should be parsed
+    assert result.obtained_labels == ["1"]
 
 
 def test_auto_verify_module_verify_sat_with_counter_example_parse_error(auto_verify_module, verification_context):
@@ -133,3 +133,22 @@ def test_auto_verify_module_verify_error_result(auto_verify_module, verification
     result = auto_verify_module.verify(verification_context, 0.6)
 
     assert result == error_message
+
+
+def test_auto_verify_module_verify_unsat_sets_obtained_labels_none(auto_verify_module, verification_context):
+    """Test that UNSAT results without obtained_labels attribute get it set to None."""
+    class MockOutcome:
+        def __init__(self):
+            self.result = "UNSAT"
+            self.took = 10.0
+            self.counter_example = None
+
+    outcome = MockOutcome()
+    mock_result = Ok(outcome)
+    auto_verify_module.verifier.verify_property = MagicMock(return_value=mock_result)
+
+    result = auto_verify_module.verify(verification_context, 0.01)
+
+    assert hasattr(result, "obtained_labels")
+    assert result.obtained_labels is None
+    assert result.result == "UNSAT"
