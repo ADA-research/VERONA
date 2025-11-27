@@ -87,7 +87,7 @@ To use the auto-verify verifiers, you need to additionally install auto-verify:
 **Note:** On macOS (and sometimes on Linux), you may need to install `swig` first with `conda install -c conda-forge swig`.
 
 ```bash
-uv pip install auto-verify>=0.1.4
+uv pip install auto-verify
 ```
 
 This package provides a framework for integrating verifiers. Please refer to the [auto-verify documentation](https://ada-research.github.io/auto-verify/) for details about auto-verify.
