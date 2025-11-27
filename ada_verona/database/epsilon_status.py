@@ -42,7 +42,7 @@ class EpsilonStatus:
         """
         self.result = complete_verification_data.result
         self.time = complete_verification_data.took
-        self.obtained_labels = complete_verification_data.obtained_labels
+        self.obtained_labels = getattr(complete_verification_data, "obtained_labels", None)
 
     def to_dict(self) -> dict:
         """Convert the EpsilonStatus to a dictionary."""

@@ -83,6 +83,8 @@ class AutoVerifyModule(VerificationModule):
                     outcome.obtained_labels = [str(predicted_label)]
                 except Exception as e:
                     logger.warning(f"Failed to parse counter example label: {e}")
+            if not hasattr(outcome, "obtained_labels"):
+                outcome.obtained_labels = None
             return outcome
         elif isinstance(result, Err):
             logger.info(f"Error during verification: {result.unwrap_err()}")
