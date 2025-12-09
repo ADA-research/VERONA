@@ -42,6 +42,7 @@ from .database.vnnlib_property import VNNLibProperty
 
 # Dataset sampler classes
 from .dataset_sampler.dataset_sampler import DatasetSampler
+from .dataset_sampler.identity_sampler import IdentitySampler
 from .dataset_sampler.predictions_based_sampler import PredictionsBasedSampler
 
 # Epsilon value estimator classes
@@ -87,12 +88,22 @@ if not HAS_AUTOVERIFY:
         stacklevel=2,
     )
 
+# Check for foolbox availability
+HAS_FOOLBOX = importlib.util.find_spec("foolbox") is not None
+if not HAS_FOOLBOX:
+    warnings.warn(
+        "Foolbox not found. Some adversarial attack features will be limited. "
+        "To install: pip install foolbox",
+        stacklevel=2,
+    )
+
 
 __all__ = [
     "__version__",
     "__author__",
     "HAS_AUTOATTACK",
     "HAS_AUTOVERIFY",
+    "HAS_FOOLBOX",
     # Core abstract classes
     "DatasetSampler",
     "EpsilonValueEstimator",
@@ -114,6 +125,7 @@ __all__ = [
     "DataPoint",
     # Dataset sampler classes
     "PredictionsBasedSampler",
+    "IdentitySampler",
     "PytorchExperimentDataset",
     "ImageFileDataset",
     # Epsilon value estimator classes
@@ -146,3 +158,8 @@ if HAS_AUTOVERIFY:
             "parse_counter_example_label",
         ]
     )
+
+if HAS_FOOLBOX:
+    foolbox_attack_module = importlib.import_module(".verification_module.attacks.foolbox_attack", __package__)
+    FoolboxAttack = foolbox_attack_module.FoolboxAttack
+    __all__.extend(["FoolboxAttack"])

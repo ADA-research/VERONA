@@ -95,6 +95,7 @@ VERONA implements the following adversarial attack methods:
 - **Fast Gradient Sign Method (FGSM)** - [Goodfellow et al., 2015](https://arxiv.org/abs/1412.6572)
 - **Projected Gradient Descent (PGD)** - [Madry et al., 2018](https://arxiv.org/abs/1706.06083)
 - **AutoAttack** - [Croce and Hein, 2020](https://proceedings.mlr.press/v119/croce20b.html)
+- All attacks from [foolbox](https://github.com/bethgelab/foolbox/tree/master/foolbox/attacks) through the [`FoolboxAttack`](../ada_verona/verification_module/attacks/foolbox_attack.py) class
 
 ### Optional: AutoAttack Installation
 
