@@ -61,11 +61,35 @@ class FoolboxAttack(Attack):
 
         attack = self.attack_cls(**self.kwargs)
 
-        if data.dim() == 3:
+        # Ensure data has batch dimension (Foolbox requires batch dimension)
+        # Data should be (batch_size, channels, height, width) or (batch_size, features)
+        # Foolbox expects at least 2D tensors: (batch_size, ...)
+        if data.dim() == 0:
+            # Scalar, add batch dimension: (1,)
             data = data.unsqueeze(0)
+        elif data.dim() == 1:
+            # 1D tensor, add batch dimension: (1, features)
+            data = data.unsqueeze(0)
+        elif data.dim() == 3:
+            # 3D tensor (C, H, W), add batch dimension: (1, C, H, W)
+            data = data.unsqueeze(0)
+        # If data is already 4D (B, C, H, W) or 2D (B, features), keep as is
+        # But verify it has a batch dimension
+        if data.dim() >= 2 and data.shape[0] == 0:
+            raise ValueError(f"Data tensor has invalid batch size: {data.shape}")
 
+        # Ensure target has batch dimension
+        # Target should be 1D with shape (batch_size,) for a single sample: (1,)
         if target.dim() == 0:
+            # Scalar target, add batch dimension
             target = target.unsqueeze(0)
+        elif target.dim() == 1:
+            # Already 1D, should be fine (typically shape (1,) for single sample)
+            # But ensure it's not empty
+            if target.shape[0] == 0:
+                raise ValueError("Target tensor cannot be empty")
+        # If target is already correct shape, keep as is
+
         _, clipped_advs, _ = attack(fmodel, data, target, epsilons=epsilon)
 
         return clipped_advs
