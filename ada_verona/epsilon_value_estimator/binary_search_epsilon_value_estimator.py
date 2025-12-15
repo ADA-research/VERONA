@@ -139,7 +139,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
                 verification_context.save_result(epsilon_status_list[midpoint])
                 logger.debug(
                     f"current epsilon value: {epsilon_status_list[midpoint].result},"
-                    "took: {epsilon_status_list[midpoint].time}"  
+                    f"took: {epsilon_status_list[midpoint].time}"  
                 )
 
             if epsilon_status_list[midpoint].result == VerificationResult.UNSAT:
