@@ -19,6 +19,7 @@ import numpy as np
 import onnx
 import torch
 from onnx2torch import convert
+from onnxsim import simplify
 
 from ada_verona.database.machine_learning_model.network import Network
 from ada_verona.database.machine_learning_model.torch_model_wrapper import TorchModelWrapper
@@ -102,7 +103,21 @@ class ONNXNetwork(Network):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         torch_model_wrapper = self.torch_model_wrapper
         if torch_model_wrapper is None:
-            torch_model = convert(self.path).to(device)
+            onnx_model = self.load_onnx_model()
+            # Simplify model
+            try:
+                model_simp, check = simplify(onnx_model)
+                if not check:
+                    print(f"ONNX-simplifier validation failed for {self.name}, using original.")
+                    model_to_convert = onnx_model
+                else:
+                    model_to_convert = model_simp
+            except Exception as e:
+                print(f"Simplification failed ({e}). Attempting to convert original model.")
+                model_to_convert = onnx_model
+
+            torch_model = convert(model_to_convert).to(device)
+            
             torch_model_wrapper = TorchModelWrapper(torch_model, self.get_input_shape())
             self.torch_model_wrapper = torch_model_wrapper
 
