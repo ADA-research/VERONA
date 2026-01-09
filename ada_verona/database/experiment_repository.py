@@ -137,7 +137,7 @@ class ExperimentRepository:
         if self.network_folder is None:
             raise Exception("No Network folder given.")
         else:
-            network_path_list = [file for file in self.network_folder.iterdir()]
+            network_path_list = [file for file in self.network_folder.iterdir() if file.is_file() and file.suffix.lower() == '.onnx']
             network_list = [ONNXNetwork(x) for x in network_path_list]
         return network_list
         
