@@ -64,15 +64,34 @@ class AutoVerifyModule(VerificationModule):
             image, verification_context.data_point.label, epsilon
         )
 
+        # SDP-CROWN needs access to the concrete instance (image), label, and epsilon,
+        # but it is executed in a separate process that only receives the `.vnnlib` path.
+        # We therefore embed a small VERONA metadata header into the `.vnnlib` content.
+        if (self.verifier.name == "sdpcrown") and ("; verona_metadata_version:" not in vnnlib_property.content):
+            image_flat = verification_context.data_point.data.detach().cpu().numpy().reshape(-1)
+            image_csv = ",".join(f"{v:.8f}" for v in image_flat)
+            header = (
+                "; verona_metadata_version: 1\n"
+                f"; verona_epsilon: {float(epsilon):.8f}\n"
+                f"; verona_image_class: {int(verification_context.data_point.label)}\n"
+                f"; verona_image: {image_csv}\n"
+            )
+            vnnlib_property.content = header + vnnlib_property.content
+
         verification_context.save_vnnlib_property(vnnlib_property)
 
         if self.config:
             result = self.verifier.verify_property(
-                verification_context.network.path, vnnlib_property.path, timeout=self.timeout, config=self.config
+                verification_context.network.path,
+                vnnlib_property.path,
+                timeout=self.timeout,
+                config=self.config,
             )
         else:
             result = self.verifier.verify_property(
-                verification_context.network.path, vnnlib_property.path, timeout=self.timeout
+                verification_context.network.path,
+                vnnlib_property.path,
+                timeout=self.timeout,
             )
 
         if isinstance(result, Ok):

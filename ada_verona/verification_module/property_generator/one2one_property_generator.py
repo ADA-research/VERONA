@@ -26,7 +26,7 @@ class One2OnePropertyGenerator(PropertyGenerator):
 
     def __init__(self, target_class: int, number_classes: int = 10, data_lb: int = 0, data_ub: int = 1):
         """
-        Initialize the One2OnePropertyGenerator with the target class, number of classes, data lower bound, 
+        Initialize the One2OnePropertyGenerator with the target class, number of classes, data lower bound,
         and data upper bound.
         Args:
             target_class (int): The target class for the property.
@@ -84,7 +84,10 @@ class One2OnePropertyGenerator(PropertyGenerator):
 
         property_name = f"property_{image_class}_{str(epsilon).replace('.', '_')}"
 
-        return VNNLibProperty(name=property_name, content=result)
+        return VNNLibProperty(
+            name=property_name,
+            content=result,
+        )
 
     def get_dict_for_epsilon_result(self) -> dict:
         """
@@ -102,7 +105,7 @@ class One2OnePropertyGenerator(PropertyGenerator):
         Returns:
             dict: The dictionary representation of the One2OnePropertyGenerator.
         """
-        
+
         return dict(
             target_class=self.target_class,
             number_classes=self.number_classes,
@@ -111,8 +114,7 @@ class One2OnePropertyGenerator(PropertyGenerator):
             type=self.__class__.__name__,
             module=self.__class__.__module__,
         )
-    
-    
+
     @classmethod
     def from_dict(cls, data: dict):
         """
