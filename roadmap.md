@@ -8,12 +8,13 @@ This roadmap outlines the planned development and priorities for VERONA.
 
 ## 2. Near-Term Goals (Sept 2025 – Jan 2026)  
 - **Roadmap meeting** – Finalise this draft in an open meeting with all council members.  
-- **Certified defense with randomized smoothing** – For transformer-based image classifiers.  
+- **Certified defense with randomized smoothing** – Support for certified defense (yielding statistical robustness certificates) methods for image classifiers.  
 - **Vehicle integration for local robustness.**  
 
 ## 3. Mid-Term Goals (2026)  
 - **Vehicle integration for complex properties** – Extend to properties with tree structures requiring GPU communication in parallel execution. Add an estimator for this.  
-- **Reduce dependency on AutoVerify.**  
+- **Reduce dependency on AutoVerify.**
+- Building dedicated interfaces to support adv attacks from [foolbox](https://github.com/bethgelab/foolbox) and [adversarial-attacks-pytorch](https://github.com/Harry24k/adversarial-attacks-pytorch) 
 - **Support for tree-based models** – Add support for decision trees and random forests (based on Marie’s bachelor project + student work).  
 - **Docker support** – Provide Docker images for reproducibility and paper-specific setups.  
 
