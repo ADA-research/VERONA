@@ -28,5 +28,5 @@ This roadmap outlines the planned development and priorities for VERONA.
 - [TODO] Add links to PRs open for contributions.  
 
 ## 6. Updates  
-- PyPI release: `ada_verona` v1.0.0 on [DATE] ([LINK])  
+- PyPI release: `ada_verona` v1.0.3 on [17-11-2025] ([[pypi](https://pypi.org/project/ada-verona/)])  
 - First draft of roadmap released on [DATE].  
