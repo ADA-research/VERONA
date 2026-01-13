@@ -67,7 +67,7 @@ class AutoVerifyModule(VerificationModule):
         # SDP-CROWN needs access to the concrete instance (image), label, and epsilon,
         # but it is executed in a separate process that only receives the `.vnnlib` path.
         # We therefore embed a small VERONA metadata header into the `.vnnlib` content.
-        if self.verifier.name == "sdpcrown" and "; verona_metadata_version:" not in vnnlib_property.content:
+        if (self.verifier.name == "sdpcrown") and ("; verona_metadata_version:" not in vnnlib_property.content):
             image_flat = verification_context.data_point.data.detach().cpu().numpy().reshape(-1)
             image_csv = ",".join(f"{v:.8f}" for v in image_flat)
             header = (
