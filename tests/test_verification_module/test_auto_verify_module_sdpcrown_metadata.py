@@ -25,6 +25,7 @@ from result import Ok
 from ada_verona.database.dataset.data_point import DataPoint
 from ada_verona.database.machine_learning_model.onnx_network import ONNXNetwork
 from ada_verona.database.verification_context import VerificationContext
+from ada_verona.database.verification_result import CompleteVerificationData
 from ada_verona.verification_module.auto_verify_module import AutoVerifyModule
 from ada_verona.verification_module.property_generator.one2any_property_generator import One2AnyPropertyGenerator
 
@@ -38,7 +39,7 @@ class _CapturingVerifier:
     def verify_property(self, network: Path, property: Path, **kwargs):  # noqa: A002
         self.seen_network = network
         self.seen_property = property
-        return Ok("UNSAT")
+        return Ok(CompleteVerificationData(result="UNSAT", took=0.0))
 
 
 def _parse_verona_header(vnnlib_text: str) -> tuple[float, int, np.ndarray]:
@@ -80,7 +81,7 @@ def test_sdpcrown_injects_verona_metadata_header(tmp_path: Path):
 
     epsilon = 0.1
     result = module.verify(verification_context, epsilon=epsilon)
-    assert result == "UNSAT"
+    assert result.result == "UNSAT"
 
     assert verifier.seen_property is not None
     vnnlib_text = verifier.seen_property.read_text(encoding="utf-8")
@@ -108,7 +109,7 @@ def test_non_sdpcrown_does_not_inject_metadata(tmp_path: Path):
     module = AutoVerifyModule(verifier=verifier, timeout=1.0)
 
     result = module.verify(verification_context, epsilon=0.1)
-    assert result == "UNSAT"
+    assert result.result == "UNSAT"
 
     assert verifier.seen_property is not None
     vnnlib_text = verifier.seen_property.read_text(encoding="utf-8")
