@@ -28,7 +28,6 @@ from ada_verona.verification_module.verification_module import VerificationModul
 logger = logging.getLogger(__name__)
 
 
-
 class AutoVerifyModule(VerificationModule):
     """
     A module for automatically verifying the robustness of a model using a specified verifier.
@@ -46,7 +45,7 @@ class AutoVerifyModule(VerificationModule):
         self.verifier = verifier
         self.timeout = timeout
         self.config = config
-        self.name = f"AutoVerifyModule ({verifier.name})" 
+        self.name = f"AutoVerifyModule ({verifier.name})"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
@@ -78,10 +77,19 @@ class AutoVerifyModule(VerificationModule):
 
         if isinstance(result, Ok):
             outcome = result.unwrap()
+            if outcome.result == "SAT" and outcome.counter_example:
+                try:
+                    predicted_label = parse_counter_example_label(result)
+                    outcome.obtained_labels = [str(predicted_label)]
+                except Exception as e:
+                    logger.warning(f"Failed to parse counter example label: {e}")
+            if not hasattr(outcome, "obtained_labels"):
+                outcome.obtained_labels = None
             return outcome
         elif isinstance(result, Err):
             logger.info(f"Error during verification: {result.unwrap_err()}")
             return result.unwrap_err()
+
 
 def parse_counter_example(result: Ok, verification_context: VerificationContext) -> np.ndarray:
     """
@@ -95,10 +103,10 @@ def parse_counter_example(result: Ok, verification_context: VerificationContext)
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
-    counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers if x.strip()])
-    
+    counter_example_array = np.array([float(re.sub(r"X_\d*", "", x).strip()) for x in numbers if x.strip()])
 
     return counter_example_array.reshape(verification_context.data_point.data.shape)
+
 
 def parse_counter_example_label(result: Ok) -> int:
     """
@@ -112,6 +120,6 @@ def parse_counter_example_label(result: Ok) -> int:
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "X" not in x]
-    counter_example_array = np.array([float(re.sub(r'Y_\d*', '', x).strip()) for x in numbers if x.strip()])
+    counter_example_array = np.array([float(re.sub(r"Y_\d*", "", x).strip()) for x in numbers if x.strip()])
 
     return int(np.argmax(counter_example_array))
