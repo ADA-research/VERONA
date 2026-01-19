@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ada-verona"
-version = "1.0.1"
+version = "1.0.3"
 description = "Neural Network Robustness Analysis Framework"
 authors = [
     {name = "Annelot Bosman", email = "a.w.bosman@liacs.leidenuniv.nl"},
@@ -16,7 +16,7 @@ authors = [
 author = "Annelot Bosmann, Aaron Berger, Hendrik Baacke, Jan van Rijn, Holger H. Hoos"
 author_email = "a.w.bosman@liacs.leidenuniv.nl, aaron.berger@rwth-aachen.de, hendrik.baacke@rwth-aachen.de, jan.vanrijn@liacs.leidenuniv.nl, hh@aim.rwth-aachen.de"
 readme = "README.md"
-requires-python = ">=3.10,<3.11" 
+requires-python = ">=3.10,<3.12" 
 license = {file = "LICENSE"}
 keywords = ["neural networks", "robustness", "verification", "adversarial", "adversarial robustness", "adversarial attacks", "AI safety"]
 classifiers = [
@@ -32,9 +32,9 @@ classifiers = [
 dependencies = [
     "matplotlib>=3.10.0",
     "numpy>=1.24.3",
-    "onnx>=1.14.0",
-    "onnxruntime>=1.14.1",
-    "onnx2torch>=1.5.14",
+    "onnx>=1.17.0",
+    "onnxruntime>=1.18.0",
+    "onnx2torch>=1.5.15",
     "pandas>=2.0.1",
     "PyYAML>=6.0.1",
     "result>=0.9.0",
@@ -67,13 +67,13 @@ dev = [
     "pytest-mock>=3.14.0",
     "pytest-cov>=4.1.0",
     "coverage>=7.0.0",
+    "auto-verify==1.0.0",
+    "autoattack @ git+https://github.com/fra31/auto-attack",
     "ruff>=0.3.4",
     "black>=22.0.0",
     "mypy>=0.991",
-    "pre-commit",
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.7.0",
-    "mkdocstrings-python>=1.19.0"
+    "build>=0.10.0",
+    "twine>=4.0.0"
 ]
 
 [project.urls]
