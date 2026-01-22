@@ -28,7 +28,6 @@ from ada_verona.verification_module.verification_module import VerificationModul
 logger = logging.getLogger(__name__)
 
 
-
 class AutoVerifyModule(VerificationModule):
     """
     A module for automatically verifying the robustness of a model using a specified verifier.
@@ -46,7 +45,7 @@ class AutoVerifyModule(VerificationModule):
         self.verifier = verifier
         self.timeout = timeout
         self.config = config
-        self.name = f"AutoVerifyModule ({verifier.name})" 
+        self.name = f"AutoVerifyModule ({verifier.name})"
 
     def verify(self, verification_context: VerificationContext, epsilon: float) -> str | CompleteVerificationData:
         """
@@ -65,23 +64,51 @@ class AutoVerifyModule(VerificationModule):
             image, verification_context.data_point.label, epsilon
         )
 
+        # SDP-CROWN needs access to the concrete instance (image), label, and epsilon,
+        # but it is executed in a separate process that only receives the `.vnnlib` path.
+        # We therefore embed a small VERONA metadata header into the `.vnnlib` content.
+        if (self.verifier.name == "sdpcrown") and ("; verona_metadata_version:" not in vnnlib_property.content):
+            image_flat = verification_context.data_point.data.detach().cpu().numpy().reshape(-1)
+            image_csv = ",".join(f"{v:.8f}" for v in image_flat)
+            header = (
+                "; verona_metadata_version: 1\n"
+                f"; verona_epsilon: {float(epsilon):.8f}\n"
+                f"; verona_image_class: {int(verification_context.data_point.label)}\n"
+                f"; verona_image: {image_csv}\n"
+            )
+            vnnlib_property.content = header + vnnlib_property.content
+
         verification_context.save_vnnlib_property(vnnlib_property)
 
         if self.config:
             result = self.verifier.verify_property(
-                verification_context.network.path, vnnlib_property.path, timeout=self.timeout, config=self.config
+                verification_context.network.path,
+                vnnlib_property.path,
+                timeout=self.timeout,
+                config=self.config,
             )
         else:
             result = self.verifier.verify_property(
-                verification_context.network.path, vnnlib_property.path, timeout=self.timeout
+                verification_context.network.path,
+                vnnlib_property.path,
+                timeout=self.timeout,
             )
 
         if isinstance(result, Ok):
             outcome = result.unwrap()
+            if outcome.result == "SAT" and outcome.counter_example:
+                try:
+                    predicted_label = parse_counter_example_label(result)
+                    outcome.obtained_labels = [str(predicted_label)]
+                except Exception as e:
+                    logger.warning(f"Failed to parse counter example label: {e}")
+            if not hasattr(outcome, "obtained_labels"):
+                outcome.obtained_labels = None
             return outcome
         elif isinstance(result, Err):
             logger.info(f"Error during verification: {result.unwrap_err()}")
             return result.unwrap_err()
+
 
 def parse_counter_example(result: Ok, verification_context: VerificationContext) -> np.ndarray:
     """
@@ -95,10 +122,10 @@ def parse_counter_example(result: Ok, verification_context: VerificationContext)
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "Y" not in x]
-    counter_example_array = np.array([float(re.sub(r'X_\d*', '', x).strip()) for x in numbers if x.strip()])
-    
+    counter_example_array = np.array([float(re.sub(r"X_\d*", "", x).strip()) for x in numbers if x.strip()])
 
     return counter_example_array.reshape(verification_context.data_point.data.shape)
+
 
 def parse_counter_example_label(result: Ok) -> int:
     """
@@ -112,6 +139,6 @@ def parse_counter_example_label(result: Ok) -> int:
     """
     string_list_without_sat = [x for x in result.unwrap().counter_example.split("\n") if "sat" not in x]
     numbers = [x.replace("(", "").replace(")", "") for x in string_list_without_sat if "X" not in x]
-    counter_example_array = np.array([float(re.sub(r'Y_\d*', '', x).strip()) for x in numbers if x.strip()])
+    counter_example_array = np.array([float(re.sub(r"Y_\d*", "", x).strip()) for x in numbers if x.strip()])
 
     return int(np.argmax(counter_example_array))
