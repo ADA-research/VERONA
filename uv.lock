@@ -12,6 +12,7 @@ dependencies = [
     { name = "onnx" },
     { name = "onnx2torch" },
     { name = "onnxruntime" },
+    { name = "onnxsim" }, 
     { name = "pandas" },
     { name = "pyyaml" },
     { name = "result" },
