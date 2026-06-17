@@ -13,11 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
-import foolbox as fb
 import pytest
 import torch
 from torch import nn
 
+import foolbox as fb
 from ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
 from ada_verona.verification_module.attacks.fgsm_attack import FGSMAttack
 from ada_verona.verification_module.attacks.foolbox_attack import FoolboxAttack

@@ -13,6 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
+import importlib.util
+
+if importlib.util.find_spec("foolbox") is None:
+    raise ImportError("Foolbox not found. This package is required for this script. To install: pip install foolbox")
+
 import logging
 from pathlib import Path
 
@@ -34,7 +39,16 @@ from ada_verona.verification_module.property_generator.one2any_property_generato
 
 logger.setup_logging(level=logging.INFO)
 
-experiment_name = "foolbox_pgd"
+# ── Configure attack ──────────────────────────────────────────────────────────
+# Switch between attack classes and kwargs to try different foolbox attacks.
+# Examples:
+#   attack_cls, attack_kwargs = LinfPGD, {"steps": 10}
+#   attack_cls, attack_kwargs = L2CarliniWagnerAttack, {"steps": 100}
+attack_cls = LinfPGD
+attack_kwargs = {"steps": 10}
+experiment_name = f"foolbox_{attack_cls.__name__}"
+# ─────────────────────────────────────────────────────────────────────────────
+
 timeout = 600
 experiment_repository_path = Path("../example_experiment/results_foolbox")
 network_folder = Path("../example_experiment/data/networks")
@@ -60,7 +74,7 @@ file_database.save_configuration(
 )
 
 property_generator = One2AnyPropertyGenerator()
-verifier = AttackEstimationModule(attack=FoolboxAttack(LinfPGD, bounds=(0, 1), steps=10))
+verifier = AttackEstimationModule(attack=FoolboxAttack(attack_cls, bounds=(0, 1), **attack_kwargs))
 
 epsilon_value_estimator = BinarySearchEpsilonValueEstimator(epsilon_value_list=epsilon_list.copy(), verifier=verifier)
 dataset_sampler = PredictionsBasedSampler(sample_correct_predictions=True)

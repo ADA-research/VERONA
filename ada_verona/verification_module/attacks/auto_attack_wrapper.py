@@ -59,16 +59,16 @@ class AutoAttackWrapper(Attack):
         Returns:
             Tensor: The perturbed data.
         """
-        
+
         adversary = AutoAttack(
-            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose =self.verbose
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
         )
         data = data.unsqueeze(0)
 
         # auto attack requires NCHW input format
         perturbed_data = adversary.run_standard_evaluation(data, target)
-        
-        # Handle the case where perturbed_data is a tuple (for autoattack: The first element is the perturbed image 
+
+        # Handle the case where perturbed_data is a tuple (for autoattack: The first element is the perturbed image
         # and second element is the model's prediction after the attack)
         if isinstance(perturbed_data, tuple):
             # Return the first element of the tuple (the perturbed images)

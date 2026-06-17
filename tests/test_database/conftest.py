@@ -34,9 +34,10 @@ class MockVerificationContext:
 
     def get_dict_for_epsilon_result(self):
         return {"mock_key": "mock_value"}
-    
+
     def to_dict(self):
         return {"mock_key": "mock_value"}
+
 
 @pytest.fixture
 def mock_verification_context():
@@ -52,7 +53,7 @@ def experiment_repository(tmp_path):
     return ExperimentRepository(base_path=base_path, network_folder=network_folder)
 
 
-@pytest.fixture 
+@pytest.fixture
 def epsilon_value_result(mock_verification_context):
     epsilon = 0.5
     smallest_sat_value = 0.3
@@ -68,12 +69,12 @@ def epsilon_value_result(mock_verification_context):
     return result
 
 
-
 @pytest.fixture
 def network(tmp_path):
     onnx_file = tmp_path / "network.onnx"
     onnx_file.touch()
     return ONNXNetwork(path=onnx_file)
+
 
 @pytest.fixture
 def mock_graph():
@@ -82,20 +83,12 @@ def mock_graph():
     output_tensor = onnx.helper.make_tensor_value_info("output", onnx.TensorProto.FLOAT, [1, 3, 224, 224])
 
     # Create a dummy node (e.g., identity operation)
-    node = onnx.helper.make_node(
-        "Relu",
-        inputs=["input"],
-        outputs=["output"]
-    )
+    node = onnx.helper.make_node("Relu", inputs=["input"], outputs=["output"])
 
     # Construct the graph
-    graph = onnx.helper.make_graph(
-        nodes=[node],
-        name="test_graph",
-        inputs=[input_tensor],
-        outputs=[output_tensor]
-    )
+    graph = onnx.helper.make_graph(nodes=[node], name="test_graph", inputs=[input_tensor], outputs=[output_tensor])
     return graph
+
 
 class MockTorchModel(torch.nn.Module):
     """
@@ -104,7 +97,7 @@ class MockTorchModel(torch.nn.Module):
 
     def forward(self, x):
         return torch.sum(x).unsqueeze(0)
-    
+
 
 @pytest.fixture
 def mock_torch_model():
@@ -120,7 +113,7 @@ def torch_model_wrapper(mock_torch_model):
 
 @pytest.fixture
 def datapoint():
-    return DataPoint("1", 0, torch.tensor([0.1, 0.2, 0.3]))  
+    return DataPoint("1", 0, torch.tensor([0.1, 0.2, 0.3]))
 
 
 @pytest.fixture
@@ -131,7 +124,8 @@ def verification_context(network, datapoint, tmp_path, property_generator):
 @pytest.fixture
 def pytorch_network(mock_torch_model):
     """Create a PyTorchNetwork instance."""
-    return PyTorchNetwork(model=mock_torch_model, input_shape=[224,224], name="test_model")
+    return PyTorchNetwork(model=mock_torch_model, input_shape=[224, 224], name="test_model")
+
 
 @pytest.fixture
 def complete_verification_data():

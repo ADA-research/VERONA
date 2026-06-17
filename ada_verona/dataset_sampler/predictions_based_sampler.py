@@ -30,7 +30,7 @@ class PredictionsBasedSampler(DatasetSampler):
         Initialize the PredictionsBasedSampler with the given parameter.
 
         Args:
-            sample_correct_predictions (bool, optional): Whether to sample data points with correct predictions. 
+            sample_correct_predictions (bool, optional): Whether to sample data points with correct predictions.
             Defaults to True as in the JAIR paper.
             top_k: Number of top scores to take into account for checking the correct prediction.
         """
@@ -53,18 +53,18 @@ class PredictionsBasedSampler(DatasetSampler):
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = network.load_pytorch_model().to(device)
-        model.eval() 
+        model.eval()
 
         for data_point in dataset:
             data = data_point.data.reshape(network.get_input_shape())
-            data = data.to(device) 
+            data = data.to(device)
 
-            with torch.no_grad():  
+            with torch.no_grad():
                 output = model(data)
 
             _, predicted_labels = torch.topk(output, self.top_k)
-            predicted_labels = predicted_labels.cpu()  
-            
+            predicted_labels = predicted_labels.cpu()
+
             if self.sample_correct_predictions:
                 if int(data_point.label) in predicted_labels:
                     selected_indices.append(data_point.id)
@@ -73,4 +73,3 @@ class PredictionsBasedSampler(DatasetSampler):
                     selected_indices.append(data_point.id)
 
         return dataset.get_subset(selected_indices)
-

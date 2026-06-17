@@ -22,4 +22,3 @@ def test_fgsm_attack_execute(fgsm_attack, model, data, target):
     assert isinstance(perturbed_data, torch.Tensor)
     assert perturbed_data.shape == data.shape
     assert torch.all(perturbed_data >= 0) and torch.all(perturbed_data <= 1)
-

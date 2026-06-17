@@ -36,8 +36,6 @@ class Network(ABC):
             torch.nn.Module: The loaded PyTorch model.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-      
-
 
     @abstractmethod
     def get_input_shape(self) -> np.ndarray | tuple[int, ...]:
@@ -48,8 +46,6 @@ class Network(ABC):
             Union[np.ndarray, tuple[int, ...]]: The input shape of the model.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-      
-
 
     @abstractmethod
     def to_dict(self) -> dict:
@@ -60,8 +56,6 @@ class Network(ABC):
             dict: The dictionary representation of the network.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-      
-
 
     @classmethod
     @abstractmethod
@@ -77,7 +71,6 @@ class Network(ABC):
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
 
-
     @property
     @abstractmethod
     def name(self) -> str:
@@ -88,7 +81,7 @@ class Network(ABC):
             str: The name of the network.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-    
+
     @property
     @abstractmethod
     def path(self) -> Path:
@@ -103,12 +96,11 @@ class Network(ABC):
     @classmethod
     def from_file(cls, file: dict[Path]):
         """Create network from file
-        Args: 
-            file (dict[Path]): contains the paths to the relevant weights (for ONNX) 
+        Args:
+            file (dict[Path]): contains the paths to the relevant weights (for ONNX)
             and additionally to the architecture file for PyTorch networks.
-        
-        Returns: 
-            Created network from the correct class OR error. 
+
+        Returns:
+            Created network from the correct class OR error.
         """
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-        

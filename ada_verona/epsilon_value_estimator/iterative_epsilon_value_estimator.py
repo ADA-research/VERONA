@@ -24,15 +24,17 @@ from ada_verona.epsilon_value_estimator.epsilon_value_estimator import EpsilonVa
 
 logger = logging.getLogger(__name__)
 
+
 class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
     """
     A class to estimate the epsilon value using an iterative search with configurable direction.
     """
+
     def compute_epsilon_value(
-    self,
-    verification_context: VerificationContext,
-    reverse_search=False,
-) -> EpsilonValueResult:
+        self,
+        verification_context: VerificationContext,
+        reverse_search=False,
+    ) -> EpsilonValueResult:
         """
         Compute the epsilon value using an iterative search.
 
@@ -49,19 +51,17 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
             verification_context, epsilon_status_list
         )
         duration = time.time() - start_time
-        epsilon_value_result = EpsilonValueResult(verification_context, 
-                                                  highest_unsat_value, 
-                                                  lowest_sat_value, 
-                                                  duration, 
-                                                  self.verifier.name)
+        epsilon_value_result = EpsilonValueResult(
+            verification_context, highest_unsat_value, lowest_sat_value, duration, self.verifier.name
+        )
 
         return epsilon_value_result
-    
-    def iterative_search(self, 
-                         verification_context: VerificationContext, 
-                        epsilon_status_list: list[EpsilonStatus]) -> tuple[float, float, list]:
+
+    def iterative_search(
+        self, verification_context: VerificationContext, epsilon_status_list: list[EpsilonStatus]
+    ) -> tuple[float, float, list]:
         """
-        Perform search and determine results based on actual epsilon values. 
+        Perform search and determine results based on actual epsilon values.
         Find the highest UNSAT and smallest SAT epsilon values.
 
         Args:
@@ -73,7 +73,7 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
             float: The smallest SAT epsilon value.
             list: The epsilon status list.
         """
-        
+
         for status in epsilon_status_list:
             outcome = self.verifier.verify(verification_context, status.value)
             status.set_values(outcome)
@@ -84,7 +84,6 @@ class IterativeEpsilonValueEstimator(EpsilonValueEstimator):
         sat_values = [x.value for x in epsilon_status_list if x.result == VerificationResult.SAT]
 
         highest_unsat = max(unsat_values) if unsat_values else 0
-        lowest_sat = min(sat_values) if sat_values else 'undefined'
+        lowest_sat = min(sat_values) if sat_values else "undefined"
 
-        
         return highest_unsat, lowest_sat, epsilon_status_list

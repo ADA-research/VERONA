@@ -13,9 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
-import foolbox
 from torch import Tensor, nn
 
+import foolbox
 from ada_verona.verification_module.attacks.attack import Attack
 
 
@@ -23,6 +23,10 @@ class FoolboxAttack(Attack):
     """
     A wrapper for Foolbox adversarial attacks.
     Requires foolbox to be installed: pip install foolbox
+
+    Only untargeted attacks are supported. The `target` parameter in `execute()`
+    is the correct class label; foolbox uses it as the `Misclassification`
+    criterion (i.e., find an input that is no longer classified as `target`).
 
     Attributes:
         attack_cls (class): The Foolbox attack class to use.
@@ -83,11 +87,8 @@ class FoolboxAttack(Attack):
         if target.dim() == 0:
             # Scalar target, add batch dimension
             target = target.unsqueeze(0)
-        elif target.dim() == 1:
-            # Already 1D, should be fine (typically shape (1,) for single sample)
-            # But ensure it's not empty
-            if target.shape[0] == 0:
-                raise ValueError("Target tensor cannot be empty")
+        elif target.dim() == 1 and target.shape[0] == 0:
+            raise ValueError("Target tensor cannot be empty")
         # If target is already correct shape, keep as is
 
         _, clipped_advs, _ = attack(fmodel, data, target, epsilons=epsilon)
