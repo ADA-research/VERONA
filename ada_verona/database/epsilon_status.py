@@ -15,6 +15,8 @@
 
 from dataclasses import dataclass
 
+import numpy as np
+
 from ada_verona.database.verification_result import CompleteVerificationData, VerificationResult
 
 
@@ -40,15 +42,23 @@ class EpsilonStatus:
         """
         self.result = complete_verification_data.result
         self.time = complete_verification_data.took
-        self.obtained_labels = complete_verification_data.obtained_labels
+        self.obtained_labels = getattr(complete_verification_data, "obtained_labels", None)
 
     def to_dict(self) -> dict:
-        """
-        Convert the EpsilonStatus to a dictionary.
+        """Convert the EpsilonStatus to a dictionary."""
+        obtained_labels_value = None
+        if self.obtained_labels is not None:
+            if isinstance(self.obtained_labels, np.ndarray):
+                obtained_labels_value = self.obtained_labels.flatten().tolist()
+            elif isinstance(self.obtained_labels, list):
+                obtained_labels_value = self.obtained_labels
+            else:
+                obtained_labels_value = [self.obtained_labels]
 
-        Returns:
-            dict: The dictionary representation of the EpsilonStatus.
-        """
-        return dict(epsilon_value=self.value, result=self.result, time=self.time, verifier=self.verifier, 
-                    obtained_labels=self.obtained_labels.flatten().tolist() if self.obtained_labels is not None 
-                    else None)
+        return dict(
+            epsilon_value=self.value,
+            result=self.result,
+            time=self.time,
+            verifier=self.verifier,
+            obtained_labels=obtained_labels_value,
+        )

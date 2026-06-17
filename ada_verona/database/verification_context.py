@@ -92,10 +92,8 @@ class VerificationContext:
         """
         Delete the temporary path and its contents.
         """
-      
 
         self.tmp_path.unlink()
-
 
     def save_status_list(self, epsilon_status_list: list[EpsilonStatus]) -> None:
         """
@@ -153,7 +151,7 @@ class VerificationContext:
         """
         # Recreate the network from its dictionary representation
 
-        network = ONNXNetwork.from_dict(data["network"]) 
+        network = ONNXNetwork.from_dict(data["network"])
         data_point = DataPoint.from_dict(data["data_point"])
         tmp_path = Path(data["tmp_path"])
         property_generator = PropertyGenerator.from_dict(data["property_generator"])

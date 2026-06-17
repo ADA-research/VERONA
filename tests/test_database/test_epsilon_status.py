@@ -13,14 +13,15 @@
 # limitations under the License.
 # ==============================================================================
 
+import numpy as np
+
 from ada_verona.database.epsilon_status import EpsilonStatus
 from ada_verona.database.verification_result import VerificationResult
 
 
 def test_epsilon_status_initialization():
-
     epsilon_value = 0.5
-    result = VerificationResult.SAT 
+    result = VerificationResult.SAT
     time_taken = 1.23
 
     epsilon_status = EpsilonStatus(value=epsilon_value, result=result, time=time_taken)
@@ -32,13 +33,11 @@ def test_epsilon_status_initialization():
 
 def test_epsilon_status_to_dict():
     epsilon_value = 0.5
-    result = VerificationResult.UNSAT 
+    result = VerificationResult.UNSAT
     time_taken = 2.34
     epsilon_status = EpsilonStatus(value=epsilon_value, result=result, time=time_taken)
 
-
     result_dict = epsilon_status.to_dict()
-
 
     assert result_dict == {
         "epsilon_value": epsilon_value,
@@ -48,9 +47,10 @@ def test_epsilon_status_to_dict():
         "obtained_labels": None,
     }
 
+
 def test_set_values(complete_verification_data):
     epsilon_value = 0.5
-    result = VerificationResult.UNSAT 
+    result = VerificationResult.UNSAT
     time_taken = 2.34
 
     epsilon_status = EpsilonStatus(value=epsilon_value, result=result, time=time_taken)
@@ -60,3 +60,53 @@ def test_set_values(complete_verification_data):
     assert epsilon_status.result == complete_verification_data.result
     assert epsilon_status.time == complete_verification_data.took
 
+
+def test_epsilon_status_to_dict_with_numpy_array():
+    """Test to_dict() when obtained_labels is a numpy array."""
+    epsilon_value = 0.5
+    result = VerificationResult.SAT
+    time_taken = 1.25
+    obtained_labels = np.array([1, 2, 3])
+
+    epsilon_status = EpsilonStatus(value=epsilon_value, result=result, time=time_taken, obtained_labels=obtained_labels)
+
+    result_dict = epsilon_status.to_dict()
+
+    assert result_dict["obtained_labels"] == [1, 2, 3]
+    assert result_dict["epsilon_value"] == epsilon_value
+    assert result_dict["result"] == result
+    assert result_dict["time"] == time_taken
+
+
+def test_epsilon_status_to_dict_with_list():
+    """Test to_dict() when obtained_labels is a list."""
+    epsilon_value = 0.5
+    result = VerificationResult.SAT
+    time_taken = 1.23
+    obtained_labels = [1, 2, 3]
+
+    epsilon_status = EpsilonStatus(value=epsilon_value, result=result, time=time_taken, obtained_labels=obtained_labels)
+
+    result_dict = epsilon_status.to_dict()
+
+    assert result_dict["obtained_labels"] == [1, 2, 3]
+    assert result_dict["epsilon_value"] == epsilon_value
+    assert result_dict["result"] == result
+    assert result_dict["time"] == time_taken
+
+
+def test_epsilon_status_to_dict_with_string():
+    """Test to_dict() when obtained_labels is a string."""
+    epsilon_value = 0.5
+    result = VerificationResult.SAT
+    time_taken = 1.23
+    obtained_labels = "1"
+
+    epsilon_status = EpsilonStatus(value=epsilon_value, result=result, time=time_taken, obtained_labels=obtained_labels)
+
+    result_dict = epsilon_status.to_dict()
+
+    assert result_dict["obtained_labels"] == ["1"]
+    assert result_dict["epsilon_value"] == epsilon_value
+    assert result_dict["result"] == result
+    assert result_dict["time"] == time_taken
