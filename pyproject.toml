@@ -127,3 +127,9 @@ select = [
     # isort
     "I",
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["ada_verona"]
+# foolbox is a third-party dependency; pin it explicitly so a local foolbox/
+# source checkout in the repo root cannot be misdetected as first-party.
+known-third-party = ["foolbox"]

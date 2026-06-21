@@ -13,9 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
+import foolbox
 from torch import Tensor, nn
 
-import foolbox
 from ada_verona.verification_module.attacks.attack import Attack
 
 
