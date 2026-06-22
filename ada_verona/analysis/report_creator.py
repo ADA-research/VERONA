@@ -28,19 +28,16 @@ sns.set_palette(sns.color_palette("Paired"))
 class ReportCreator:
     """Render robustness-distribution plots from a result DataFrame.
 
-    By default the plots group by ``network`` and visualise the per-input
-    ``epsilon_value`` column, which matches the result frames produced by
-    :class:`~ada_verona.database.experiment_repository.ExperimentRepository`.
-
-    Both the grouping column and the value column may be overridden, so the same
-    plots can compare along *any* dimension -- for example ``group_by="attack"``
-    to overlay several attacks.
+    By default the plots group by network and visualise the per-input
+    epsilon_value column. Both the grouping column and the value column 
+    may be overridden, so the same plots can compare along  any dim., eg 
+    group_by="attack` to overlay several attacks.
 
     Args:
         df: The result DataFrame to plot.
-        group_by: Column used to split/colour the data (the plot's ``hue``).
+        group_by: Column used to split/colour the data (plot's hue).
         value_column: Column holding the per-input value to plot (the x-axis).
-        value_label: Human-readable axis label for ``value_column``.
+        value_label: Human-readable axis label.
     """
 
     def __init__(
