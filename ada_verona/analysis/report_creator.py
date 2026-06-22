@@ -32,17 +32,15 @@ class ReportCreator:
     ``epsilon_value`` column, which matches the result frames produced by
     :class:`~ada_verona.database.experiment_repository.ExperimentRepository`.
 
-    Both the grouping column and the value column can be overridden, so the same
+    Both the grouping column and the value column may be overridden, so the same
     plots can compare along *any* dimension -- for example ``group_by="attack"``
-    to overlay several attacks. Existing call sites that pass only the DataFrame
-    keep their previous behaviour unchanged.
+    to overlay several attacks.
 
     Args:
         df: The result DataFrame to plot.
         group_by: Column used to split/colour the data (the plot's ``hue``).
         value_column: Column holding the per-input value to plot (the x-axis).
-        value_label: Human-readable axis label for ``value_column``. Defaults to
-            a prettified version of the column name.
+        value_label: Human-readable axis label for ``value_column``.
     """
 
     def __init__(
