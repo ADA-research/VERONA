@@ -24,29 +24,52 @@ class FoolboxAttack(Attack):
     A wrapper for Foolbox adversarial attacks.
     Requires foolbox to be installed: pip install foolbox
 
-    Only untargeted attacks are supported. The `target` parameter in `execute()`
-    is the correct class label; foolbox uses it as the `Misclassification`
-    criterion (i.e., find an input that is no longer classified as `target`).
+    Both untargeted and targeted attacks are supported via the `target` parameter
+    of `execute()`, which is always the correct class label:
+
+    - Untargeted (default): foolbox's `Misclassification` criterion is used, i.e.
+      the attack searches for an input no longer classified as `target`.
+    - Targeted (`targeted=True` plus a `target_class`): foolbox's
+      `TargetedMisclassification` criterion is used, i.e. the attack searches for
+      an input classified as `target_class`.
+
+    Targeted mode is attack-dependent: iterative attacks such as `LinfPGD`,
+    `LinfBasicIterativeAttack` and `LinfDeepFoolAttack` support it, while
+    single-step attacks such as `LinfFastGradientAttack` (FGSM) do not and raise
+    `ValueError: unsupported criterion`. Within the One2Any robustness pipeline a
+    successful targeted attack also implies the true label is no longer predicted,
+    so it is scored as a (typically harder) counterexample; `target_class` should
+    therefore differ from the true label, otherwise the search is degenerate.
 
     Attributes:
         attack_cls (class): The Foolbox attack class to use.
         kwargs (dict): Arguments to pass to the attack constructor.
     """
 
-    def __init__(self, attack_cls, bounds=(0, 1), **kwargs) -> None:
+    def __init__(
+        self, attack_cls, bounds=(0, 1), *, targeted: bool = False, target_class: int | None = None, **kwargs
+    ) -> None:
         """
         Initialize the FoolboxAttack wrapper.
 
         Args:
             attack_cls (class): The Foolbox attack class (e.g., foolbox.attacks.LinfPGD).
             bounds (tuple, optional): The bounds of the input data. Defaults to (0, 1).
+            targeted (bool, optional): If True, run the attack in targeted mode. Defaults to False.
+            target_class (int, optional): The class to drive predictions toward in targeted mode.
+                Required when ``targeted`` is True; ignored otherwise.
             **kwargs: Arguments to be passed to the attack constructor (e.g., steps=40).
         """
         super().__init__()
+        if targeted and target_class is None:
+            raise ValueError("A targeted FoolboxAttack requires `target_class` (the class to aim predictions at).")
         self.attack_cls = attack_cls
         self.bounds = bounds
+        self.targeted = targeted
+        self.target_class = target_class
         self.kwargs = kwargs
-        self.name = f"FoolboxAttack ({attack_cls.__name__}, bounds={bounds}, {kwargs})"
+        mode = f"targeted->{target_class}" if targeted else "untargeted"
+        self.name = f"FoolboxAttack ({attack_cls.__name__}, bounds={bounds}, {mode}, {kwargs})"
 
     def execute(self, model: nn.Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
         """
@@ -91,6 +114,15 @@ class FoolboxAttack(Attack):
             raise ValueError("Target tensor cannot be empty")
         # If target is already correct shape, keep as is
 
-        _, clipped_advs, _ = attack(fmodel, data, target, epsilons=epsilon)
+        # Pick the foolbox criterion: aim away from the true label (untargeted) or
+        # toward a chosen class (targeted). Foolbox would auto-wrap a bare label
+        # tensor as Misclassification; we build it explicitly for symmetry.
+        if self.targeted:
+            target_classes = target.new_full(target.shape, self.target_class)
+            criterion = foolbox.criteria.TargetedMisclassification(target_classes)
+        else:
+            criterion = foolbox.criteria.Misclassification(target)
+
+        _, clipped_advs, _ = attack(fmodel, data, criterion, epsilons=epsilon)
 
         return clipped_advs

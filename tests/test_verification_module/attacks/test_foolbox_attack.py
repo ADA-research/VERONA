@@ -119,3 +119,24 @@ def test_foolbox_attack_execute_0d_data_adds_batch_dimension(target):
     # is expected; the assertion guards the 0D unsqueeze branch in execute().
     with pytest.raises(ValueError):
         attack.execute(SingleFeatureModel(), torch.tensor(0.5), target, 0.1)
+
+
+def test_foolbox_attack_untargeted_defaults():
+    attack = FoolboxAttack(fb.attacks.LinfPGD, steps=5)
+    assert attack.targeted is False
+    assert attack.target_class is None
+    assert "untargeted" in attack.name
+
+
+def test_foolbox_attack_targeted_requires_target_class():
+    with pytest.raises(ValueError):
+        FoolboxAttack(fb.attacks.LinfPGD, targeted=True)
+
+
+def test_foolbox_attack_targeted_execute(model, data, target):
+    # PGD supports targeted mode; aim at class 0 (the true label fixture is 1).
+    attack = FoolboxAttack(fb.attacks.LinfPGD, targeted=True, target_class=0, steps=5)
+    assert "targeted->0" in attack.name
+    perturbed_data = attack.execute(model, torch.sigmoid(data), target, 0.3)
+    assert isinstance(perturbed_data, torch.Tensor)
+    assert perturbed_data.shape == data.shape
