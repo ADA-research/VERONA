@@ -44,17 +44,14 @@ class TorchModelWrapper(torch.nn.Module):
         Returns:
             torch.Tensor: The output tensor from the wrapped PyTorch model.
         """
-        
+
         if isinstance(x, np.ndarray):
-        # ensure correct dtype/device if needed
-            x = torch.from_numpy(x).to(
-                dtype=torch.float32,
-                device=next(self.torch_model.parameters()).device
-            )
+            # ensure correct dtype/device if needed
+            x = torch.from_numpy(x).to(dtype=torch.float32, device=next(self.torch_model.parameters()).device)
             x = x.reshape(*self.input_shape)  # tuple unpacking
 
         else:
-        # Assume it's already a torch.Tensor
+            # Assume it's already a torch.Tensor
             x = x.reshape(*self.input_shape)
 
         x = self.torch_model(x)

@@ -47,9 +47,7 @@ def mock_pytorch_experiment_dataset():
 
 
 def test_getitem(mock_pytorch_experiment_dataset):
-
     data_point = mock_pytorch_experiment_dataset[1]
-
 
     assert isinstance(data_point, DataPoint)
     assert data_point.id == 1
@@ -58,9 +56,7 @@ def test_getitem(mock_pytorch_experiment_dataset):
 
 
 def test_get_subset(mock_pytorch_experiment_dataset):
-
     subset = mock_pytorch_experiment_dataset.get_subset([0, 2])
-
 
     assert len(subset) == 2
     assert subset[0].id == 0
@@ -70,8 +66,6 @@ def test_get_subset(mock_pytorch_experiment_dataset):
 
 
 def test_str(mock_pytorch_experiment_dataset):
-
     dataset_str = str(mock_pytorch_experiment_dataset)
-
 
     assert dataset_str == "[0, 1, 2]"

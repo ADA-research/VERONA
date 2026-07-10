@@ -23,8 +23,7 @@ import torchvision.transforms as transforms
 
 if importlib.util.find_spec("autoverify") is None:
     raise ImportError(
-        "AutoVerify not found. This package is required for this script. "
-        "To install: pip install auto-verify"
+        "AutoVerify not found. This package is required for this script. To install: pip install auto-verify"
     )
 
 from autoverify.verifier import AbCrown, Nnenum
@@ -51,6 +50,7 @@ from ada_verona.verification_module.property_generator.property_generator import
 logger.setup_logging(level=logging.INFO)
 
 torch.manual_seed(0)
+
 
 def create_distribution(
     experiment_repository: ExperimentRepository,

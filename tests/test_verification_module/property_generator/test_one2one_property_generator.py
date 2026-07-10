@@ -26,6 +26,7 @@ from ada_verona.verification_module.property_generator.one2one_property_generato
 def property_generator():
     return One2OnePropertyGenerator(target_class=1, number_classes=10, data_lb=0, data_ub=1)
 
+
 def test_create_vnnlib_property(property_generator):
     image = np.array([0.5, 0.5, 0.5])
     image_class = 0
@@ -53,6 +54,7 @@ def test_get_dict_for_epsilon_result(property_generator):
     assert isinstance(result_dict, dict)
     assert result_dict == {"target_class": 1}
 
+
 def test_to_dict(property_generator):
     result_dict = property_generator.to_dict()
     assert isinstance(result_dict, dict)
@@ -60,19 +62,20 @@ def test_to_dict(property_generator):
         "target_class": 1,
         "number_classes": 10,
         "data_lb": 0,
-        "data_ub": 1, 
-        'type': 'One2OnePropertyGenerator', 
-        'module': 'ada_verona.verification_module.property_generator.one2one_property_generator'
+        "data_ub": 1,
+        "type": "One2OnePropertyGenerator",
+        "module": "ada_verona.verification_module.property_generator.one2one_property_generator",
     }
+
 
 def test_from_dict():
     data = {
         "target_class": 1,
         "number_classes": 10,
         "data_lb": 0,
-        "data_ub": 1, 
-        'type': 'One2OnePropertyGenerator', 
-        'module': 'ada_verona.verification_module.property_generator.one2one_property_generator'
+        "data_ub": 1,
+        "type": "One2OnePropertyGenerator",
+        "module": "ada_verona.verification_module.property_generator.one2one_property_generator",
     }
     property_generator = One2OnePropertyGenerator.from_dict(data)
     assert isinstance(property_generator, One2OnePropertyGenerator)

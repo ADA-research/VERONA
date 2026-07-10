@@ -34,21 +34,26 @@ def model():
 
     return SimpleModel()
 
+
 @pytest.fixture
 def data():
     return torch.randn(1, 10)
+
 
 @pytest.fixture
 def target():
     return torch.tensor([1])
 
+
 @pytest.fixture
 def attack_wrapper():
     return AutoAttackWrapper(device="cpu", norm="Linf", version="standard", verbose=False)
 
+
 @pytest.fixture
 def pgd_attack():
-     return PGDAttack(number_iterations=10, step_size=0.01, randomise=True)
+    return PGDAttack(number_iterations=10, step_size=0.01, randomise=True)
+
 
 @pytest.fixture
 def fgsm_attack():

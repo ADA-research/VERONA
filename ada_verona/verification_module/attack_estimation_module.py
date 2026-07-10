@@ -49,7 +49,7 @@ class AttackEstimationModule(VerificationModule):
         Verify the robustness of the model within the given epsilon perturbation.
 
         Args:
-            verification_context (VerificationContext): The context for verification, 
+            verification_context (VerificationContext): The context for verification,
             including the model and data point.
             epsilon (float): The perturbation magnitude for the attack.
 
@@ -61,24 +61,26 @@ class AttackEstimationModule(VerificationModule):
         if isinstance(verification_context.property_generator, One2AnyPropertyGenerator):
             # Check if the property generator is of type One2AnyPropertyGenerator
 
-            start = time.time()  
-            torch_model = verification_context.network.load_pytorch_model() 
-            device = 'cuda' if torch.cuda.is_available() else 'cpu'  
-            target = verification_context.data_point.label  
-            target_on_device = torch.tensor([target], device=device)  
-            data_on_device = verification_context.data_point.data.clone().detach().to(device)  
-            perturbed_data = self.attack.execute(torch_model, data_on_device, target_on_device, epsilon)  
-        
-            output = torch_model(perturbed_data) 
+            start = time.time()
+            torch_model = verification_context.network.load_pytorch_model()
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            target = verification_context.data_point.label
+            target_on_device = torch.tensor([target], device=device)
+            data_on_device = verification_context.data_point.data.clone().detach().to(device)
+            perturbed_data = self.attack.execute(torch_model, data_on_device, target_on_device, epsilon)
 
-            _, predicted_labels = torch.topk(output, self.top_k) 
+            output = torch_model(perturbed_data)
 
-            duration = time.time() - start 
+            _, predicted_labels = torch.topk(output, self.top_k)
+
+            duration = time.time() - start
             if target in predicted_labels:
-                return CompleteVerificationData(result=VerificationResult.UNSAT, took=duration, 
-                                                obtained_labels=predicted_labels)
+                return CompleteVerificationData(
+                    result=VerificationResult.UNSAT, took=duration, obtained_labels=predicted_labels
+                )
             else:
-                return CompleteVerificationData(result=VerificationResult.SAT, took=duration, 
-                                                obtained_labels=predicted_labels)
+                return CompleteVerificationData(
+                    result=VerificationResult.SAT, took=duration, obtained_labels=predicted_labels
+                )
         else:
             raise NotImplementedError("Currently, only one 2 any verification is implemented for adversarial attacks.")

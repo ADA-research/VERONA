@@ -47,6 +47,7 @@ from ada_verona.verification_module.property_generator.property_generator import
 logger.setup_logging(level=logging.INFO)
 torch.manual_seed(0)
 
+
 def create_distribution(
     experiment_repository: ExperimentRepository,
     dataset: ExperimentDataset,
@@ -77,7 +78,6 @@ def create_distribution(
 
 
 def main():
-    
     epsilon_list = [0.001, 0.005, 0.05, 0.08]
     experiment_repository_path = Path("../example_experiment/results")
     network_folder = Path("../example_experiment/data/networks")
@@ -93,7 +93,7 @@ def main():
     experiment_name = "AutoAttack"
     property_generator = One2AnyPropertyGenerator()
 
-    verifier = AttackEstimationModule(attack=AutoAttackWrapper(device='cuda' if torch.cuda.is_available() else 'cpu'))
+    verifier = AttackEstimationModule(attack=AutoAttackWrapper(device="cuda" if torch.cuda.is_available() else "cpu"))
 
     epsilon_value_estimator = BinarySearchEpsilonValueEstimator(
         epsilon_value_list=epsilon_list.copy(), verifier=verifier
