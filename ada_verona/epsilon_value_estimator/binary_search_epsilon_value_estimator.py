@@ -50,12 +50,12 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
             epsilon=highest_unsat_value,
             smallest_sat_value=smallest_sat_value,
             time=duration,
-            verifier = self.verifier.name,
+            verifier=self.verifier.name,
         )
 
         logger.info(
             f"Verification Context: {verification_context.get_dict_for_epsilon_result()}, "
-            f"epsilon_result: {epsilon_value_result.epsilon}"  
+            f"epsilon_result: {epsilon_value_result.epsilon}"
         )
         return epsilon_value_result
 
@@ -139,7 +139,7 @@ class BinarySearchEpsilonValueEstimator(EpsilonValueEstimator):
                 verification_context.save_result(epsilon_status_list[midpoint])
                 logger.debug(
                     f"current epsilon value: {epsilon_status_list[midpoint].result},"
-                    f"took: {epsilon_status_list[midpoint].time}"  
+                    f"took: {epsilon_status_list[midpoint].time}"
                 )
 
             if epsilon_status_list[midpoint].result == VerificationResult.UNSAT:

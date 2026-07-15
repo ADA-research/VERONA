@@ -30,7 +30,7 @@ def test_cannot_instantiate_network():
 def test_abstract_methods_raise_not_implemented_error(network):
     with pytest.raises(NotImplementedError):
         Network.load_pytorch_model(Network)
-        
+
     with pytest.raises(NotImplementedError):
         Network.get_input_shape(Network)
 

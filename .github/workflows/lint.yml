@@ -20,8 +20,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff
-          
+          # Pin to the same ruff version as .pre-commit-config.yaml so CI and
+          # local pre-commit stay in lockstep and formatting cannot silently drift.
+          pip install ruff==0.14.3
+
       - name: Lint with Ruff
         run: |
           ruff check --config pyproject.toml . || (echo "::error::Linting issues found. Please run 'ruff check --config pyproject.toml .' to see issues." && exit 1)
+
+      - name: Check formatting with Ruff
+        run: |
+          ruff format --check --config pyproject.toml . || (echo "::error::Formatting issues found. Please run 'ruff format --config pyproject.toml .' to fix." && exit 1)

@@ -23,6 +23,7 @@ def test_cannot_instantiate_datasetsampler():
     with pytest.raises(TypeError):
         DatasetSampler()
 
+
 def test_abstract_methods_raise_not_implemented_error():
     with pytest.raises(NotImplementedError):
         DatasetSampler.sample(None, None)

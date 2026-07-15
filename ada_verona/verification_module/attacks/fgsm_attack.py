@@ -28,11 +28,12 @@ class FGSMAttack(Attack):
         execute(model: Module, data: Tensor, target: Tensor, epsilon: float) -> Tensor:
             Executes the FGSM attack on the given model and data.
     """
+
     def __init__(self) -> None:
         """
         Initialize the FGSM to record the name
         Args:
-            
+
         """
         super().__init__()
         self.name = "FGSM"
@@ -66,7 +67,5 @@ class FGSMAttack(Attack):
         sign_data_grad = data_grad.sign()
 
         perturbed_image = data + epsilon * sign_data_grad
-        perturbed_image = torch.clamp(
-            perturbed_image, 0, 1
-        )
+        perturbed_image = torch.clamp(perturbed_image, 0, 1)
         return perturbed_image

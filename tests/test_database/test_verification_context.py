@@ -37,29 +37,30 @@ def test_to_dict(verification_context, tmp_path):
     context_dict = verification_context.to_dict()
     assert isinstance(context_dict, dict)
 
-    assert context_dict['network'] == {
-                        'network_path': str(tmp_path / "network.onnx"), 
-                        'type':'ONNXNetwork',
-                        'module': 'ada_verona.database.machine_learning_model.onnx_network'
-                        }  
-    assert context_dict['data_point']['id'] == "1"
-    assert context_dict['data_point']['label'] == 0
-    assert np.allclose(context_dict['data_point']["data"],[0.1, 0.2, 0.3], atol = 1e-5)
-    assert context_dict['tmp_path'] == str(verification_context.tmp_path)
-    assert context_dict['property_generator'] == verification_context.property_generator.to_dict()  
-    assert context_dict['save_epsilon_results'] is True
+    assert context_dict["network"] == {
+        "network_path": str(tmp_path / "network.onnx"),
+        "type": "ONNXNetwork",
+        "module": "ada_verona.database.machine_learning_model.onnx_network",
+    }
+    assert context_dict["data_point"]["id"] == "1"
+    assert context_dict["data_point"]["label"] == 0
+    assert np.allclose(context_dict["data_point"]["data"], [0.1, 0.2, 0.3], atol=1e-5)
+    assert context_dict["tmp_path"] == str(verification_context.tmp_path)
+    assert context_dict["property_generator"] == verification_context.property_generator.to_dict()
+    assert context_dict["save_epsilon_results"] is True
 
 
 def test_from_dict(tmp_path, verification_context):
     data = {
-        'network': {
-            'network_path': tmp_path / "network.onnx",
-            'type':'ONNXNetwork', 
-            'module': 'ada_verona.database.machine_learning_model.onnx_network'},
-        'data_point': {'id': "1", 'label': 0, 'data': [0.1, 0.2, 0.3]}, 
-        'tmp_path': str(tmp_path),
-        'property_generator': verification_context.property_generator.to_dict(),
-        'save_epsilon_results': True, 
+        "network": {
+            "network_path": tmp_path / "network.onnx",
+            "type": "ONNXNetwork",
+            "module": "ada_verona.database.machine_learning_model.onnx_network",
+        },
+        "data_point": {"id": "1", "label": 0, "data": [0.1, 0.2, 0.3]},
+        "tmp_path": str(tmp_path),
+        "property_generator": verification_context.property_generator.to_dict(),
+        "save_epsilon_results": True,
     }
 
     context = VerificationContext.from_dict(data)
@@ -67,9 +68,10 @@ def test_from_dict(tmp_path, verification_context):
     assert context.network.path == tmp_path / "network.onnx"
     assert context.data_point.id == "1"
     assert context.data_point.label == 0
-    assert np.allclose(context.data_point.data.numpy(), [0.1, 0.2, 0.3], atol=1e-5)  
+    assert np.allclose(context.data_point.data.numpy(), [0.1, 0.2, 0.3], atol=1e-5)
     assert str(context.tmp_path) == str(tmp_path)
     assert context.save_epsilon_results is True
+
 
 def test_save_vnnlib_property(verification_context):
     vnnlib_property = VNNLibProperty(name="test_property", content="test_content")
@@ -91,13 +93,11 @@ def test_save_status_list(verification_context):
 
 
 def test_save_result_per_epsilon(verification_context, experiment_repository):
-    
     experiment_repository.initialize_new_experiment("test_experiment")
-    
+
     # First result (triggers the 'else' branch - new file)
     epsilon_status1 = EpsilonStatus(0.1, None)
     verification_context.save_result(epsilon_status1)
-    
 
     # Second result (triggers the 'if result_df_path.exists()' branch - append)
     epsilon_status2 = EpsilonStatus(0.2, None)
@@ -111,20 +111,19 @@ def test_save_result_per_epsilon(verification_context, experiment_repository):
     assert df.iloc[0]["epsilon_value"] == 0.1
     assert df.iloc[1]["epsilon_value"] == 0.2
 
+
 def test_delete_tmp_path(verification_context):
-   
     tmp_file = verification_context.tmp_path / "tempfile.txt"
     tmp_file.write_text("test content")
 
     verification_context.tmp_path = tmp_file
 
-
     verification_context.delete_tmp_path()
 
     assert not tmp_file.exists()
 
-def test_get_dict_for_epsilon_result(verification_context, tmp_path):
 
+def test_get_dict_for_epsilon_result(verification_context, tmp_path):
     verification_context.tmp_path = tmp_path
     verification_context.tmp_path.mkdir(parents=True, exist_ok=True)
 

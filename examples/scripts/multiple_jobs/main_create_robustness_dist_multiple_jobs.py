@@ -36,6 +36,7 @@ logger.setup_logging(level=logging.INFO)
 
 torch.manual_seed(0)
 
+
 def write_slurm_script(
     slurm_script_template: str,
     slurm_scripts_path: Path,

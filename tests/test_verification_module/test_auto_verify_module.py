@@ -137,6 +137,7 @@ def test_auto_verify_module_verify_error_result(auto_verify_module, verification
 
 def test_auto_verify_module_verify_unsat_sets_obtained_labels_none(auto_verify_module, verification_context):
     """Test that UNSAT results without obtained_labels attribute get it set to None."""
+
     class MockOutcome:
         def __init__(self):
             self.result = "UNSAT"

@@ -28,9 +28,9 @@ def test_abstract_methods_raise_not_implemented_error():
     # Call the abstract methods on the class itself (unbound)
     with pytest.raises(NotImplementedError):
         ExperimentDataset.__len__(ExperimentDataset)
-        
+
     with pytest.raises(NotImplementedError):
         ExperimentDataset.__getitem__(ExperimentDataset, 0)
-        
+
     with pytest.raises(NotImplementedError):
         ExperimentDataset.get_subset(ExperimentDataset, [0])
