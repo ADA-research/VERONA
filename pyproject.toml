@@ -46,6 +46,10 @@ dependencies = [
 
 [project.optional-dependencies]
 
+foolbox = [
+    "foolbox>=3.3.4"
+]
+
 gpu = [
     "nvidia-cublas-cu12>=12.1.0,<13.0.0",
     "nvidia-cuda-cupti-cu12>=12.1.0,<13.0.0",
@@ -68,6 +72,7 @@ dev = [
     "pytest-cov>=4.1.0",
     "coverage>=7.0.0",
     "auto-verify==1.0.0",
+    "foolbox>=3.3.4",
     "autoattack @ git+https://github.com/fra31/auto-attack",
     "ruff>=0.3.4",
     "black>=22.0.0",
@@ -122,3 +127,9 @@ select = [
     # isort
     "I",
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["ada_verona"]
+# foolbox is a third-party dependency; pin it explicitly so a local foolbox/
+# source checkout in the repo root cannot be misdetected as first-party.
+known-third-party = ["foolbox"]

@@ -13,12 +13,14 @@
 # limitations under the License.
 # ==============================================================================
 
+import foolbox as fb
 import pytest
 import torch
 from torch import nn
 
 from ada_verona.verification_module.attacks.auto_attack_wrapper import AutoAttackWrapper
 from ada_verona.verification_module.attacks.fgsm_attack import FGSMAttack
+from ada_verona.verification_module.attacks.foolbox_attack import FoolboxAttack
 from ada_verona.verification_module.attacks.pgd_attack import PGDAttack
 
 
@@ -58,3 +60,8 @@ def pgd_attack():
 @pytest.fixture
 def fgsm_attack():
     return FGSMAttack()
+
+
+@pytest.fixture
+def foolbox_attack():
+    return FoolboxAttack(attack_cls=fb.attacks.LinfFastGradientAttack)

@@ -36,7 +36,9 @@ jobs:
       - name: Install uv and create environment
         run: |
           pip install uv
-          uv venv
+          # Only create the venv on a cache miss; the cache step may have
+          # already restored a populated .venv, and `uv venv` errors if one exists.
+          [ -d .venv ] || uv venv
           source .venv/bin/activate
           uv sync --extra dev
           uv pip install auto-verify
